@@ -2,13 +2,19 @@ import Link from "next/link";
 
 type LogoProps = {
   className?: string;
+  href?: string;
+  ariaLabel?: string;
 };
 
-export default function Logo({ className = "" }: LogoProps) {
+export default function Logo({
+  className = "",
+  href = "/",
+  ariaLabel = "Ir al inicio de joyas.ai",
+}: LogoProps) {
   return (
     <Link
-      href="/"
-      aria-label="Ir al inicio de joyas.ai"
+      href={href}
+      aria-label={ariaLabel}
       className={`group inline-flex shrink-0 items-baseline text-[#a66f08] transition-colors hover:text-[#8f5f06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-4 ${className}`}
     >
       <span

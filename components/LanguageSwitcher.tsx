@@ -19,9 +19,12 @@ const defaultLinks: LanguageLink[] = [
 
 export default function LanguageSwitcher({ links = defaultLinks }: { links?: LanguageLink[] }) {
   const pathname = usePathname();
+  const activeLocale = getLocaleFromPath(pathname);
+  const ariaLabel =
+    activeLocale === "pt-BR" ? "Seletor de idioma" : activeLocale === "en" ? "Language selector" : "Selector de idioma";
 
   return (
-    <nav aria-label="Selector de idioma" className="flex max-w-full gap-1 overflow-x-auto rounded-full border border-[#ead8b3] bg-white/80 p-1 text-xs font-semibold">
+    <nav aria-label={ariaLabel} className="flex max-w-full gap-1 overflow-x-auto rounded-full border border-[#ead8b3] bg-white/80 p-1 text-xs font-semibold">
       {links.map((link) => {
         const active = isActiveLanguage(pathname, link.locale);
 
@@ -59,4 +62,16 @@ function isActiveLanguage(pathname: string, locale: Locale) {
   }
 
   return !pathname.startsWith("/pt-br") && !pathname.startsWith("/en");
+}
+
+function getLocaleFromPath(pathname: string): Locale {
+  if (pathname === "/pt-br" || pathname.startsWith("/pt-br/")) {
+    return "pt-BR";
+  }
+
+  if (pathname === "/en" || pathname.startsWith("/en/")) {
+    return "en";
+  }
+
+  return "es";
 }

@@ -60,6 +60,8 @@ const footerGroups = [
 export default function SiteFooter() {
   const pathname = usePathname();
   const locale = getLocaleFromPath(pathname);
+  const footerAriaLabel =
+    locale === "pt-BR" ? "Links do rodapé" : locale === "en" ? "Footer links" : "Enlaces del pie de pagina";
 
   return (
     <footer className="border-t border-[#eadfca] bg-[#fbf7ef]">
@@ -78,11 +80,11 @@ export default function SiteFooter() {
             </p>
           </div>
 
-          <nav aria-label="Enlaces del pie de pagina" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+          <nav aria-label={footerAriaLabel} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {footerGroups.map((group) => (
               <div key={group.title}>
                 <h2 className="text-xs font-semibold tracking-[0.18em] text-[#9b7b3a]">
-                  {group.title}
+                  {localizeText(group.title, locale)}
                 </h2>
                 <ul className="mt-3 space-y-2">
                   {group.links.map((link) => (
@@ -94,7 +96,7 @@ export default function SiteFooter() {
                   ))}
                   {group.extra === "cookie-settings" ? (
                     <li>
-                      <CookieSettingsButton />
+                      <CookieSettingsButton locale={locale} />
                     </li>
                   ) : null}
                 </ul>

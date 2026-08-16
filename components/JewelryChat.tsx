@@ -15,11 +15,13 @@ import type {
   ConversationMessage,
   GuidedPreferences,
 } from "@/lib/advisor";
+import type { Locale } from "@/lib/i18n";
 
 type Option = {
   label: string;
   icon?: React.ReactNode;
   accentClassName?: string;
+  swatchKey?: string;
 };
 
 type VisualOption = {
@@ -146,7 +148,410 @@ const initialPreferences: GuidedPreferences = {
   materials: [],
 };
 
-export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR" | "en" }) {
+const chatCopy = {
+  es: {
+    heroEyebrow: "Joyero personal con IA",
+    heroTitle: "Encuentra la joya perfecta con inteligencia artificial",
+    heroDescription:
+      "Cuéntanos qué buscas o déjate guiar paso a paso. Nuestro joyero IA analizará la persona, la ocasión, el estilo y tu presupuesto para recomendarte la opción más adecuada.",
+    tabsLabel: "Modos del recomendador",
+    directTab: "Describe lo que buscas",
+    guidedTab: "Déjate guiar por el joyero IA",
+    directTitle: "Describe lo que buscas",
+    directHelp:
+      "Escribe como hablarías con un joyero: persona, ocasión, estilo, materiales y presupuesto si lo tienes claro.",
+    directLabel: "Tu búsqueda",
+    directPlaceholder:
+      "Ejemplo: Busco un collar para mi pareja por nuestro aniversario. Le gusta la plata, las piedras azules y los diseños elegantes, pero discretos. Mi presupuesto es de hasta 120 €.",
+    directTip: "Consejo: cuanto más concreto sea el contexto, más precisa será la recomendación.",
+    askButton: "Preguntar al joyero IA",
+    loadingButton: "Analizando...",
+    guidedSubmit: "Obtener recomendaciones del joyero IA",
+    directValidation:
+      "Describe brevemente la persona, ocasión o presupuesto para que el joyero IA pueda ayudarte.",
+    guidedValidation:
+      "Selecciona al menos una preferencia o añade algún detalle antes de pedir recomendaciones.",
+    invalidResponse: "La respuesta del joyero IA no tiene el formato esperado.",
+    connectionError: "No he podido conectar con el joyero IA. Inténtalo de nuevo.",
+    retryableError:
+      "El joyero IA está recibiendo muchas consultas. Espera unos segundos y vuelve a intentarlo.",
+    genericRequestError: "No he podido generar recomendaciones.",
+    forWhom: "¿Para quién es?",
+    jewelryType: "¿Qué tipo de joya buscas?",
+    occasion: "¿Cuál es la ocasión?",
+    style: "¿Qué estilo prefieres?",
+    styleHint: "Puedes elegir más de uno.",
+    material: "Material",
+    materialHint: "Puedes elegir más de uno o marcar sin preferencia.",
+    budget: "Presupuesto",
+    min: "Mínimo",
+    max: "Máximo",
+    details: "Detalles adicionales",
+    detailsPlaceholder:
+      "Puedes añadir algo más: colores favoritos, si tiene alergias, si prefiere joyas discretas, si ya tiene algo parecido...",
+    customBudget: "Presupuesto personalizado",
+    noPreference: "Sin preferencia",
+    summaryTitle: "Resumen para revisar",
+    summaryFallback: "El joyero IA preparará una recomendación con las preferencias seleccionadas.",
+    summarySearch: "Busco una joya",
+    summarySearchPrefix: "Busco",
+    summaryFor: "para",
+    summaryStyle: "de estilo",
+    summaryMaterials: "preferiblemente en",
+    summaryBudget: "con presupuesto",
+    listAnd: "y",
+    trustTitle: "Recomendación prudente",
+    trustFirst:
+      "El joyero IA propone tipos de joya personalizados. En esta fase no muestra productos concretos, tiendas, marcas, stock ni precios exactos.",
+    trustSecond:
+      "Los rangos son orientativos y conviene verificarlos antes de comprar según material, acabado y proveedor.",
+    statusLoading: "El joyero IA está analizando tus preferencias...",
+    retry: "Reintentar",
+    empty:
+      "No se han encontrado recomendaciones claras. Añade algún detalle más sobre estilo, ocasión o presupuesto y vuelve a intentarlo.",
+    resultsEyebrow: "Recomendaciones del joyero IA",
+    resultsTitle: "Tres ideas personalizadas",
+    resultsDisclaimer:
+      "Recomendación orientativa: representa un tipo de joya, no un producto concreto disponible en una tienda.",
+    recommendation: "Recomendación",
+    whyFits: "Por qué encaja",
+    recommendedMaterial: "Material recomendado",
+    indicativePrice: "Precio orientativo",
+    jewelerTip: "Consejo del joyero",
+    refinementTitle: "¿Quieres aclarar o cambiar algo?",
+    refinementHelp:
+      "El joyero IA recuerda tus preferencias. Puedes pedirle que descarte una opción, cambie el material, reduzca el presupuesto o busque algo más original.",
+    message: "Mensaje",
+    refinementPlaceholder:
+      "Ejemplo: No le gustan los collares muy cortos y prefiero una piedra más oscura.",
+    refining: "Refinando...",
+    sendRefinement: "Enviar aclaración",
+  },
+  "pt-BR": {
+    heroEyebrow: "Joalheiro pessoal com IA",
+    heroTitle: "Encontre a joia perfeita com inteligência artificial",
+    heroDescription:
+      "Conte o que procura ou deixe-se guiar passo a passo. Nosso joalheiro IA analisará a pessoa, a ocasião, o estilo e seu orçamento para recomendar uma opção adequada.",
+    tabsLabel: "Modos do recomendador",
+    directTab: "Descreva o que procura",
+    guidedTab: "Deixe o joalheiro IA guiar você",
+    directTitle: "Descreva o que procura",
+    directHelp:
+      "Escreva como falaria com um joalheiro: pessoa, ocasião, estilo, materiais e orçamento, se já tiver isso claro.",
+    directLabel: "Sua busca",
+    directPlaceholder:
+      "Exemplo: Procuro um colar para meu par pelo nosso aniversário de relacionamento. Ela gosta de prata, pedras azuis e designs elegantes, mas discretos. Meu orçamento é de até 120 €.",
+    directTip: "Dica: quanto mais concreto for o contexto, mais precisa será a recomendação.",
+    askButton: "Perguntar ao joalheiro IA",
+    loadingButton: "Analisando...",
+    guidedSubmit: "Obter recomendações do joalheiro IA",
+    directValidation:
+      "Descreva brevemente a pessoa, a ocasião ou o orçamento para que o joalheiro IA possa ajudar.",
+    guidedValidation:
+      "Selecione pelo menos uma preferência ou adicione algum detalhe antes de pedir recomendações.",
+    invalidResponse: "A resposta do joalheiro IA não tem o formato esperado.",
+    connectionError: "Não consegui conectar com o joalheiro IA. Tente novamente.",
+    retryableError:
+      "O joalheiro IA está recebendo muitas consultas. Aguarde alguns segundos e tente novamente.",
+    genericRequestError: "Não consegui gerar recomendações.",
+    forWhom: "Para quem é?",
+    jewelryType: "Que tipo de joia você procura?",
+    occasion: "Qual é a ocasião?",
+    style: "Que estilo você prefere?",
+    styleHint: "Você pode escolher mais de um.",
+    material: "Material",
+    materialHint: "Você pode escolher mais de um ou marcar sem preferência.",
+    budget: "Orçamento",
+    min: "Mínimo",
+    max: "Máximo",
+    details: "Detalhes adicionais",
+    detailsPlaceholder:
+      "Você pode adicionar algo mais: cores favoritas, alergias, preferência por joias discretas, se já tem algo parecido...",
+    customBudget: "Orçamento personalizado",
+    noPreference: "Sem preferência",
+    summaryTitle: "Resumo para revisar",
+    summaryFallback: "O joalheiro IA preparará uma recomendação com as preferências selecionadas.",
+    summarySearch: "Procuro uma joia",
+    summarySearchPrefix: "Procuro",
+    summaryFor: "para",
+    summaryStyle: "de estilo",
+    summaryMaterials: "preferencialmente em",
+    summaryBudget: "com orçamento",
+    listAnd: "e",
+    trustTitle: "Recomendação prudente",
+    trustFirst:
+      "O joalheiro IA propõe tipos de joia personalizados. Nesta fase, não mostra produtos concretos, lojas, marcas, estoque nem preços exatos.",
+    trustSecond:
+      "As faixas são orientativas e convém verificá-las antes de comprar conforme material, acabamento e fornecedor.",
+    statusLoading: "O joalheiro IA está analisando suas preferências...",
+    retry: "Tentar novamente",
+    empty:
+      "Não foram encontradas recomendações claras. Adicione mais algum detalhe sobre estilo, ocasião ou orçamento e tente novamente.",
+    resultsEyebrow: "Recomendações do joalheiro IA",
+    resultsTitle: "Três ideias personalizadas",
+    resultsDisclaimer:
+      "Recomendação orientativa: representa um tipo de joia, não um produto concreto disponível em uma loja.",
+    recommendation: "Recomendação",
+    whyFits: "Por que combina",
+    recommendedMaterial: "Material recomendado",
+    indicativePrice: "Preço orientativo",
+    jewelerTip: "Dica do joalheiro",
+    refinementTitle: "Quer esclarecer ou mudar algo?",
+    refinementHelp:
+      "O joalheiro IA lembra suas preferências. Você pode pedir para descartar uma opção, mudar o material, reduzir o orçamento ou buscar algo mais original.",
+    message: "Mensagem",
+    refinementPlaceholder:
+      "Exemplo: Ela não gosta de colares muito curtos e prefiro uma pedra mais escura.",
+    refining: "Refinando...",
+    sendRefinement: "Enviar esclarecimento",
+  },
+  en: {
+    heroEyebrow: "Personal AI jeweler",
+    heroTitle: "Find the perfect jewelry with artificial intelligence",
+    heroDescription:
+      "Tell us what you need or follow the guided flow. Our AI jeweler will analyze the person, occasion, style and budget to recommend a suitable option.",
+    tabsLabel: "Advisor modes",
+    directTab: "Describe what you need",
+    guidedTab: "Let the AI jeweler guide you",
+    directTitle: "Describe what you need",
+    directHelp:
+      "Write as you would to a jeweler: person, occasion, style, materials and budget if you already know them.",
+    directLabel: "Your search",
+    directPlaceholder:
+      "Example: I am looking for a necklace for my partner for our anniversary. She likes silver, blue stones and elegant but understated designs. My budget is up to €120.",
+    directTip: "Tip: the more specific the context, the more precise the recommendation.",
+    askButton: "Ask the AI jeweler",
+    loadingButton: "Analyzing...",
+    guidedSubmit: "Get AI jeweler recommendations",
+    directValidation:
+      "Briefly describe the person, occasion or budget so the AI jeweler can help.",
+    guidedValidation:
+      "Select at least one preference or add a detail before requesting recommendations.",
+    invalidResponse: "The AI jeweler response does not have the expected format.",
+    connectionError: "I could not connect to the AI jeweler. Please try again.",
+    retryableError:
+      "The AI jeweler is receiving many requests. Wait a few seconds and try again.",
+    genericRequestError: "I could not generate recommendations.",
+    forWhom: "Who is it for?",
+    jewelryType: "What type of jewelry are you looking for?",
+    occasion: "What is the occasion?",
+    style: "What style do you prefer?",
+    styleHint: "You can choose more than one.",
+    material: "Material",
+    materialHint: "You can choose more than one or select no preference.",
+    budget: "Budget",
+    min: "Minimum",
+    max: "Maximum",
+    details: "Additional details",
+    detailsPlaceholder:
+      "You can add more context: favorite colors, allergies, whether they prefer understated jewelry, whether they already own something similar...",
+    customBudget: "Custom budget",
+    noPreference: "No preference",
+    summaryTitle: "Review summary",
+    summaryFallback: "The AI jeweler will prepare a recommendation using the selected preferences.",
+    summarySearch: "I am looking for a jewelry piece",
+    summarySearchPrefix: "I am looking for",
+    summaryFor: "for",
+    summaryStyle: "in a",
+    summaryMaterials: "preferably in",
+    summaryBudget: "with a budget of",
+    listAnd: "and",
+    trustTitle: "Careful recommendation",
+    trustFirst:
+      "The AI jeweler suggests personalized jewelry types. At this stage it does not show specific products, stores, brands, stock or exact prices.",
+    trustSecond:
+      "Price ranges are indicative and should be checked before buying according to material, finish and supplier.",
+    statusLoading: "The AI jeweler is analyzing your preferences...",
+    retry: "Try again",
+    empty:
+      "No clear recommendations were found. Add another detail about style, occasion or budget and try again.",
+    resultsEyebrow: "AI jeweler recommendations",
+    resultsTitle: "Three personalized ideas",
+    resultsDisclaimer:
+      "Indicative recommendation: this represents a jewelry type, not a specific product available in a store.",
+    recommendation: "Recommendation",
+    whyFits: "Why it fits",
+    recommendedMaterial: "Recommended material",
+    indicativePrice: "Indicative price",
+    jewelerTip: "Jeweler tip",
+    refinementTitle: "Want to clarify or change something?",
+    refinementHelp:
+      "The AI jeweler remembers your preferences. You can ask it to discard an option, change the material, lower the budget or look for something more original.",
+    message: "Message",
+    refinementPlaceholder:
+      "Example: She does not like very short necklaces and I would prefer a darker stone.",
+    refining: "Refining...",
+    sendRefinement: "Send clarification",
+  },
+} satisfies Record<Locale, Record<string, string>>;
+
+type ChatCopy = (typeof chatCopy)[Locale];
+
+function getQuickExamples(locale: Locale) {
+  if (locale === "pt-BR") {
+    return [
+      {
+        label: "Presente de aniversário",
+        text: "Procuro uma joia para meu par pelo nosso aniversário de relacionamento. Ela gosta de designs elegantes, discretos e com algum detalhe especial. Meu orçamento aproximado é de 100 a 200 €.",
+      },
+      {
+        label: "Joia masculina",
+        text: "Quero uma joia masculina, sóbria e fácil de usar no dia a dia. Prefiro materiais resistentes e um estilo elegante sem ser chamativo.",
+      },
+      {
+        label: "Brincos elegantes",
+        text: "Procuro brincos elegantes para uma ocasião especial. Gostaria de algo luminoso, discreto e que combine bem com vestidos simples.",
+      },
+      {
+        label: "Pulseira minimalista",
+        text: "Quero uma pulseira minimalista para uso diário. Procuro algo fino, confortável e com aparência premium sem ficar formal demais.",
+      },
+      {
+        label: "Presente até 100 €",
+        text: "Preciso de uma ideia de joia para presentear por menos de 100 €. Quero que pareça cuidadosa, elegante e fácil de acertar, mesmo sem conhecer todos os gostos da pessoa.",
+      },
+    ];
+  }
+
+  if (locale === "en") {
+    return [
+      {
+        label: "Anniversary gift",
+        text: "I am looking for a piece of jewelry for my partner for our anniversary. She likes elegant, understated designs with a special detail. My approximate budget is €100 to €200.",
+      },
+      {
+        label: "Men's jewelry",
+        text: "I want a men's jewelry piece that is sober and easy to wear every day. I prefer durable materials and an elegant style that is not flashy.",
+      },
+      {
+        label: "Elegant earrings",
+        text: "I am looking for elegant earrings for a special occasion. I would like something luminous, understated and easy to pair with simple dresses.",
+      },
+      {
+        label: "Minimal bracelet",
+        text: "I want a minimal bracelet for everyday wear. I am looking for something slim, comfortable and premium-looking without feeling too formal.",
+      },
+      {
+        label: "Gift under €100",
+        text: "I need a jewelry gift idea under €100. I want it to feel thoughtful, elegant and easy to get right even though I do not know all their tastes.",
+      },
+    ];
+  }
+
+  return quickExamples;
+}
+
+function getRecipients(locale: Locale): Option[] {
+  if (locale === "pt-BR") {
+    return [
+      { label: "Mulher" },
+      { label: "Homem" },
+      { label: "Unissex" },
+      { label: "Para mim" },
+      { label: "Prefiro não indicar" },
+    ];
+  }
+
+  if (locale === "en") {
+    return [
+      { label: "Woman" },
+      { label: "Man" },
+      { label: "Unisex" },
+      { label: "For myself" },
+      { label: "Prefer not to say" },
+    ];
+  }
+
+  return recipients;
+}
+
+function getJewelryTypes(locale: Locale): VisualOption[] {
+  const labels =
+    locale === "pt-BR"
+      ? ["Anel", "Colar", "Pingente", "Pulseira", "Brincos", "Abotoaduras", "Relógio", "Não tenho certeza"]
+      : locale === "en"
+        ? ["Ring", "Necklace", "Pendant", "Bracelet", "Earrings", "Cufflinks", "Watch", "Not sure"]
+        : ["Anillo", "Collar", "Colgante", "Pulsera", "Pendientes", "Gemelos", "Reloj", "No estoy seguro"];
+  const values = ["anillo", "collar", "colgante", "pulsera", "pendientes", "gemelos", "reloj", "no estoy seguro"];
+  const icons: JewelryIconType[] = ["ring", "necklace", "pendant", "bracelet", "earrings", "cufflinks", "watch", "unsure"];
+
+  return values.map((value, index) => ({
+    value,
+    label: labels[index],
+    icon: <JewelryTypeIcon type={icons[index]} />,
+  }));
+}
+
+function getOccasions(locale: Locale): Option[] {
+  const labels =
+    locale === "pt-BR"
+      ? ["Aniversário de relacionamento", "Aniversário", "Noivado", "Casamento", "Dia dos Namorados", "Natal", "Presente espontâneo", "Uso pessoal", "Outra ocasião"]
+      : locale === "en"
+        ? ["Anniversary", "Birthday", "Engagement", "Wedding", "Valentine's Day", "Christmas", "Spontaneous gift", "Personal use", "Other occasion"]
+        : ["Aniversario", "Cumpleaños", "Compromiso", "Boda", "San Valentín", "Navidad", "Regalo espontáneo", "Para uso personal", "Otra ocasión"];
+
+  return occasions.map((option, index) => ({ ...option, label: labels[index] }));
+}
+
+function getStyles(locale: Locale): Option[] {
+  const labels =
+    locale === "pt-BR"
+      ? ["Minimalista", "Elegante", "Clássico", "Moderno", "Romântico", "Original", "Discreto", "Chamativo", "Vintage", "Luxo discreto"]
+      : locale === "en"
+        ? ["Minimal", "Elegant", "Classic", "Modern", "Romantic", "Original", "Understated", "Bold", "Vintage", "Quiet luxury"]
+        : ["Minimalista", "Elegante", "Clásico", "Moderno", "Romántico", "Original", "Discreto", "Llamativo", "Vintage", "Lujo discreto"];
+
+  return styles.map((option, index) => ({ ...option, label: labels[index] }));
+}
+
+function getMaterials(locale: Locale, noPreference: string): Option[] {
+  const labels =
+    locale === "pt-BR"
+      ? ["Ouro amarelo", "Ouro branco", "Ouro rosé", "Prata", "Aço", "Pedras naturais", "Pérolas", noPreference]
+      : locale === "en"
+        ? ["Yellow gold", "White gold", "Rose gold", "Silver", "Steel", "Natural gemstones", "Pearls", noPreference]
+        : ["Oro amarillo", "Oro blanco", "Oro rosa", "Plata", "Acero", "Piedras naturales", "Perlas", noPreference];
+  const swatchKeys = ["Oro amarillo", "Oro blanco", "Oro rosa", "Plata", "Acero", "Piedras naturales", "Perlas", "Sin preferencia"];
+
+  return labels.map((label, index) => ({ label, swatchKey: swatchKeys[index] }));
+}
+
+function getBudgetOptions(locale: Locale, customBudget: string): BudgetOption[] {
+  const firstLabel = locale === "pt-BR" ? "Menos de 50 €" : locale === "en" ? "Under €50" : "Menos de 50 €";
+  const overLabel = locale === "pt-BR" ? "Mais de 500 €" : locale === "en" ? "Over €500" : "Más de 500 €";
+
+  return [
+    { label: firstLabel, min: 0, max: 50 },
+    { label: "50-100 €", min: 50, max: 100 },
+    { label: "100-200 €", min: 100, max: 200 },
+    { label: "200-500 €", min: 200, max: 500 },
+    { label: overLabel, min: 500 },
+    { label: customBudget, custom: true },
+  ];
+}
+
+function getRefinementPrompts(locale: Locale) {
+  if (locale === "pt-BR") {
+    return ["Mais econômico", "Mais original", "Mais discreto", "Mudar material", "Evitar pedras", "Ver outras ideias"];
+  }
+
+  if (locale === "en") {
+    return ["More affordable", "More original", "More understated", "Change material", "Avoid stones", "See other ideas"];
+  }
+
+  return refinementPrompts;
+}
+
+export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
+  const copy = chatCopy[locale];
+  const localizedQuickExamples = getQuickExamples(locale);
+  const localizedRecipients = getRecipients(locale);
+  const localizedJewelryTypes = getJewelryTypes(locale);
+  const localizedOccasions = getOccasions(locale);
+  const localizedStyles = getStyles(locale);
+  const localizedMaterials = getMaterials(locale, copy.noPreference);
+  const localizedBudgetOptions = getBudgetOptions(locale, copy.customBudget);
+  const localizedRefinementPrompts = getRefinementPrompts(locale);
   const [mode, setMode] = useState<AdvisorMode>("direct");
   const [directDescription, setDirectDescription] = useState("");
   const [preferences, setPreferences] = useState<GuidedPreferences>(initialPreferences);
@@ -162,8 +567,8 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
 
   const isLoading = status === "loading" || status === "refining";
   const guidedSummary = useMemo(
-    () => buildGuidedSummary(preferences, selectedBudget),
-    [preferences, selectedBudget]
+    () => buildGuidedSummary(preferences, selectedBudget, copy, locale),
+    [preferences, selectedBudget, copy, locale]
   );
 
   function switchMode(nextMode: AdvisorMode) {
@@ -190,9 +595,9 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
       const selected = current[key] ?? [];
       const next = selected.includes(value)
         ? selected.filter((item) => item !== value)
-        : key === "materials" && value === "Sin preferencia"
-          ? ["Sin preferencia"]
-          : [...selected.filter((item) => item !== "Sin preferencia"), value];
+        : key === "materials" && value === copy.noPreference
+          ? [copy.noPreference]
+          : [...selected.filter((item) => item !== copy.noPreference), value];
 
       return { ...current, [key]: next };
     });
@@ -217,7 +622,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
       ...current,
       budgetMin: parseNumber(min),
       budgetMax: parseNumber(max),
-      budgetLabel: "Presupuesto personalizado",
+      budgetLabel: copy.customBudget,
     }));
   }
 
@@ -231,8 +636,8 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
     if (!request) {
       setError(
         mode === "direct"
-          ? "Describe brevemente la persona, ocasión o presupuesto para que el joyero IA pueda ayudarte."
-          : "Selecciona al menos una preferencia o añade algún detalle antes de pedir recomendaciones."
+          ? copy.directValidation
+          : copy.guidedValidation
       );
       setStatus("error");
       return;
@@ -254,11 +659,11 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
       };
 
       if (!response.ok) {
-        throw new Error(getAdvisorRequestErrorMessage(response.status, data));
+        throw new Error(getAdvisorRequestErrorMessage(response.status, data, copy));
       }
 
       if (!isAdvisorResponse(data)) {
-        throw new Error("La respuesta del joyero IA no tiene el formato esperado.");
+        throw new Error(copy.invalidResponse);
       }
 
       const nextConversation = refinement
@@ -274,7 +679,9 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
                 request.directDescription ||
                 buildGuidedSummary(
                   request.guidedPreferences,
-                  request.guidedPreferences?.budgetLabel
+                  request.guidedPreferences?.budgetLabel,
+                  copy,
+                  locale
                 ),
             },
             { role: "assistant" as const, content: data.followUpMessage },
@@ -291,7 +698,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
       setError(
         requestError instanceof Error
           ? requestError.message
-          : "No he podido conectar con el joyero IA. Inténtalo de nuevo."
+          : copy.connectionError
       );
       setStatus("error");
     }
@@ -352,17 +759,17 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
     >
       <div className="mx-auto max-w-4xl text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#9b722b]">
-          Joyero personal con IA
+          {copy.heroEyebrow}
         </p>
         <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-[-0.04em] text-[#17120b] sm:text-4xl lg:text-5xl">
-          Encuentra la joya perfecta con inteligencia artificial
+          {copy.heroTitle}
         </h2>
         <p className="mx-auto mt-4 max-w-3xl text-sm leading-7 text-[#63584c] sm:text-base">
-          Cuéntanos qué buscas o déjate guiar paso a paso. Nuestro joyero IA analizará la persona, la ocasión, el estilo y tu presupuesto para recomendarte la opción más adecuada.
+          {copy.heroDescription}
         </p>
       </div>
 
-      <AdvisorModeTabs mode={mode} onChange={switchMode} />
+      <AdvisorModeTabs mode={mode} copy={copy} onChange={switchMode} />
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.38fr)] lg:items-start">
         <div className="min-w-0 rounded-3xl border border-[#eadfca] bg-[#fffdf8] p-4 sm:p-5 lg:p-6">
@@ -370,6 +777,8 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
             <DirectAdvisorForm
               value={directDescription}
               isLoading={isLoading}
+              copy={copy}
+              examples={localizedQuickExamples}
               onChange={setDirectDescription}
               onExample={fillExample}
               onSubmit={(event) => {
@@ -384,6 +793,13 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
               customBudgetMin={customBudgetMin}
               customBudgetMax={customBudgetMax}
               isLoading={isLoading}
+              copy={copy}
+              recipients={localizedRecipients}
+              jewelryTypes={localizedJewelryTypes}
+              occasions={localizedOccasions}
+              styles={localizedStyles}
+              materials={localizedMaterials}
+              budgetOptions={localizedBudgetOptions}
               summary={guidedSummary}
               onSingleSelect={updateSinglePreference}
               onMultiSelect={toggleListPreference}
@@ -403,17 +819,18 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
           )}
         </div>
 
-        <TrustPanel />
+        <TrustPanel copy={copy} />
       </div>
 
       <StatusPanel
         status={status}
         error={error}
+        copy={copy}
         onRetry={() => void submitAdvisor()}
       />
 
       <div ref={resultsRef} className="scroll-mt-28">
-        <RecommendationResults response={advisorResponse} status={status} />
+        <RecommendationResults response={advisorResponse} status={status} copy={copy} />
       </div>
 
       {advisorResponse ? (
@@ -421,6 +838,8 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
           conversation={conversation}
           value={refinementInput}
           isLoading={isLoading}
+          copy={copy}
+          prompts={localizedRefinementPrompts}
           onChange={setRefinementInput}
           onSubmit={(event) => {
             event.preventDefault();
@@ -438,20 +857,22 @@ export default function JewelryChat({ locale = "es" }: { locale?: "es" | "pt-BR"
 
 function AdvisorModeTabs({
   mode,
+  copy,
   onChange,
 }: {
   mode: AdvisorMode;
+  copy: ChatCopy;
   onChange: (mode: AdvisorMode) => void;
 }) {
   const tabs: { mode: AdvisorMode; label: string }[] = [
-    { mode: "direct", label: "Describe lo que buscas" },
-    { mode: "guided", label: "Déjate guiar por el joyero IA" },
+    { mode: "direct", label: copy.directTab },
+    { mode: "guided", label: copy.guidedTab },
   ];
 
   return (
     <div
       role="tablist"
-      aria-label="Modos del recomendador"
+      aria-label={copy.tabsLabel}
       className="mx-auto mt-7 grid max-w-2xl gap-2 rounded-2xl border border-[#ead8b3] bg-[#fff9ed] p-2 sm:grid-cols-2"
     >
       {tabs.map((tab) => {
@@ -482,12 +903,16 @@ function AdvisorModeTabs({
 function DirectAdvisorForm({
   value,
   isLoading,
+  copy,
+  examples,
   onChange,
   onExample,
   onSubmit,
 }: {
   value: string;
   isLoading: boolean;
+  copy: ChatCopy;
+  examples: Array<{ label: string; text: string }>;
   onChange: (value: string) => void;
   onExample: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -495,30 +920,30 @@ function DirectAdvisorForm({
   return (
     <form onSubmit={onSubmit}>
       <h3 className="text-xl font-semibold tracking-[-0.03em] text-[#17120b]">
-        Describe lo que buscas
+        {copy.directTitle}
       </h3>
       <p className="mt-2 text-sm leading-6 text-[#6f6255]">
-        Escribe como hablarías con un joyero: persona, ocasión, estilo, materiales y presupuesto si lo tienes claro.
+        {copy.directHelp}
       </p>
 
       <label htmlFor="direct-description" className="mt-5 block text-sm font-semibold text-[#2b241f]">
-        Tu búsqueda
+        {copy.directLabel}
       </label>
       <textarea
         id="direct-description"
         value={value}
         maxLength={maxDescriptionLength}
         onChange={(event) => onChange(event.target.value)}
-        placeholder="Ejemplo: Busco un collar para mi pareja por nuestro aniversario. Le gusta la plata, las piedras azules y los diseños elegantes, pero discretos. Mi presupuesto es de hasta 120 €."
+        placeholder={copy.directPlaceholder}
         className="mt-2 min-h-44 w-full resize-y rounded-2xl border border-[#ead8b3] bg-white px-4 py-4 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25"
       />
       <div className="mt-2 flex flex-col gap-2 text-xs text-[#7c7064] sm:flex-row sm:items-center sm:justify-between">
-        <p>Consejo: cuanto más concreto sea el contexto, más precisa será la recomendación.</p>
+        <p>{copy.directTip}</p>
         <p aria-live="polite">{value.length}/{maxDescriptionLength}</p>
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
-        {quickExamples.map((example) => (
+        {examples.map((example) => (
           <button
             key={example.label}
             type="button"
@@ -535,7 +960,7 @@ function DirectAdvisorForm({
         disabled={isLoading || !value.trim()}
         className="mt-6 min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
-        {isLoading ? "Analizando..." : "Preguntar al joyero IA"}
+        {isLoading ? copy.loadingButton : copy.askButton}
       </button>
     </form>
   );
@@ -547,6 +972,13 @@ function GuidedAdvisorForm({
   customBudgetMin,
   customBudgetMax,
   isLoading,
+  copy,
+  recipients,
+  jewelryTypes,
+  occasions,
+  styles,
+  materials,
+  budgetOptions,
   summary,
   onSingleSelect,
   onMultiSelect,
@@ -560,6 +992,13 @@ function GuidedAdvisorForm({
   customBudgetMin: string;
   customBudgetMax: string;
   isLoading: boolean;
+  copy: ChatCopy;
+  recipients: Option[];
+  jewelryTypes: VisualOption[];
+  occasions: Option[];
+  styles: Option[];
+  materials: Option[];
+  budgetOptions: BudgetOption[];
   summary: string;
   onSingleSelect: (key: keyof GuidedPreferences, value: string) => void;
   onMultiSelect: (key: "styles" | "materials", value: string) => void;
@@ -570,7 +1009,7 @@ function GuidedAdvisorForm({
 }) {
   return (
     <form onSubmit={onSubmit} className="space-y-7">
-      <OptionGroup title="¿Para quién es?">
+      <OptionGroup title={copy.forWhom}>
         {recipients.map((option) => (
           <SelectableOption
             key={option.label}
@@ -581,7 +1020,7 @@ function GuidedAdvisorForm({
         ))}
       </OptionGroup>
 
-      <OptionGroup title="¿Qué tipo de joya buscas?" layout="jewelry-grid">
+      <OptionGroup title={copy.jewelryType} layout="jewelry-grid">
         {jewelryTypes.map((option) => (
           <VisualOptionCard
             key={option.value}
@@ -593,7 +1032,7 @@ function GuidedAdvisorForm({
         ))}
       </OptionGroup>
 
-      <OptionGroup title="¿Cuál es la ocasión?">
+      <OptionGroup title={copy.occasion}>
         {occasions.map((option) => (
           <SelectableOption
             key={option.label}
@@ -606,7 +1045,7 @@ function GuidedAdvisorForm({
         ))}
       </OptionGroup>
 
-      <OptionGroup title="¿Qué estilo prefieres?" hint="Puedes elegir más de uno.">
+      <OptionGroup title={copy.style} hint={copy.styleHint}>
         {styles.map((option) => (
           <SelectableOption
             key={option.label}
@@ -619,19 +1058,19 @@ function GuidedAdvisorForm({
         ))}
       </OptionGroup>
 
-      <OptionGroup title="Material" hint="Puedes elegir más de uno o marcar sin preferencia.">
+      <OptionGroup title={copy.material} hint={copy.materialHint}>
         {materials.map((option) => (
           <SelectableOption
             key={option.label}
             label={option.label}
-            icon={<MaterialSwatch material={option.label} />}
+            icon={<MaterialSwatch material={option.swatchKey ?? option.label} />}
             selected={preferences.materials?.includes(option.label) ?? false}
             onClick={() => onMultiSelect("materials", option.label)}
           />
         ))}
       </OptionGroup>
 
-      <OptionGroup title="Presupuesto">
+      <OptionGroup title={copy.budget}>
         {budgetOptions.map((option) => (
           <SelectableOption
             key={option.label}
@@ -642,10 +1081,10 @@ function GuidedAdvisorForm({
         ))}
       </OptionGroup>
 
-      {selectedBudget === "Presupuesto personalizado" ? (
+      {selectedBudget === copy.customBudget ? (
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="text-sm font-semibold text-[#2b241f]">
-            Mínimo
+            {copy.min}
             <input
               type="number"
               min="0"
@@ -657,7 +1096,7 @@ function GuidedAdvisorForm({
             />
           </label>
           <label className="text-sm font-semibold text-[#2b241f]">
-            Máximo
+            {copy.max}
             <input
               type="number"
               min="0"
@@ -672,24 +1111,24 @@ function GuidedAdvisorForm({
       ) : null}
 
       <label htmlFor="guided-details" className="block text-sm font-semibold text-[#2b241f]">
-        Detalles adicionales
+        {copy.details}
         <textarea
           id="guided-details"
           value={preferences.additionalDetails ?? ""}
           onChange={(event) => onDetails(event.target.value)}
-          placeholder="Puedes añadir algo más: colores favoritos, si tiene alergias, si prefiere joyas discretas, si ya tiene algo parecido..."
+          placeholder={copy.detailsPlaceholder}
           className="mt-2 min-h-28 w-full resize-y rounded-2xl border border-[#ead8b3] bg-white px-4 py-3 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25"
         />
       </label>
 
-      <PreferenceSummary summary={summary} />
+      <PreferenceSummary summary={summary} copy={copy} />
 
       <button
         type="submit"
         disabled={isLoading}
         className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
-        {isLoading ? "Analizando..." : "Obtener recomendaciones del joyero IA"}
+        {isLoading ? copy.loadingButton : copy.guidedSubmit}
       </button>
     </form>
   );
@@ -1140,30 +1579,26 @@ function SmallLineIcon({ children }: { children: React.ReactNode }) {
   );
 }
 
-function PreferenceSummary({ summary }: { summary: string }) {
+function PreferenceSummary({ summary, copy }: { summary: string; copy: ChatCopy }) {
   return (
     <div className="rounded-2xl border border-[#ead8b3] bg-white p-4">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9b722b]">
-        Resumen para revisar
+        {copy.summaryTitle}
       </p>
       <p className="mt-2 text-sm leading-6 text-[#554a40]">{summary}</p>
     </div>
   );
 }
 
-function TrustPanel() {
+function TrustPanel({ copy }: { copy: ChatCopy }) {
   return (
     <aside className="min-w-0 rounded-3xl border border-[#eadfca] bg-[#fbf7ef] p-5">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9b722b]">
-        Recomendación prudente
+        {copy.trustTitle}
       </p>
       <div className="mt-4 space-y-4 text-sm leading-6 text-[#625746]">
-        <p>
-          El joyero IA propone tipos de joya personalizados. En esta fase no muestra productos concretos, tiendas, marcas, stock ni precios exactos.
-        </p>
-        <p>
-          Los rangos son orientativos y conviene verificarlos antes de comprar según material, acabado y proveedor.
-        </p>
+        <p>{copy.trustFirst}</p>
+        <p>{copy.trustSecond}</p>
       </div>
     </aside>
   );
@@ -1172,16 +1607,18 @@ function TrustPanel() {
 function StatusPanel({
   status,
   error,
+  copy,
   onRetry,
 }: {
   status: RequestState;
   error: string;
+  copy: ChatCopy;
   onRetry: () => void;
 }) {
   if (status === "loading" || status === "refining") {
     return (
       <div className="mt-6 rounded-2xl border border-[#ead8b3] bg-[#fff9ed] px-4 py-3 text-sm font-semibold text-[#6b4b13]" role="status">
-        El joyero IA está analizando tus preferencias...
+        {copy.statusLoading}
       </div>
     );
   }
@@ -1195,7 +1632,7 @@ function StatusPanel({
           onClick={onRetry}
           className="mt-3 min-h-11 rounded-xl border border-[#c89a43] bg-white px-4 py-2 font-semibold text-[#7a540f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]"
         >
-          Reintentar
+          {copy.retry}
         </button>
       </div>
     );
@@ -1207,14 +1644,16 @@ function StatusPanel({
 function RecommendationResults({
   response,
   status,
+  copy,
 }: {
   response: AdvisorResponse | null;
   status: RequestState;
+  copy: ChatCopy;
 }) {
   if (status === "empty") {
     return (
       <div className="mt-7 rounded-3xl border border-[#ead8b3] bg-white p-5 text-sm leading-6 text-[#625746]">
-        No se han encontrado recomendaciones claras. Añade algún detalle más sobre estilo, ocasión o presupuesto y vuelve a intentarlo.
+        {copy.empty}
       </div>
     );
   }
@@ -1228,14 +1667,14 @@ function RecommendationResults({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9b722b]">
-            Recomendaciones del joyero IA
+            {copy.resultsEyebrow}
           </p>
           <h3 className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-[#17120b]">
-            Tres ideas personalizadas
+            {copy.resultsTitle}
           </h3>
         </div>
         <p className="max-w-xl rounded-2xl border border-[#ead8b3] bg-[#fff9ed] px-4 py-3 text-xs leading-5 text-[#6d6256]">
-          Recomendación orientativa: representa un tipo de joya, no un producto concreto disponible en una tienda.
+          {copy.resultsDisclaimer}
         </p>
       </div>
 
@@ -1247,6 +1686,7 @@ function RecommendationResults({
             key={recommendation.id}
             recommendation={recommendation}
             index={index}
+            copy={copy}
           />
         ))}
       </div>
@@ -1257,9 +1697,11 @@ function RecommendationResults({
 function RecommendationCard({
   recommendation,
   index,
+  copy,
 }: {
   recommendation: AdvisorRecommendation;
   index: number;
+  copy: ChatCopy;
 }) {
   const tags = [
     ...recommendation.styles,
@@ -1270,15 +1712,15 @@ function RecommendationCard({
   return (
     <article className="rounded-3xl border border-[#ead8b3] bg-white p-5 shadow-sm">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9b722b]">
-        Recomendación {index + 1}
+        {copy.recommendation} {index + 1}
       </p>
       <h4 className="mt-3 text-xl font-semibold leading-tight tracking-[-0.03em] text-[#17120b]">
         {recommendation.genericName}
       </h4>
-      <InfoBlock title="Por qué encaja" text={recommendation.reason} />
-      <InfoBlock title="Material recomendado" text={recommendation.recommendedMaterials.join(", ")} />
-      <InfoBlock title="Precio orientativo" text={recommendation.estimatedPriceRange} />
-      <InfoBlock title="Consejo del joyero" text={recommendation.jewelerTip} />
+      <InfoBlock title={copy.whyFits} text={recommendation.reason} />
+      <InfoBlock title={copy.recommendedMaterial} text={recommendation.recommendedMaterials.join(", ")} />
+      <InfoBlock title={copy.indicativePrice} text={recommendation.estimatedPriceRange} />
+      <InfoBlock title={copy.jewelerTip} text={recommendation.jewelerTip} />
       <div className="mt-4 flex flex-wrap gap-2">
         {tags.map((tag) => (
           <span key={tag} className="rounded-full bg-[#fff1d2] px-3 py-1 text-xs font-semibold text-[#68420c]">
@@ -1305,6 +1747,8 @@ function RefinementChat({
   conversation,
   value,
   isLoading,
+  copy,
+  prompts,
   onChange,
   onSubmit,
   onQuickPrompt,
@@ -1312,6 +1756,8 @@ function RefinementChat({
   conversation: ConversationMessage[];
   value: string;
   isLoading: boolean;
+  copy: ChatCopy;
+  prompts: string[];
   onChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onQuickPrompt: (value: string) => void;
@@ -1326,10 +1772,10 @@ function RefinementChat({
   return (
     <section className="mt-8 rounded-3xl border border-[#ead8b3] bg-[#fffdf8] p-4 sm:p-5">
       <h3 className="text-2xl font-semibold tracking-[-0.04em] text-[#17120b]">
-        ¿Quieres aclarar o cambiar algo?
+        {copy.refinementTitle}
       </h3>
       <p className="mt-2 max-w-3xl text-sm leading-6 text-[#625746]">
-        El joyero IA recuerda tus preferencias. Puedes pedirle que descarte una opción, cambie el material, reduzca el presupuesto o busque algo más original.
+        {copy.refinementHelp}
       </p>
 
       <div className="mt-4 max-h-72 space-y-3 overflow-y-auto rounded-2xl border border-[#eadfca] bg-white p-3">
@@ -1348,7 +1794,7 @@ function RefinementChat({
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {refinementPrompts.map((prompt) => (
+        {prompts.map((prompt) => (
           <button
             key={prompt}
             type="button"
@@ -1363,13 +1809,13 @@ function RefinementChat({
 
       <form onSubmit={onSubmit} className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
         <label htmlFor="refinement-message" className="flex-1 text-sm font-semibold text-[#2b241f]">
-          Mensaje
+          {copy.message}
           <textarea
             id="refinement-message"
             value={value}
             onKeyDown={handleKeyDown}
             onChange={(event) => onChange(event.target.value)}
-            placeholder="Ejemplo: No le gustan los collares muy cortos y prefiero una piedra más oscura."
+            placeholder={copy.refinementPlaceholder}
             className="mt-2 min-h-24 w-full resize-y rounded-2xl border border-[#ead8b3] bg-white px-4 py-3 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25"
           />
         </label>
@@ -1378,7 +1824,7 @@ function RefinementChat({
           disabled={isLoading || !value.trim()}
           className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
-          {isLoading ? "Refinando..." : "Enviar aclaración"}
+          {isLoading ? copy.refining : copy.sendRefinement}
         </button>
       </form>
     </section>
@@ -1387,27 +1833,40 @@ function RefinementChat({
 
 function buildGuidedSummary(
   preferences?: GuidedPreferences,
-  selectedBudget?: string
+  selectedBudget?: string,
+  copy: ChatCopy = chatCopy.es,
+  locale: Locale = "es"
 ) {
   if (!preferences) {
-    return "El joyero IA preparará una recomendación con las preferencias seleccionadas.";
+    return copy.summaryFallback;
   }
 
   const parts = [
-    preferences.jewelryType ? `Busco ${withArticle(preferences.jewelryType)}` : "Busco una joya",
-    preferences.recipient ? `para ${preferences.recipient.toLowerCase()}` : "",
-    preferences.occasion ? `para ${preferences.occasion.toLowerCase()}` : "",
-    preferences.styles?.length ? `de estilo ${joinList(preferences.styles)}` : "",
-    preferences.materials?.length ? `preferiblemente en ${joinList(preferences.materials)}` : "",
-    selectedBudget ? `con presupuesto ${selectedBudget.toLowerCase()}` : "",
+    preferences.jewelryType
+      ? `${copy.summarySearchPrefix} ${withArticle(preferences.jewelryType, locale)}`
+      : copy.summarySearch,
+    preferences.recipient ? `${copy.summaryFor} ${preferences.recipient.toLowerCase()}` : "",
+    preferences.occasion ? `${copy.summaryFor} ${preferences.occasion.toLowerCase()}` : "",
+    preferences.styles?.length ? `${copy.summaryStyle} ${joinList(preferences.styles, copy.listAnd)}${locale === "en" ? " style" : ""}` : "",
+    preferences.materials?.length ? `${copy.summaryMaterials} ${joinList(preferences.materials, copy.listAnd)}` : "",
+    selectedBudget ? `${copy.summaryBudget} ${selectedBudget.toLowerCase()}` : "",
   ].filter(Boolean);
 
   const details = preferences.additionalDetails?.trim();
   return `${parts.join(", ")}.${details ? ` ${details}` : ""}`;
 }
 
-function withArticle(value: string) {
+function withArticle(value: string, locale: Locale) {
   const lower = value.toLowerCase();
+  if (locale === "en") {
+    return lower;
+  }
+  if (locale === "pt-BR") {
+    if (lower === "anel" || lower === "colar" || lower === "pingente" || lower === "relógio") {
+      return `um ${lower}`;
+    }
+    return `uma ${lower}`;
+  }
   if (lower === "anillo" || lower === "collar" || lower === "colgante" || lower === "reloj") {
     return `un ${lower}`;
   }
@@ -1417,12 +1876,12 @@ function withArticle(value: string) {
   return `una ${lower}`;
 }
 
-function joinList(values: string[]) {
+function joinList(values: string[], conjunction: string) {
   if (values.length <= 1) {
     return values[0] ?? "";
   }
 
-  return `${values.slice(0, -1).join(", ")} y ${values[values.length - 1]}`;
+  return `${values.slice(0, -1).join(", ")} ${conjunction} ${values[values.length - 1]}`;
 }
 
 function parseNumber(value: string) {
@@ -1432,13 +1891,14 @@ function parseNumber(value: string) {
 
 function getAdvisorRequestErrorMessage(
   status: number,
-  data: AdvisorErrorResponse
+  data: AdvisorErrorResponse,
+  copy: ChatCopy
 ) {
   if (status === 503 && data.retryable) {
-    return "El joyero IA está recibiendo muchas consultas. Espera unos segundos y vuelve a intentarlo.";
+    return copy.retryableError;
   }
 
-  return data.message || data.error || "No he podido generar recomendaciones.";
+  return copy.genericRequestError;
 }
 
 function isAdvisorResponse(data: Partial<AdvisorResponse>): data is AdvisorResponse {

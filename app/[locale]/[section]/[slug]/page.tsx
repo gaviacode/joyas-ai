@@ -8,6 +8,7 @@ import {
   findLocalizedGuideCategory,
   getArticleParent,
   getGuideBreadcrumbItems,
+  getGuideCategoryLanguageLinks,
   getGuideCategoryMetadataAlternates,
   getLanguageLinks,
   getLocalizedPath,
@@ -120,11 +121,14 @@ export default async function LocalizedArticlePage({ params }: PageProps) {
   if (kind === "guias") {
     const category = findLocalizedGuideCategory(slug, locale);
     if (category) {
+      const esSlug = guideCategories.find((item) => getLocalizedGuideCategorySlug(item.slug, locale) === category.slug)?.slug ?? category.slug;
+
       return (
         <GuideCategoryPage
           category={category}
           guides={getLocalizedGuidesForCategory(category, locale)}
           locale={locale}
+          languageLinks={getGuideCategoryLanguageLinks(esSlug)}
         />
       );
     }

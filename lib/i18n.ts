@@ -569,20 +569,37 @@ const exactText: Record<LocalizedLocale, Record<string, string>> = {
     "Oro y metales": "Ouro e metais",
     "También te puede interesar": "Você também pode gostar",
     "Joyero IA": "Joalheiro IA",
-    "¿No sabes qué joya elegir?": "Nao sabe qual joia escolher?",
-    "Cuéntale a nuestro joyero IA para quién es la joya, la ocasión y tu presupuesto, y te ayudará a encontrar una opción adecuada.": "Conte ao nosso joalheiro IA para quem e a joia, a ocasiao e seu orcamento, e ele ajudara a encontrar uma opcao adequada.",
+    "¿No sabes qué joya elegir?": "Não sabe qual joia escolher?",
+    "Cuéntale a nuestro joyero IA para quién es la joya, la ocasión y tu presupuesto, y te ayudará a encontrar una opción adecuada.": "Conte ao nosso joalheiro IA para quem é a joia, a ocasião e seu orçamento, e ele ajudará a encontrar uma opção adequada.",
     "Preguntar al joyero IA": "Perguntar ao joalheiro IA",
     "Probar el joyero IA": "Testar o joalheiro IA",
-    "Cómo saber si una joya es de oro": "Como saber se uma joia e de ouro",
+    "Cómo saber si una joya es de oro": "Como saber se uma joia é de ouro",
     "Oro blanco": "Ouro branco",
-    "Oro rosa": "Ouro rose",
+    "Oro rosa": "Ouro rosé",
     "Platino en joyería": "Platina em joias",
     "Plata 925 o plata de ley": "Prata 925",
     "Cómo cuidar joyas sin dañarlas": "Como cuidar de joias",
-    "Tipos de anillos": "Tipos de aneis",
+    "Tipos de anillos": "Tipos de anéis",
     "Regalo sorpresa": "Presente surpresa",
     "Recomendador": "Recomendador",
     "Como funciona": "Como funciona",
+    "Sobre joyas.ai": "Sobre a joyas.ai",
+    "JOYAS": "JOIAS",
+    "OCASIONES": "OCASIÕES",
+    "GUIAS": "GUIAS",
+    "INFORMACION": "INFORMAÇÃO",
+    "Joyas para boda": "Joias para casamento",
+    "Aniversario": "Aniversário",
+    "San Valentin": "Dia dos Namorados",
+    "Dia de la madre": "Dia das Mães",
+    "Guias de joyeria": "Guias de joalheria",
+    "Talla de anillo": "Medida do anel",
+    "Oro 14k, 18k y 24k": "Ouro 14k, 18k e 24k",
+    "Plata 925": "Prata 925",
+    "Cuidado de joyas": "Cuidados com joias",
+    "Transparencia": "Transparência",
+    "Aviso legal": "Aviso legal",
+    "Privacidad": "Privacidade",
     "Guías de joyería": "Guias de joalheria",
     "Guías sobre": "Guias sobre",
     "Todas las categorías": "Todas as categorias",
@@ -614,6 +631,25 @@ const exactText: Record<LocalizedLocale, Record<string, string>> = {
     "Regalo sorpresa": "Surprise gift",
     "Recomendador": "Advisor",
     "Como funciona": "How it works",
+    "Sobre joyas.ai": "About joyas.ai",
+    "JOYAS": "JEWELRY",
+    "OCASIONES": "OCCASIONS",
+    "GUIAS": "GUIDES",
+    "INFORMACION": "INFORMATION",
+    "Joyas para boda": "Wedding jewelry",
+    "Aniversario": "Anniversary",
+    "Compromiso": "Engagement",
+    "Cumpleaños": "Birthday",
+    "San Valentin": "Valentine's Day",
+    "Dia de la madre": "Mother's Day",
+    "Guias de joyeria": "Jewelry guides",
+    "Talla de anillo": "Ring size",
+    "Oro 14k, 18k y 24k": "14k, 18k and 24k gold",
+    "Plata 925": "925 silver",
+    "Cuidado de joyas": "Jewelry care",
+    "Transparencia": "Transparency",
+    "Aviso legal": "Legal notice",
+    "Privacidad": "Privacy",
     "Guías de joyería": "Jewelry guides",
     "Guías sobre": "Guides to",
     "Todas las categorías": "All categories",
@@ -749,6 +785,24 @@ export function getGuideCategoryAlternates(esSlug: string) {
 
 export function getLanguageLinks(kind: ContentKind, esSlug: string) {
   const alternates = getArticleAlternates(kind, esSlug);
+  return locales.map((locale) => ({
+    locale,
+    href: alternates[locale],
+    label: localeLabels[locale],
+  }));
+}
+
+export function getIndexLanguageLinks(kind: ContentKind) {
+  const alternates = getIndexAlternates(kind);
+  return locales.map((locale) => ({
+    locale,
+    href: alternates[locale],
+    label: localeLabels[locale],
+  }));
+}
+
+export function getGuideCategoryLanguageLinks(esSlug: string) {
+  const alternates = getGuideCategoryAlternates(esSlug);
   return locales.map((locale) => ({
     locale,
     href: alternates[locale],

@@ -5,6 +5,7 @@ import Breadcrumbs from "@/components/Breadcrumbs";
 import SiteHeader from "@/components/SiteHeader";
 import {
   getLocalizedGuideCategories,
+  getIndexLanguageLinks,
   getLocalizedIndexPath,
   getLocalizedPath,
   getLocalizedSection,
@@ -82,7 +83,7 @@ export default async function LocalizedSectionPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
-      <SiteHeader locale={locale} />
+      <SiteHeader locale={locale} languageLinks={getIndexLanguageLinks(kind)} />
       <section className="mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:px-10">
         <Breadcrumbs
           homeLabel={localizeText("Inicio", locale)}

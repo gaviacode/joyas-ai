@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import type { LanguageLink } from "@/components/LanguageSwitcher";
 import SiteHeader from "@/components/SiteHeader";
 import { getLocalizedIndexPath, localizeText, type Locale } from "@/lib/i18n";
 import type { ArticleData, GuideCategory } from "@/lib/site-content";
@@ -8,16 +9,19 @@ type GuideCategoryPageProps = {
   category: GuideCategory;
   guides: ArticleData[];
   locale?: Locale;
+  languageLinks?: LanguageLink[];
 };
 
-export default function GuideCategoryPage({ category, guides, locale = "es" }: GuideCategoryPageProps) {
+export default function GuideCategoryPage({ category, guides, locale = "es", languageLinks }: GuideCategoryPageProps) {
   const guidesHref = getLocalizedIndexPath("guias", locale);
 
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
-      <SiteHeader locale={locale} />
+      <SiteHeader locale={locale} languageLinks={languageLinks} />
       <section className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14 lg:px-10">
         <Breadcrumbs
+          homeLabel={localizeText("Inicio", locale)}
+          homeHref={locale === "es" ? "/" : locale === "pt-BR" ? "/pt-br" : "/en"}
           items={[
             { href: guidesHref, label: localizeText("Guías", locale) },
             { href: category.href, label: category.title },

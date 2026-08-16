@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import SiteHeader from "@/components/SiteHeader";
-import { getIndexMetadataAlternates, openGraphLocales } from "@/lib/i18n";
+import { getIndexLanguageLinks, getIndexMetadataAlternates, openGraphLocales } from "@/lib/i18n";
 import { jewelryCategories } from "@/lib/site-content";
 
 export const metadata: Metadata = {
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 export default function JewelryIndexPage() {
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
-      <SiteHeader />
+      <SiteHeader languageLinks={getIndexLanguageLinks("joyas")} />
       <section className="mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:px-10">
         <Breadcrumbs items={[{ href: "/joyas", label: "Joyas" }]} />
         <h1 className="mt-8 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
