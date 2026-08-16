@@ -89,7 +89,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Página de contacto de joyas.ai.",
       eyebrow: "Contacto",
       intro: "Puedes contactar con joyas.ai para consultas, colaboraciones o información sobre el proyecto.",
-      sections: [{ title: "Email", paragraphs: ["Email de contacto: contacto@joyas.ai"] }],
+      sections: [{ title: "Email", paragraphs: ["Email de contacto: gaviacode@gmail.com"] }],
     },
     "aviso-legal": {
       kind: "aviso-legal",
@@ -99,7 +99,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       intro: "Esta página reúne información legal básica del proyecto joyas.ai.",
       sections: [
         { title: "Datos del titular pendientes", paragraphs: ["Antes de promocionar la web de forma definitiva conviene completar nombre o razón social, NIF/CIF si procede, domicilio o dirección de contacto legal y cualquier dato exigible según la normativa aplicable."] },
-        { title: "Contacto operativo", paragraphs: ["Email de contacto: contacto@joyas.ai"] },
+        { title: "Contacto operativo", paragraphs: ["Email de contacto: gaviacode@gmail.com"] },
         { title: "Uso del sitio", paragraphs: ["El contenido de joyas.ai tiene carácter informativo y no sustituye la revisión de datos concretos antes de comprar una joya."] },
       ],
     },
@@ -110,7 +110,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       eyebrow: "Privacidad",
       intro: "Esta política explica de forma básica qué datos podrían tratarse al usar joyas.ai.",
       sections: [
-        { title: "Responsable pendiente de completar", paragraphs: ["La información identificativa completa del responsable debe añadirse antes de promocionar joyas.ai de forma definitiva. Email operativo: contacto@joyas.ai."] },
+        { title: "Responsable pendiente de completar", paragraphs: ["La información identificativa completa del responsable debe añadirse antes de promocionar joyas.ai de forma definitiva. Email operativo: gaviacode@gmail.com."] },
         { title: "Datos del chat", paragraphs: ["El chat puede tratar la información que introduces voluntariamente para generar recomendaciones. No conviene introducir datos especialmente sensibles, información financiera, documentos de identidad ni datos personales innecesarios para elegir una joya."] },
         { title: "Analítica con consentimiento", paragraphs: ["Google Analytics solo se carga si existe configuración de Analytics y si aceptas las cookies analíticas. Puedes retirar o cambiar el consentimiento desde la configuración de cookies."] },
       ],
@@ -195,7 +195,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Página de contato da joyas.ai.",
       eyebrow: "Contato",
       intro: "Você pode entrar em contato com a joyas.ai para consultas, colaborações ou informações sobre o projeto.",
-      sections: [{ title: "Email", paragraphs: ["Email de contato: contacto@joyas.ai"] }],
+      sections: [{ title: "Email", paragraphs: ["Email de contato: gaviacode@gmail.com"] }],
     },
     "aviso-legal": {
       kind: "aviso-legal",
@@ -205,7 +205,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       intro: "Esta página reúne informação legal básica do projeto joyas.ai.",
       sections: [
         { title: "Dados do titular pendentes", paragraphs: ["Antes de promover o site de forma definitiva, convém completar nome ou razão social, identificação fiscal se aplicável, endereço ou contato legal e qualquer dado exigido pela norma aplicável."] },
-        { title: "Contato operacional", paragraphs: ["Email de contato: contacto@joyas.ai"] },
+        { title: "Contato operacional", paragraphs: ["Email de contato: gaviacode@gmail.com"] },
         { title: "Uso do site", paragraphs: ["O conteúdo da joyas.ai tem caráter informativo e não substitui a revisão de dados concretos antes de comprar uma joia."] },
       ],
     },
@@ -216,7 +216,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       eyebrow: "Privacidade",
       intro: "Esta política explica de forma básica quais dados podem ser tratados ao usar a joyas.ai.",
       sections: [
-        { title: "Responsável pendente de completar", paragraphs: ["A identificação completa do responsável deve ser adicionada antes de promover a joyas.ai de forma definitiva. Email operacional: contacto@joyas.ai."] },
+        { title: "Responsável pendente de completar", paragraphs: ["A identificação completa do responsável deve ser adicionada antes de promover a joyas.ai de forma definitiva. Email operacional: gaviacode@gmail.com."] },
         { title: "Dados do chat", paragraphs: ["O chat pode tratar as informações que você fornece voluntariamente para gerar recomendações. Não convém inserir dados especialmente sensíveis, informação financeira, documentos de identidade nem dados pessoais desnecessários para escolher uma joia."] },
         { title: "Analytics com consentimento", paragraphs: ["O Google Analytics só é carregado se houver configuração de Analytics e se você aceitar cookies analíticos. Você pode retirar ou alterar o consentimento na configuração de cookies."] },
       ],
@@ -301,7 +301,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Contact page for joyas.ai.",
       eyebrow: "Contact",
       intro: "You can contact joyas.ai for questions, collaborations or information about the project.",
-      sections: [{ title: "Email", paragraphs: ["Contact email: contacto@joyas.ai"] }],
+      sections: [{ title: "Email", paragraphs: ["Contact email: gaviacode@gmail.com"] }],
     },
     "aviso-legal": {
       kind: "aviso-legal",
@@ -311,7 +311,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       intro: "This page gathers basic legal information about the joyas.ai project.",
       sections: [
         { title: "Owner details pending", paragraphs: ["Before seriously promoting the site, add the legal name or company name, tax ID if applicable, legal address or contact address and any details required by applicable rules."] },
-        { title: "Operational contact", paragraphs: ["Contact email: contacto@joyas.ai"] },
+        { title: "Operational contact", paragraphs: ["Contact email: gaviacode@gmail.com"] },
         { title: "Site use", paragraphs: ["The content on joyas.ai is informational and does not replace checking concrete details before buying jewelry."] },
       ],
     },
@@ -322,7 +322,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       eyebrow: "Privacy",
       intro: "This policy explains in basic terms what data may be processed when using joyas.ai.",
       sections: [
-        { title: "Controller details pending", paragraphs: ["The full identity of the controller should be added before joyas.ai is promoted seriously. Operational email: contacto@joyas.ai."] },
+        { title: "Controller details pending", paragraphs: ["The full identity of the controller should be added before joyas.ai is promoted seriously. Operational email: gaviacode@gmail.com."] },
         { title: "Chat data", paragraphs: ["The chat may process the information you voluntarily provide to generate recommendations. Do not enter especially sensitive data, financial information, identity documents or personal data that is unnecessary for choosing jewelry."] },
         { title: "Analytics with consent", paragraphs: ["Google Analytics only loads if Analytics is configured and you accept analytics cookies. You can withdraw or change consent from cookie settings."] },
       ],

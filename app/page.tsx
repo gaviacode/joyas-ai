@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
 import SiteHeader from "@/components/SiteHeader";
 import JewelryChat from "@/components/JewelryChat";
 import { getHomeMetadataAlternates, openGraphLocales } from "@/lib/i18n";
+import { absoluteUrl, PUBLIC_CONTACT_EMAIL, SITE_NAME } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Encuentra la joya perfecta con IA | joyas.ai",
@@ -60,6 +62,11 @@ const guideLinks = [
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
+      <Script
+        id="home-website-organization-structured-data"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildHomeStructuredData()) }}
+      />
       <SiteHeader />
 
       <section className="mx-auto grid max-w-7xl gap-10 px-5 pb-10 pt-8 sm:px-8 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:px-10 lg:pb-14 lg:pt-10">
@@ -161,6 +168,28 @@ export default function Home() {
       </section>
     </main>
   );
+}
+
+function buildHomeStructuredData() {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": `${absoluteUrl("/")}#website`,
+        name: SITE_NAME,
+        alternateName: "joyas.ai - Recomendador de joyas con IA",
+        url: absoluteUrl("/"),
+      },
+      {
+        "@type": "Organization",
+        "@id": `${absoluteUrl("/")}#organization`,
+        name: SITE_NAME,
+        url: absoluteUrl("/"),
+        email: PUBLIC_CONTACT_EMAIL,
+      },
+    ],
+  };
 }
 
 function HeroJewelry() {

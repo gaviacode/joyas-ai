@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { EDITORIAL_REVIEW_DATE, getOpenGraphImagePath } from "@/lib/editorial";
 import {
   findArticle,
   findGuideCategoryForArticle,
@@ -916,6 +917,7 @@ export function getGuideCategoryMetadataAlternates(esSlug: string, locale: Local
 
 export function buildArticleMetadata(article: ArticleData, kind: ContentKind, locale: Locale): Metadata {
   const alternates = getMetadataAlternates(kind, article.originalSlug ?? article.slug, locale);
+  const ogImage = getOpenGraphImagePath(locale);
 
   return {
     title: `${article.title} | joyas.ai`,
@@ -929,11 +931,14 @@ export function buildArticleMetadata(article: ArticleData, kind: ContentKind, lo
       locale: openGraphLocales[locale],
       alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),
       type: "article",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: `${article.title} | joyas.ai` }],
+      modifiedTime: EDITORIAL_REVIEW_DATE,
     },
     twitter: {
       card: "summary_large_image",
       title: `${article.title} | joyas.ai`,
       description: article.description,
+      images: [ogImage],
     },
   };
 }

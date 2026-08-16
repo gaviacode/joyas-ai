@@ -4,7 +4,9 @@ import AiAdvisorCta from "@/components/AiAdvisorCta";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import type { LanguageLink } from "@/components/LanguageSwitcher";
 import SiteHeader from "@/components/SiteHeader";
+import { EDITORIAL_REVIEW_DATE, editorialDetails, getOpenGraphImagePath } from "@/lib/editorial";
 import type { ArticleData, LinkItem, RichParagraph } from "@/lib/site-content";
+import { absoluteUrl, PUBLIC_CONTACT_EMAIL, SITE_NAME } from "@/lib/site-config";
 import { localizeText } from "@/lib/i18n";
 
 type StructuredDataFaq = {
@@ -31,23 +33,30 @@ type ArticlePageProps = {
 export default function ArticlePage({ article, parent, breadcrumbItems, languageLinks, structuredData }: ArticlePageProps) {
   const relatedLinks = article.related.filter((link) => link.href !== "/#joyero-ia");
   const locale = article.locale ?? "es";
-  const jsonLd = structuredData ? buildStructuredData(structuredData) : undefined;
+  const breadcrumbs = breadcrumbItems ?? [parent, { href: `${parent.href}/${article.slug}`, label: article.title }];
+  const canonicalPath = structuredData?.canonicalPath ?? breadcrumbs[breadcrumbs.length - 1]?.href ?? `${parent.href}/${article.slug}`;
+  const jsonLd = buildStructuredData({
+    id: structuredData?.id ?? `${locale === "pt-BR" ? "pt-br" : locale}-${article.originalSlug ?? article.slug}-structured-data`,
+    canonicalPath,
+    breadcrumbs: structuredData?.breadcrumbs ?? breadcrumbs,
+    faqs: structuredData?.faqs,
+    faqTitle: structuredData?.faqTitle,
+  }, article);
+  const editorial = editorialDetails[locale];
 
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
-      {jsonLd ? (
-        <Script
-          id={structuredData?.id}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      ) : null}
+      <Script
+        id={jsonLd.id}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd.data) }}
+      />
       <SiteHeader languageLinks={languageLinks} locale={locale} />
       <article className="mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-14 lg:px-10">
         <Breadcrumbs
           homeLabel={localizeText("Inicio", locale)}
           homeHref={locale === "es" ? "/" : locale === "pt-BR" ? "/pt-br" : "/en"}
-          items={breadcrumbItems ?? [parent, { href: `${parent.href}/${article.slug}`, label: article.title }]}
+          items={breadcrumbs}
         />
 
         <header className="mt-8 max-w-3xl">
@@ -58,6 +67,14 @@ export default function ArticlePage({ article, parent, breadcrumbItems, language
             {article.title}
           </h1>
           <p className="mt-6 text-lg leading-8 text-[#63584c]">{article.intro}</p>
+          <div className="mt-6 rounded-2xl border border-[#ead8b3] bg-white/75 p-5 text-sm leading-7 text-[#625746] shadow-sm">
+            <p className="font-semibold text-[#17120b]">{editorial.reviewedBy}</p>
+            <p className="mt-1 text-[#7c7064]">{editorial.reviewDateLabel}</p>
+            <p className="mt-3">
+              <span className="font-semibold text-[#17120b]">{editorial.methodologyLabel}: </span>
+              {editorial.methodology}
+            </p>
+          </div>
         </header>
 
         <div className="mt-10 grid gap-5">
@@ -206,8 +223,9 @@ export default function ArticlePage({ article, parent, breadcrumbItems, language
   );
 }
 
-function buildStructuredData(data: ArticleStructuredData) {
-  const pageUrl = `https://joyas.ai${data.canonicalPath}`;
+function buildStructuredData(data: ArticleStructuredData, article: ArticleData) {
+  const locale = article.locale ?? "es";
+  const pageUrl = absoluteUrl(data.canonicalPath);
   const graph: object[] = [
     {
       "@type": "BreadcrumbList",
@@ -215,13 +233,31 @@ function buildStructuredData(data: ArticleStructuredData) {
         "@type": "ListItem",
         position: index + 1,
         name: item.label,
-        item: `https://joyas.ai${item.href}`,
+        item: absoluteUrl(item.href),
       })),
     },
     {
       "@type": "Article",
-      mainEntityOfPage: pageUrl,
-      headline: data.breadcrumbs[data.breadcrumbs.length - 1]?.label,
+      mainEntityOfPage: {
+        "@type": "WebPage",
+        "@id": pageUrl,
+      },
+      headline: article.title,
+      description: article.description,
+      image: [absoluteUrl(getOpenGraphImagePath(locale))],
+      dateModified: EDITORIAL_REVIEW_DATE,
+      inLanguage: locale === "es" ? "es-ES" : locale,
+      author: {
+        "@type": "Organization",
+        name: editorialDetails[locale].authorName,
+        url: absoluteUrl(editorialDetails[locale].aboutPath),
+      },
+      publisher: {
+        "@type": "Organization",
+        name: SITE_NAME,
+        url: absoluteUrl("/"),
+        email: PUBLIC_CONTACT_EMAIL,
+      },
     },
   ];
 
@@ -240,8 +276,11 @@ function buildStructuredData(data: ArticleStructuredData) {
   }
 
   return {
-    "@context": "https://schema.org",
-    "@graph": graph,
+    id: data.id,
+    data: {
+      "@context": "https://schema.org",
+      "@graph": graph,
+    },
   };
 }
 
