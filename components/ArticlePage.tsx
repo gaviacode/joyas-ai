@@ -67,14 +67,6 @@ export default function ArticlePage({ article, parent, breadcrumbItems, language
             {article.title}
           </h1>
           <p className="mt-6 text-lg leading-8 text-[#63584c]">{article.intro}</p>
-          <div className="mt-6 rounded-2xl border border-[#ead8b3] bg-white/75 p-5 text-sm leading-7 text-[#625746] shadow-sm">
-            <p className="font-semibold text-[#17120b]">{editorial.reviewedBy}</p>
-            <p className="mt-1 text-[#7c7064]">{editorial.reviewDateLabel}</p>
-            <p className="mt-3">
-              <span className="font-semibold text-[#17120b]">{editorial.methodologyLabel}: </span>
-              {editorial.methodology}
-            </p>
-          </div>
         </header>
 
         <div className="mt-10 grid gap-5">
@@ -218,8 +210,25 @@ export default function ArticlePage({ article, parent, breadcrumbItems, language
             </div>
           </section>
         ) : null}
+
+        <EditorialNote editorial={editorial} />
       </article>
     </main>
+  );
+}
+
+function EditorialNote({ editorial }: { editorial: (typeof editorialDetails)[keyof typeof editorialDetails] }) {
+  return (
+    <aside className="mt-8 rounded-2xl border border-[#ead8b3]/80 bg-white/55 px-4 py-4 text-sm leading-6 text-[#625746] sm:px-5">
+      <h2 className="text-base font-semibold tracking-[-0.01em] text-[#3a3129]">{editorial.title}</h2>
+      <p className="mt-2 text-[#6f6256]">
+        {editorial.reviewedBy} <span aria-hidden="true">·</span> {editorial.reviewDateLabel}
+      </p>
+      <p className="mt-2">
+        <span className="font-semibold text-[#3a3129]">{editorial.methodologyLabel}: </span>
+        {editorial.methodology}
+      </p>
+    </aside>
   );
 }
 

@@ -6,6 +6,7 @@ export const editorialDetails: Record<
   Locale,
   {
     authorName: string;
+    title: string;
     reviewedBy: string;
     reviewDateLabel: string;
     methodologyLabel: string;
@@ -15,6 +16,7 @@ export const editorialDetails: Record<
 > = {
   es: {
     authorName: "Equipo editorial de joyas.ai",
+    title: "Sobre este contenido",
     reviewedBy: "Revisado por el equipo editorial de joyas.ai",
     reviewDateLabel: "Ultima revision: 17 de agosto de 2026",
     methodologyLabel: "Metodologia",
@@ -24,6 +26,7 @@ export const editorialDetails: Record<
   },
   "pt-BR": {
     authorName: "Equipe editorial da joyas.ai",
+    title: "Sobre este conteúdo",
     reviewedBy: "Revisado pela equipe editorial da joyas.ai",
     reviewDateLabel: "Ultima revisao: 17 de agosto de 2026",
     methodologyLabel: "Metodologia",
@@ -33,6 +36,7 @@ export const editorialDetails: Record<
   },
   en: {
     authorName: "joyas.ai editorial team",
+    title: "About this content",
     reviewedBy: "Reviewed by the joyas.ai editorial team",
     reviewDateLabel: "Last reviewed: August 17, 2026",
     methodologyLabel: "Methodology",
