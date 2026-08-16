@@ -48,11 +48,17 @@ const MAX_PRIMARY_ATTEMPTS = 3;
 const GEMINI_TIMEOUT_MS = 18_000;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 20;
+const RATE_LIMIT_UNKNOWN_CLIENT_MAX_REQUESTS = 200;
 const RATE_LIMIT_CLEANUP_INTERVAL_MS = 10 * 60 * 1000;
 
 type RateLimitEntry = {
   count: number;
   resetAt: number;
+};
+
+type ClientIdentity = {
+  key: string;
+  limit: number;
 };
 
 // Best-effort per-instance limiter. If Railway scales horizontally, replace this
@@ -91,7 +97,7 @@ type ParsedAdvisorResponse = Omit<AdvisorResponse, "recommendations"> & {
 
 export async function POST(request: Request) {
   try {
-    const rateLimitResult = checkRateLimit(getClientIp(request));
+    const rateLimitResult = checkRateLimit(getClientIdentity(request));
     if (!rateLimitResult.allowed) {
       return NextResponse.json(
         {
@@ -164,13 +170,11 @@ export async function POST(request: Request) {
     }
 
     const statusCode = getGeminiStatusCode(error);
-    const diagnostic = getGeminiErrorDiagnostic(error);
-
     console.error("Gemini advisor internal error", stringifyLogPayload({
       statusCode,
       retryable: statusCode ? RETRYABLE_GEMINI_STATUS_CODES.has(statusCode) : false,
+      errorName: error instanceof Error ? error.name : typeof error,
     }));
-    console.error("Gemini advisor raw error", stringifyLogPayload(diagnostic));
 
     return NextResponse.json(
       {
@@ -332,81 +336,11 @@ function getGeminiStatusCode(error: unknown) {
   return undefined;
 }
 
-function getGeminiErrorDiagnostic(error: unknown) {
-  const err = error as {
-    status?: unknown;
-    statusCode?: unknown;
-    code?: unknown;
-    response?: unknown;
-    errorDetails?: unknown;
-    cause?: unknown;
-  };
-
-  return {
-    name: error instanceof Error ? error.name : undefined,
-    message: error instanceof Error ? error.message : String(error),
-    stack: error instanceof Error ? error.stack : undefined,
-    cause: error instanceof Error ? error.cause : err?.cause,
-    status: isRecord(error) ? err.status : undefined,
-    statusCode: isRecord(error) ? err.statusCode : undefined,
-    code: isRecord(error) ? err.code : undefined,
-    response: isRecord(error) ? safeSerializeForLog(err.response) : undefined,
-    errorDetails: isRecord(error) ? safeSerializeForLog(err.errorDetails) : undefined,
-    error: safeSerializeForLog(error),
-  };
-}
-
-function safeSerializeForLog(value: unknown, depth = 0): unknown {
-  if (value === null || value === undefined) {
-    return value;
-  }
-
-  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-    return value;
-  }
-
-  if (typeof value === "bigint") {
-    return value.toString();
-  }
-
-  if (value instanceof Error) {
-    return {
-      name: value.name,
-      message: value.message,
-      stack: value.stack,
-      cause: safeSerializeForLog(value.cause, depth + 1),
-    };
-  }
-
-  if (depth >= 2) {
-    return "[Max log depth reached]";
-  }
-
-  if (Array.isArray(value)) {
-    return value.slice(0, 20).map((item) => safeSerializeForLog(item, depth + 1));
-  }
-
-  if (!isRecord(value)) {
-    return String(value);
-  }
-
-  return Object.fromEntries(
-    Object.entries(value)
-      .filter(([key]) => !isSensitiveLogKey(key))
-      .slice(0, 40)
-      .map(([key, item]) => [key, safeSerializeForLog(item, depth + 1)])
-  );
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object";
 }
 
-function isSensitiveLogKey(key: string) {
-  return /api[-_]?key|authorization|x-goog-api-key|cookie|token|secret|password/i.test(key);
-}
-
-function getClientIp(request: Request) {
+function getClientIdentity(request: Request): ClientIdentity {
   const headers = request.headers;
   const forwardedFor = headers.get("x-forwarded-for");
   const forwardedIp = forwardedFor
@@ -414,28 +348,36 @@ function getClientIp(request: Request) {
     .map((value) => value.trim())
     .find(Boolean);
 
-  return (
+  const ip = (
     headers.get("cf-connecting-ip")?.trim() ||
     headers.get("x-real-ip")?.trim() ||
-    forwardedIp ||
-    "unknown"
+    forwardedIp
   );
+
+  if (ip) {
+    return { key: `ip:${ip}`, limit: RATE_LIMIT_MAX_REQUESTS };
+  }
+
+  return {
+    key: "missing-proxy-ip",
+    limit: RATE_LIMIT_UNKNOWN_CLIENT_MAX_REQUESTS,
+  };
 }
 
-function checkRateLimit(clientIp: string) {
+function checkRateLimit(identity: ClientIdentity) {
   const now = Date.now();
   cleanupRateLimitStore(now);
 
-  const current = rateLimitStore.get(clientIp);
+  const current = rateLimitStore.get(identity.key);
   if (!current || current.resetAt <= now) {
-    rateLimitStore.set(clientIp, {
+    rateLimitStore.set(identity.key, {
       count: 1,
       resetAt: now + RATE_LIMIT_WINDOW_MS,
     });
     return { allowed: true as const };
   }
 
-  if (current.count >= RATE_LIMIT_MAX_REQUESTS) {
+  if (current.count >= identity.limit) {
     return {
       allowed: false as const,
       retryAfterSeconds: Math.max(1, Math.ceil((current.resetAt - now) / 1000)),

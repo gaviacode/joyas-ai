@@ -7,7 +7,15 @@ export const size = {
 
 export const contentType = "image/png";
 
-export default function OpenGraphImage() {
+export default function OpenGraphImage({ params }: { params?: { locale?: string } }) {
+  const locale = params?.locale;
+  const tagline =
+    locale === "en"
+      ? "Your AI jeweler for better choices"
+      : locale === "pt-br"
+        ? "Seu joalheiro IA para escolher melhor"
+        : "Tu joyero IA para elegir mejor";
+
   return new ImageResponse(
     (
       <div
@@ -35,7 +43,7 @@ export default function OpenGraphImage() {
             color: "#2b241f",
           }}
         >
-          Tu joyero IA para elegir mejor
+          {tagline}
         </div>
         <div
           style={{

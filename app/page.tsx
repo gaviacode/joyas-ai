@@ -16,6 +16,7 @@ export const metadata: Metadata = {
       "Joyero IA para elegir collares, pulseras, pendientes o anillos según ocasión, presupuesto y estilo de la persona.",
     url: "/",
     siteName: "joyas.ai",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "joyas.ai - Tu joyero IA" }],
     locale: openGraphLocales.es,
     alternateLocale: [openGraphLocales["pt-BR"], openGraphLocales.en],
     type: "website",
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
     title: "Encuentra la joya perfecta con IA | joyas.ai",
     description:
       "Joyero IA para elegir collares, pulseras, pendientes o anillos según ocasión, presupuesto y estilo de la persona.",
+    images: ["/opengraph-image"],
   },
 };
 

@@ -97,7 +97,11 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Información legal básica de joyas.ai.",
       eyebrow: "Legal",
       intro: "Esta página reúne información legal básica del proyecto joyas.ai.",
-      sections: [{ title: "Uso del sitio", paragraphs: ["El contenido de joyas.ai tiene carácter informativo y no sustituye la revisión de datos concretos antes de comprar una joya."] }],
+      sections: [
+        { title: "Datos del titular pendientes", paragraphs: ["Antes de promocionar la web de forma definitiva conviene completar nombre o razón social, NIF/CIF si procede, domicilio o dirección de contacto legal y cualquier dato exigible según la normativa aplicable."] },
+        { title: "Contacto operativo", paragraphs: ["Email de contacto: contacto@joyas.ai"] },
+        { title: "Uso del sitio", paragraphs: ["El contenido de joyas.ai tiene carácter informativo y no sustituye la revisión de datos concretos antes de comprar una joya."] },
+      ],
     },
     "politica-privacidad": {
       kind: "politica-privacidad",
@@ -105,7 +109,11 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Política de privacidad básica de joyas.ai.",
       eyebrow: "Privacidad",
       intro: "Esta política explica de forma básica qué datos podrían tratarse al usar joyas.ai.",
-      sections: [{ title: "Datos del chat", paragraphs: ["No conviene introducir datos especialmente sensibles, información financiera, documentos de identidad ni datos personales innecesarios para elegir una joya."] }],
+      sections: [
+        { title: "Responsable pendiente de completar", paragraphs: ["La información identificativa completa del responsable debe añadirse antes de promocionar joyas.ai de forma definitiva. Email operativo: contacto@joyas.ai."] },
+        { title: "Datos del chat", paragraphs: ["El chat puede tratar la información que introduces voluntariamente para generar recomendaciones. No conviene introducir datos especialmente sensibles, información financiera, documentos de identidad ni datos personales innecesarios para elegir una joya."] },
+        { title: "Analítica con consentimiento", paragraphs: ["Google Analytics solo se carga si existe configuración de Analytics y si aceptas las cookies analíticas. Puedes retirar o cambiar el consentimiento desde la configuración de cookies."] },
+      ],
     },
     cookies: {
       kind: "cookies",
@@ -187,7 +195,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Página de contato da joyas.ai.",
       eyebrow: "Contato",
       intro: "Você pode entrar em contato com a joyas.ai para consultas, colaborações ou informações sobre o projeto.",
-      sections: [{ title: "Email", paragraphs: ["Email de contato: contato@joyas.ai"] }],
+      sections: [{ title: "Email", paragraphs: ["Email de contato: contacto@joyas.ai"] }],
     },
     "aviso-legal": {
       kind: "aviso-legal",
@@ -195,7 +203,11 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Informação legal básica da joyas.ai.",
       eyebrow: "Legal",
       intro: "Esta página reúne informação legal básica do projeto joyas.ai.",
-      sections: [{ title: "Uso do site", paragraphs: ["O conteúdo da joyas.ai tem caráter informativo e não substitui a revisão de dados concretos antes de comprar uma joia."] }],
+      sections: [
+        { title: "Dados do titular pendentes", paragraphs: ["Antes de promover o site de forma definitiva, convém completar nome ou razão social, identificação fiscal se aplicável, endereço ou contato legal e qualquer dado exigido pela norma aplicável."] },
+        { title: "Contato operacional", paragraphs: ["Email de contato: contacto@joyas.ai"] },
+        { title: "Uso do site", paragraphs: ["O conteúdo da joyas.ai tem caráter informativo e não substitui a revisão de dados concretos antes de comprar uma joia."] },
+      ],
     },
     "politica-privacidad": {
       kind: "politica-privacidad",
@@ -203,7 +215,11 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Política de privacidade básica da joyas.ai.",
       eyebrow: "Privacidade",
       intro: "Esta política explica de forma básica quais dados podem ser tratados ao usar a joyas.ai.",
-      sections: [{ title: "Dados do chat", paragraphs: ["Não convém inserir dados especialmente sensíveis, informação financeira, documentos de identidade nem dados pessoais desnecessários para escolher uma joia."] }],
+      sections: [
+        { title: "Responsável pendente de completar", paragraphs: ["A identificação completa do responsável deve ser adicionada antes de promover a joyas.ai de forma definitiva. Email operacional: contacto@joyas.ai."] },
+        { title: "Dados do chat", paragraphs: ["O chat pode tratar as informações que você fornece voluntariamente para gerar recomendações. Não convém inserir dados especialmente sensíveis, informação financeira, documentos de identidade nem dados pessoais desnecessários para escolher uma joia."] },
+        { title: "Analytics com consentimento", paragraphs: ["O Google Analytics só é carregado se houver configuração de Analytics e se você aceitar cookies analíticos. Você pode retirar ou alterar o consentimento na configuração de cookies."] },
+      ],
     },
     cookies: {
       kind: "cookies",
@@ -285,7 +301,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Contact page for joyas.ai.",
       eyebrow: "Contact",
       intro: "You can contact joyas.ai for questions, collaborations or information about the project.",
-      sections: [{ title: "Email", paragraphs: ["Contact email: contact@joyas.ai"] }],
+      sections: [{ title: "Email", paragraphs: ["Contact email: contacto@joyas.ai"] }],
     },
     "aviso-legal": {
       kind: "aviso-legal",
@@ -293,7 +309,11 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Basic legal information for joyas.ai.",
       eyebrow: "Legal",
       intro: "This page gathers basic legal information about the joyas.ai project.",
-      sections: [{ title: "Site use", paragraphs: ["The content on joyas.ai is informational and does not replace checking concrete details before buying jewelry."] }],
+      sections: [
+        { title: "Owner details pending", paragraphs: ["Before seriously promoting the site, add the legal name or company name, tax ID if applicable, legal address or contact address and any details required by applicable rules."] },
+        { title: "Operational contact", paragraphs: ["Contact email: contacto@joyas.ai"] },
+        { title: "Site use", paragraphs: ["The content on joyas.ai is informational and does not replace checking concrete details before buying jewelry."] },
+      ],
     },
     "politica-privacidad": {
       kind: "politica-privacidad",
@@ -301,7 +321,11 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Basic privacy policy for joyas.ai.",
       eyebrow: "Privacy",
       intro: "This policy explains in basic terms what data may be processed when using joyas.ai.",
-      sections: [{ title: "Chat data", paragraphs: ["Do not enter especially sensitive data, financial information, identity documents or personal data that is unnecessary for choosing jewelry."] }],
+      sections: [
+        { title: "Controller details pending", paragraphs: ["The full identity of the controller should be added before joyas.ai is promoted seriously. Operational email: contacto@joyas.ai."] },
+        { title: "Chat data", paragraphs: ["The chat may process the information you voluntarily provide to generate recommendations. Do not enter especially sensitive data, financial information, identity documents or personal data that is unnecessary for choosing jewelry."] },
+        { title: "Analytics with consent", paragraphs: ["Google Analytics only loads if Analytics is configured and you accept analytics cookies. You can withdraw or change consent from cookie settings."] },
+      ],
     },
     cookies: {
       kind: "cookies",

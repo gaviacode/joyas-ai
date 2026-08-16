@@ -29,6 +29,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     locale === "pt-BR"
         ? "Joalheiro IA para escolher anéis, colares, pulseiras ou brincos conforme ocasião, orçamento e estilo da pessoa."
         : "AI jewelry advisor for choosing rings, necklaces, bracelets or earrings by occasion, budget and personal style.";
+  const ogImage = locale === "pt-BR" ? "/pt-br/opengraph-image" : "/en/opengraph-image";
+  const ogAlt = locale === "pt-BR" ? "joyas.ai - Seu joalheiro IA" : "joyas.ai - Your AI jeweler";
 
   return {
     title,
@@ -39,6 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       url: getLocaleHomePath(locale),
       siteName: "joyas.ai",
+      images: [{ url: ogImage, width: 1200, height: 630, alt: ogAlt }],
       locale: openGraphLocales[locale],
       alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),
       type: "website",
@@ -47,6 +50,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: "summary_large_image",
       title,
       description,
+      images: [ogImage],
     },
   };
 }
@@ -195,7 +199,7 @@ function getHomeCopy(locale: LocalizedLocale) {
       occasionsEyebrow: "Ocasiões",
       occasionsTitle: "Escolha conforme o momento",
       occasions: [
-        { href: "/pt-br/ocasioes/aniversario", label: "Aniversário" },
+        { href: "/pt-br/ocasioes/aniversario", label: "Aniversário de relacionamento" },
         { href: "/pt-br/ocasioes/noivado", label: "Noivado" },
         { href: "/pt-br/ocasioes/casamento", label: "Casamento" },
         { href: "/pt-br/ocasioes/aniversario-presente", label: "Aniversário" },

@@ -144,6 +144,8 @@ const chatCopy = {
     connectionError: "No he podido conectar con el joyero IA. Inténtalo de nuevo.",
     retryableError:
       "El joyero IA está recibiendo muchas consultas. Espera unos segundos y vuelve a intentarlo.",
+    rateLimitedError:
+      "Has realizado demasiadas consultas. Inténtalo de nuevo en unos minutos.",
     genericRequestError: "No he podido generar recomendaciones.",
     forWhom: "¿Para quién es?",
     jewelryType: "¿Qué tipo de joya buscas?",
@@ -222,6 +224,8 @@ const chatCopy = {
     connectionError: "Não consegui conectar com o joalheiro IA. Tente novamente.",
     retryableError:
       "O joalheiro IA está recebendo muitas consultas. Aguarde alguns segundos e tente novamente.",
+    rateLimitedError:
+      "Você fez consultas demais. Tente novamente em alguns minutos.",
     genericRequestError: "Não consegui gerar recomendações.",
     forWhom: "Para quem é?",
     jewelryType: "Que tipo de joia você procura?",
@@ -300,6 +304,8 @@ const chatCopy = {
     connectionError: "I could not connect to the AI jeweler. Please try again.",
     retryableError:
       "The AI jeweler is receiving many requests. Wait a few seconds and try again.",
+    rateLimitedError:
+      "You have made too many requests. Please try again in a few minutes.",
     genericRequestError: "I could not generate recommendations.",
     forWhom: "Who is it for?",
     jewelryType: "What type of jewelry are you looking for?",
@@ -1865,6 +1871,10 @@ function getAdvisorRequestErrorMessage(
 ) {
   if (status === 503 && data.retryable) {
     return copy.retryableError;
+  }
+
+  if (status === 429) {
+    return copy.rateLimitedError;
   }
 
   return copy.genericRequestError;
