@@ -15,6 +15,23 @@ export const metadata: Metadata = {
   title: "joyas.ai | Recomendador de joyas con IA",
   description:
     "Asistente de inteligencia artificial para elegir joyas según ocasión, presupuesto, estilo y destinatario.",
+  openGraph: {
+    title: "joyas.ai | Recomendador de joyas con IA",
+    description:
+      "Asistente de inteligencia artificial para elegir joyas según ocasión, presupuesto, estilo y destinatario.",
+    url: "/",
+    siteName: "joyas.ai",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "joyas.ai - Tu joyero IA" }],
+    locale: "es_ES",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "joyas.ai | Recomendador de joyas con IA",
+    description:
+      "Asistente de inteligencia artificial para elegir joyas según ocasión, presupuesto, estilo y destinatario.",
+    images: ["/opengraph-image"],
+  },
 };
 
 export default async function RootLayout({

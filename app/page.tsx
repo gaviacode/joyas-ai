@@ -8,12 +8,12 @@ import { getHomeMetadataAlternates, openGraphLocales } from "@/lib/i18n";
 export const metadata: Metadata = {
   title: "Encuentra la joya perfecta con IA | joyas.ai",
   description:
-    "Joyero IA para elegir collares, pulseras, pendientes o anillos segun ocasion, presupuesto y estilo de la persona.",
+    "Joyero IA para elegir collares, pulseras, pendientes o anillos según ocasión, presupuesto y estilo de la persona.",
   alternates: getHomeMetadataAlternates("es"),
   openGraph: {
     title: "Encuentra la joya perfecta con IA | joyas.ai",
     description:
-      "Joyero IA para elegir collares, pulseras, pendientes o anillos segun ocasion, presupuesto y estilo de la persona.",
+      "Joyero IA para elegir collares, pulseras, pendientes o anillos según ocasión, presupuesto y estilo de la persona.",
     url: "/",
     siteName: "joyas.ai",
     locale: openGraphLocales.es,
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Encuentra la joya perfecta con IA | joyas.ai",
     description:
-      "Joyero IA para elegir collares, pulseras, pendientes o anillos segun ocasion, presupuesto y estilo de la persona.",
+      "Joyero IA para elegir collares, pulseras, pendientes o anillos según ocasión, presupuesto y estilo de la persona.",
   },
 };
 
@@ -32,20 +32,20 @@ const categories = [
   { href: "/joyas/anillos", title: "Anillos", text: "Uso diario, regalo, compromiso, alianzas y talla.", image: "/images/categories/categoria-anillos.png" },
   { href: "/joyas/collares", title: "Collares", text: "Longitud, colgantes, escotes y materiales.", image: "/images/categories/categoria-collares.png" },
   { href: "/joyas/pulseras", title: "Pulseras", text: "Cierres, talla, grabados y comodidad.", image: "/images/categories/categoria-pulseras.png" },
-  { href: "/joyas/pendientes", title: "Pendientes", text: "Tamaño, cierre, peso, estilo y ocasion.", image: "/images/categories/categoria-pendientes.png" },
+  { href: "/joyas/pendientes", title: "Pendientes", text: "Tamaño, cierre, peso, estilo y ocasión.", image: "/images/categories/categoria-pendientes.png" },
   { href: "/joyas/boda", title: "Joyas para boda", text: "Alianzas, novia, novio, madrina e invitadas.", image: "/images/categories/categoria-joyas-boda.png" },
   { href: "/joyas/regalos", title: "Regalos", text: "Ideas para acertar sin conocerlo todo.", image: "/images/categories/categoria-regalos-especiales.png" },
 ];
 
 const occasions = [
-  { href: "/ocasiones/aniversario", label: "Aniversario" },
-  { href: "/ocasiones/compromiso", label: "Compromiso" },
-  { href: "/ocasiones/boda", label: "Boda" },
-  { href: "/ocasiones/cumpleanos", label: "Cumpleaños" },
-  { href: "/ocasiones/san-valentin", label: "San Valentin" },
-  { href: "/ocasiones/dia-de-la-madre", label: "Dia de la madre" },
-  { href: "/ocasiones/graduacion", label: "Graduacion" },
-  { href: "/ocasiones/regalo-sorpresa", label: "Regalo sorpresa" },
+  { href: "/ocasiónes/aniversario", label: "Aniversario" },
+  { href: "/ocasiónes/compromiso", label: "Compromiso" },
+  { href: "/ocasiónes/boda", label: "Boda" },
+  { href: "/ocasiónes/cumpleanos", label: "Cumpleaños" },
+  { href: "/ocasiónes/san-valentin", label: "San Valentín" },
+  { href: "/ocasiónes/dia-de-la-madre", label: "Día de la madre" },
+  { href: "/ocasiónes/Graduación", label: "Graduación" },
+  { href: "/ocasiónes/regalo-sorpresa", label: "Regalo sorpresa" },
 ];
 
 const guideLinks = [
@@ -69,7 +69,7 @@ export default function Home() {
             Encuentra la joya perfecta con IA
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-[#63584c]">
-            Habla con un joyero experto con inteligencia artificial y descubre anillos, collares, pulseras o pendientes segun la ocasion, tu presupuesto y el estilo de la persona.
+            Habla con un joyero experto con inteligencia artificial y descubre anillos, collares, pulseras o pendientes según la ocasión, tu presupuesto y el estilo de la persona.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link href="/#joyero-ia" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#b97a05] to-[#d7a63c] px-7 py-4 font-semibold text-white shadow-lg shadow-[#b97a05]/20 transition hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
@@ -81,8 +81,8 @@ export default function Home() {
           </div>
           <div className="mt-9 grid gap-3 sm:grid-cols-3">
             <InfoChip title="Recomendaciones honestas" text="Ideas claras, sin inventar productos ni valoraciones falsas." />
-            <InfoChip title="Pensado para regalar" text="Segun ocasion, estilo, presupuesto y persona." />
-            <InfoChip title="Orientacion rapida" text="Dinos que buscas y el joyero IA te ayuda a ordenar opciones." />
+            <InfoChip title="Pensado para regalar" text="según ocasión, estilo, presupuesto y persona." />
+            <InfoChip title="Orientación rápida" text="Dinos qué buscas y el joyero IA te ayuda a ordenar opciones." />
           </div>
         </div>
         <HeroJewelry />
@@ -96,10 +96,10 @@ export default function Home() {
 
       <section className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:px-10">
         <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">Categorias</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">Categorías</p>
           <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em]">Explora por tipo de joya</h2>
           <p className="mt-4 text-lg leading-8 text-[#63584c]">
-            Cada guia explica estilos, materiales, momentos de uso y errores frecuentes para elegir con mas criterio.
+            Cada guía explica estilos, materiales, momentos de uso y errores frecuentes para elegir con más criterio.
           </p>
         </div>
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -112,8 +112,8 @@ export default function Home() {
       <section className="bg-white/55 px-5 py-14 sm:px-8 lg:px-10">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">Ocasiones</p>
-            <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em]">Elige segun el momento</h2>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">ocasiónes</p>
+            <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em]">Elige según el momento</h2>
           </div>
           <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {occasions.map((occasion) => (
@@ -127,9 +127,9 @@ export default function Home() {
 
       <section className="mx-auto grid max-w-7xl gap-6 px-5 py-14 sm:px-8 lg:grid-cols-[1fr_1fr] lg:px-10">
         <article className="rounded-3xl border border-[#ead8b3] bg-white p-6 shadow-sm sm:p-8">
-          <h2 className="text-3xl font-semibold tracking-[-0.04em]">Guias para comprar mejor</h2>
+          <h2 className="text-3xl font-semibold tracking-[-0.04em]">Guías para comprar mejor</h2>
           <p className="mt-4 leading-8 text-[#625746]">
-            Aprende lo esencial sobre materiales, tallas, cuidados y piedras antes de tomar una decision.
+            Aprende lo esencial sobre materiales, tallas, cuidados y piedras antes de tomar una decisión.
           </p>
           <div className="mt-6 grid gap-3">
             {guideLinks.map((guide) => (
@@ -139,17 +139,17 @@ export default function Home() {
             ))}
           </div>
           <Link href="/guias" className="mt-6 inline-flex rounded-xl bg-[#17120b] px-5 py-3 font-semibold text-white transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
-            Ver todas las guias
+            Ver todas las guías
           </Link>
         </article>
 
         <article className="rounded-3xl border border-[#ead8b3] bg-white p-6 shadow-sm sm:p-8">
           <h2 className="text-3xl font-semibold tracking-[-0.04em]">Preguntas frecuentes</h2>
           <p className="mt-4 leading-8 text-[#625746]">
-            Respuestas claras sobre el recomendador, afiliacion, tallas, oro, plata y limites de una recomendacion.
+            Respuestas claras sobre el recomendador, afiliación, tallas, oro, plata y límites de una recomendación.
           </p>
           <div className="mt-6 grid gap-3">
-            {["joyas.ai vende joyas directamente?", "Como sabe la IA que joya recomendarme?", "Que significa plata 925?"].map((question) => (
+            {["joyas.ai vende joyas directamente?", "Cómo sabe la IA que joya recomendarme?", "Qué significa plata 925?"].map((question) => (
               <Link key={question} href="/preguntas-frecuentes" className="rounded-2xl border border-[#ead8b3] bg-[#fffdf8] p-4 font-semibold text-[#2b241f] transition hover:bg-[#fff5df] hover:text-[#9a6b08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
                 {question}
               </Link>
@@ -189,7 +189,7 @@ function CategoryCard({ href, title, text, image }: { href: string; title: strin
       <div className="p-6">
         <h3 className="text-2xl font-semibold tracking-[-0.03em]">{title}</h3>
         <p className="mt-2 leading-7 text-[#7c7064]">{text}</p>
-        <span className="mt-5 inline-flex font-semibold text-[#9a6b08]">Ver guia</span>
+        <span className="mt-5 inline-flex font-semibold text-[#9a6b08]">Ver guía</span>
       </div>
     </Link>
   );

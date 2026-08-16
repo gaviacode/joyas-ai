@@ -6,15 +6,15 @@ import { getIndexLanguageLinks, getIndexMetadataAlternates, openGraphLocales } f
 import { occasions } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: "Joyas por ocasion | joyas.ai",
+  title: "Joyas por ocasión | joyas.ai",
   description:
-    "Guias para elegir joyas en aniversarios, compromiso, boda, cumpleaños, San Valentin, Dia de la madre y graduacion.",
+    "Guías para elegir joyas en aniversarios, compromiso, boda, cumpleaños, San Valentín, Día de la madre y graduación.",
   alternates: getIndexMetadataAlternates("ocasiones", "es"),
   openGraph: {
-    title: "Joyas por ocasion | joyas.ai",
+    title: "Joyas por ocasión | joyas.ai",
     description:
-      "Guias para elegir joyas en aniversarios, compromiso, boda, cumpleaños, San Valentin, Dia de la madre y graduacion.",
-    url: "/ocasiones",
+      "Guías para elegir joyas en aniversarios, compromiso, boda, cumpleaños, San Valentín, Día de la madre y graduación.",
+    url: "/ocasiónes",
     siteName: "joyas.ai",
     locale: openGraphLocales.es,
     alternateLocale: [openGraphLocales["pt-BR"], openGraphLocales.en],
@@ -22,9 +22,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Joyas por ocasion | joyas.ai",
+    title: "Joyas por ocasión | joyas.ai",
     description:
-      "Guias para elegir joyas en aniversarios, compromiso, boda, cumpleaños, San Valentin, Dia de la madre y graduacion.",
+      "Guías para elegir joyas en aniversarios, compromiso, boda, cumpleaños, San Valentín, Día de la madre y graduación.",
   },
 };
 
@@ -33,18 +33,18 @@ export default function OccasionsIndexPage() {
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
       <SiteHeader languageLinks={getIndexLanguageLinks("ocasiones")} />
       <section className="mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:px-10">
-        <Breadcrumbs items={[{ href: "/ocasiones", label: "Ocasiones" }]} />
+        <Breadcrumbs items={[{ href: "/ocasiónes", label: "ocasiónes" }]} />
         <h1 className="mt-8 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
-          Joyas por ocasion
+          Joyas por ocasión
         </h1>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-[#63584c]">
-          Cada ocasion pide una lectura distinta: simbolismo, comodidad, presupuesto y relacion con la persona.
+          Cada ocasión pide una lectura distinta: simbolismo, comodidad, presupuesto y relación con la persona.
         </p>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {occasions.map((item) => (
             <Link
               key={item.slug}
-              href={`/ocasiones/${item.slug}`}
+              href={`/ocasiónes/${item.slug}`}
               className="rounded-3xl border border-[#ead8b3] bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-[#805400]/10"
             >
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#9b7b3a]">

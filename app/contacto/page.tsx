@@ -1,26 +1,19 @@
 import type { Metadata } from "next";
-import InfoPage from "@/components/InfoPage";
+import LocalizedInfoPage from "@/components/LocalizedInfoPage";
+import { getInfoLanguageLinks, getInfoMetadataAlternates, getLocalizedInfoPath, openGraphLocales } from "@/lib/i18n";
+import { getInfoPage } from "@/lib/info-pages";
+
+const kind = "contacto";
+const page = getInfoPage(kind, "es");
 
 export const metadata: Metadata = {
-  title: "Contacto | joyas.ai",
-  description: "Página de contacto de joyas.ai.",
+  title: `${page.title} | joyas.ai`,
+  description: page.description,
+  alternates: getInfoMetadataAlternates(kind, "es"),
+  openGraph: { title: `${page.title} | joyas.ai`, description: page.description, url: getLocalizedInfoPath(kind, "es"), siteName: "joyas.ai", locale: openGraphLocales.es, alternateLocale: [openGraphLocales["pt-BR"], openGraphLocales.en], type: "website" },
+  twitter: { card: "summary_large_image", title: `${page.title} | joyas.ai`, description: page.description },
 };
 
 export default function ContactPage() {
-  return (
-    <InfoPage
-      eyebrow="Contacto"
-      title="Contacto"
-      intro="Puedes contactar con joyas.ai para consultas, colaboraciones o información sobre el proyecto."
-      sections={[
-        {
-          title: "Email",
-          paragraphs: [
-            "Email de contacto: contacto@joyas.ai",
-            "Por ahora no hay formulario funcional en la web. Si se añade uno más adelante, se indicará claramente cómo se tratan los datos enviados.",
-          ],
-        },
-      ]}
-    />
-  );
+  return <LocalizedInfoPage page={page} locale="es" href={getLocalizedInfoPath(kind, "es")} languageLinks={getInfoLanguageLinks(kind)} />;
 }

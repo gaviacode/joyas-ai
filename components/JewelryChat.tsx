@@ -78,17 +78,6 @@ const recipients: Option[] = [
   { label: "Prefiero no indicarlo" },
 ];
 
-const jewelryTypes: VisualOption[] = [
-  { value: "anillo", label: "Anillo", icon: <JewelryTypeIcon type="ring" /> },
-  { value: "collar", label: "Collar", icon: <JewelryTypeIcon type="necklace" /> },
-  { value: "colgante", label: "Colgante", icon: <JewelryTypeIcon type="pendant" /> },
-  { value: "pulsera", label: "Pulsera", icon: <JewelryTypeIcon type="bracelet" /> },
-  { value: "pendientes", label: "Pendientes", icon: <JewelryTypeIcon type="earrings" /> },
-  { value: "gemelos", label: "Gemelos", icon: <JewelryTypeIcon type="cufflinks" /> },
-  { value: "reloj", label: "Reloj", icon: <JewelryTypeIcon type="watch" /> },
-  { value: "no estoy seguro", label: "No estoy seguro", icon: <JewelryTypeIcon type="unsure" /> },
-];
-
 const occasions: Option[] = [
   { label: "Aniversario", icon: <OccasionIcon type="anniversary" />, accentClassName: "text-[#a87314]" },
   { label: "Cumpleaños", icon: <OccasionIcon type="birthday" />, accentClassName: "text-[#b96b55]" },
@@ -112,26 +101,6 @@ const styles: Option[] = [
   { label: "Llamativo", icon: <StyleIcon type="bold" />, accentClassName: "text-[#9a641e]" },
   { label: "Vintage", icon: <StyleIcon type="vintage" />, accentClassName: "text-[#836035]" },
   { label: "Lujo discreto", icon: <StyleIcon type="quietLuxury" />, accentClassName: "text-[#9a722b]" },
-];
-
-const materials: Option[] = [
-  { label: "Oro amarillo" },
-  { label: "Oro blanco" },
-  { label: "Oro rosa" },
-  { label: "Plata" },
-  { label: "Acero" },
-  { label: "Piedras naturales" },
-  { label: "Perlas" },
-  { label: "Sin preferencia" },
-];
-
-const budgetOptions: BudgetOption[] = [
-  { label: "Menos de 50 €", min: 0, max: 50 },
-  { label: "50-100 €", min: 50, max: 100 },
-  { label: "100-200 €", min: 100, max: 200 },
-  { label: "200-500 €", min: 200, max: 500 },
-  { label: "Más de 500 €", min: 500 },
-  { label: "Presupuesto personalizado", custom: true },
 ];
 
 const refinementPrompts = [

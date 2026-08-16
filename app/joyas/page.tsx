@@ -8,12 +8,12 @@ import { jewelryCategories } from "@/lib/site-content";
 export const metadata: Metadata = {
   title: "Joyas: anillos, collares, pulseras y pendientes | joyas.ai",
   description:
-    "Explora guias de joyas por categoria: anillos, collares, pulseras, pendientes, boda y regalos.",
+    "Explora guías de joyas por categoría: anillos, collares, pulseras, pendientes, boda y regalos.",
   alternates: getIndexMetadataAlternates("joyas", "es"),
   openGraph: {
     title: "Joyas: anillos, collares, pulseras y pendientes | joyas.ai",
     description:
-      "Explora guias de joyas por categoria: anillos, collares, pulseras, pendientes, boda y regalos.",
+      "Explora guías de joyas por categoría: anillos, collares, pulseras, pendientes, boda y regalos.",
     url: "/joyas",
     siteName: "joyas.ai",
     locale: openGraphLocales.es,
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Joyas: anillos, collares, pulseras y pendientes | joyas.ai",
     description:
-      "Explora guias de joyas por categoria: anillos, collares, pulseras, pendientes, boda y regalos.",
+      "Explora guías de joyas por categoría: anillos, collares, pulseras, pendientes, boda y regalos.",
   },
 };
 
@@ -35,10 +35,10 @@ export default function JewelryIndexPage() {
       <section className="mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:px-10">
         <Breadcrumbs items={[{ href: "/joyas", label: "Joyas" }]} />
         <h1 className="mt-8 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
-          Guias por tipo de joya
+          guías por tipo de joya
         </h1>
         <p className="mt-4 max-w-3xl text-lg leading-8 text-[#63584c]">
-          Elige una categoria para comparar estilos, materiales, usos y errores frecuentes antes de comprar o regalar.
+          Elige una categoría para comparar estilos, materiales, usos y errores frecuentes antes de comprar o regalar.
         </p>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {jewelryCategories.map((item) => (

@@ -2,8 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import LocalizedInfoPage from "@/components/LocalizedInfoPage";
 import SiteHeader from "@/components/SiteHeader";
 import {
+  findInfoPageKindBySlug,
+  getInfoLanguageLinks,
+  getInfoMetadataAlternates,
+  getLocalizedInfoPath,
   getLocalizedGuideCategories,
   getIndexLanguageLinks,
   getLocalizedIndexPath,
@@ -19,6 +24,7 @@ import {
   type Locale,
   type LocalizedLocale,
 } from "@/lib/i18n";
+import { getInfoPage } from "@/lib/info-pages";
 import { jewelryCategories, occasions } from "@/lib/site-content";
 
 type PageProps = {
@@ -29,19 +35,57 @@ const contentKinds: ContentKind[] = ["joyas", "ocasiones", "guias"];
 
 export function generateStaticParams() {
   const locales: LocalizedLocale[] = ["pt-BR", "en"];
-  return locales.flatMap((locale) =>
+  const sectionParams = locales.flatMap((locale) =>
     contentKinds.map((kind) => ({
       locale: locale === "pt-BR" ? "pt-br" : locale,
       section: getLocalizedSection(kind, locale),
     })),
   );
+  const infoParams = locales.flatMap((locale) =>
+    getLocalizedInfoPageKinds().map((kind) => ({
+      locale: locale === "pt-BR" ? "pt-br" : locale,
+      section: getLocalizedInfoPath(kind, locale).split("/").filter(Boolean).at(-1) ?? "",
+    })),
+  );
+
+  return [...sectionParams, ...infoParams];
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale: rawLocale, section } = await params;
   const locale = parseLocale(rawLocale);
   const kind = locale ? parseSection(section, locale) : undefined;
-  if (!locale || !kind) {
+  const infoKind = locale ? findInfoPageKindBySlug(section, locale) : undefined;
+  if (!locale || (!kind && !infoKind)) {
+    return {};
+  }
+
+  if (infoKind) {
+    const page = getInfoPage(infoKind, locale);
+    const title = `${page.title} | joyas.ai`;
+
+    return {
+      title,
+      description: page.description,
+      alternates: getInfoMetadataAlternates(infoKind, locale),
+      openGraph: {
+        title,
+        description: page.description,
+        url: getLocalizedInfoPath(infoKind, locale),
+        siteName: "joyas.ai",
+        locale: openGraphLocales[locale],
+        alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),
+        type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description: page.description,
+      },
+    };
+  }
+
+  if (!kind) {
     return {};
   }
 
@@ -74,7 +118,26 @@ export default async function LocalizedSectionPage({ params }: PageProps) {
   const { locale: rawLocale, section } = await params;
   const locale = parseLocale(rawLocale);
   const kind = locale ? parseSection(section, locale) : undefined;
-  if (!locale || !kind) {
+  const infoKind = locale ? findInfoPageKindBySlug(section, locale) : undefined;
+  if (!locale || (!kind && !infoKind)) {
+    notFound();
+  }
+
+  if (infoKind) {
+    const page = getInfoPage(infoKind, locale);
+    const pageHref = getLocalizedInfoPath(infoKind, locale);
+
+    return (
+      <LocalizedInfoPage
+        page={page}
+        locale={locale}
+        href={pageHref}
+        languageLinks={getInfoLanguageLinks(infoKind)}
+      />
+    );
+  }
+
+  if (!kind) {
     notFound();
   }
 
@@ -116,6 +179,21 @@ export default async function LocalizedSectionPage({ params }: PageProps) {
       </section>
     </main>
   );
+}
+
+function getLocalizedInfoPageKinds() {
+  return [
+    "como-funciona",
+    "joyero-ia",
+    "preguntas-frecuentes",
+    "sobre-joyas-ai",
+    "transparencia",
+    "transparencia-afiliacion",
+    "contacto",
+    "aviso-legal",
+    "politica-privacidad",
+    "cookies",
+  ] as const;
 }
 
 function getItems(kind: ContentKind, locale: Locale) {

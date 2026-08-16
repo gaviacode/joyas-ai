@@ -10,7 +10,7 @@ const footerGroups = [
     title: "JOYAS.AI",
     links: [
       { href: "/#joyero-ia", label: "Recomendador" },
-      { href: "/como-funciona", label: "Como funciona" },
+      { href: "/como-funciona", label: "Cómo funciona" },
       { href: "/sobre-joyas-ai", label: "Sobre joyas.ai" },
     ],
   },
@@ -30,14 +30,14 @@ const footerGroups = [
       { href: "/ocasiones/aniversario", label: "Aniversario" },
       { href: "/ocasiones/compromiso", label: "Compromiso" },
       { href: "/ocasiones/cumpleanos", label: "Cumpleaños" },
-      { href: "/ocasiones/san-valentin", label: "San Valentin" },
-      { href: "/ocasiones/dia-de-la-madre", label: "Dia de la madre" },
+      { href: "/ocasiones/san-valentin", label: "San Valentín" },
+      { href: "/ocasiones/dia-de-la-madre", label: "Día de la madre" },
     ],
   },
   {
     title: "GUIAS",
     links: [
-      { href: "/guias", label: "Guias de joyeria" },
+      { href: "/guias", label: "Guías de joyería" },
       { href: "/joyas/anillos/como-saber-talla-anillo", label: "Talla de anillo" },
       { href: "/guias/oro-14k-18k-24k", label: "Oro 14k, 18k y 24k" },
       { href: "/guias/plata-925", label: "Plata 925" },
@@ -49,6 +49,8 @@ const footerGroups = [
     links: [
       { href: "/preguntas-frecuentes", label: "Preguntas frecuentes" },
       { href: "/transparencia", label: "Transparencia" },
+      { href: "/transparencia-afiliacion", label: "Transparencia de afiliación" },
+      { href: "/contacto", label: "Contacto" },
       { href: "/aviso-legal", label: "Aviso legal" },
       { href: "/politica-privacidad", label: "Privacidad" },
       { href: "/cookies", label: "Cookies" },
@@ -61,7 +63,7 @@ export default function SiteFooter() {
   const pathname = usePathname();
   const locale = getLocaleFromPath(pathname);
   const footerAriaLabel =
-    locale === "pt-BR" ? "Links do rodapé" : locale === "en" ? "Footer links" : "Enlaces del pie de pagina";
+    locale === "pt-BR" ? "Links do rodapé" : locale === "en" ? "Footer links" : "Enlaces del pie de página";
 
   return (
     <footer className="border-t border-[#eadfca] bg-[#fbf7ef]">
@@ -76,7 +78,7 @@ export default function SiteFooter() {
                 ? "Recomendador de joias com IA, guias de compra e conteúdo informativo para escolher com mais critério."
                 : locale === "en"
                   ? "AI jewelry advisor, buying guides and practical content for choosing with more confidence."
-                  : "Recomendador de joyas con IA, guias de compra y contenido informativo para elegir con mas criterio."}
+                : "Recomendador de joyas con IA, guías de compra y contenido informativo para elegir con más criterio."}
             </p>
           </div>
 
@@ -84,7 +86,7 @@ export default function SiteFooter() {
             {footerGroups.map((group) => (
               <div key={group.title}>
                 <h2 className="text-xs font-semibold tracking-[0.18em] text-[#9b7b3a]">
-                  {localizeText(group.title, locale)}
+                  {group.title === "JOYAS.AI" ? group.title : localizeText(group.title, locale)}
                 </h2>
                 <ul className="mt-3 space-y-2">
                   {group.links.map((link) => (

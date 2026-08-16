@@ -7,8 +7,8 @@ const navLinks = [
   { href: "/#joyero-ia", label: "Recomendador" },
   { href: "/joyas/regalos", label: "Joyas" },
   { href: "/ocasiones/aniversario", label: "Ocasiones" },
-  { href: "/guias", label: "Guias" },
-  { href: "/como-funciona", label: "Como funciona" },
+  { href: "/guias", label: "Guías" },
+  { href: "/como-funciona", label: "Cómo funciona" },
 ];
 
 export default function SiteHeader({
@@ -25,7 +25,7 @@ export default function SiteHeader({
   const advisorHref = localizeHref("/#joyero-ia", locale);
   const homeHref = localizeHref("/", locale);
   const labels = {
-    mainNav: locale === "pt-BR" ? "Navegação principal" : locale === "en" ? "Main navigation" : "Navegacion principal",
+    mainNav: locale === "pt-BR" ? "Navegação principal" : locale === "en" ? "Main navigation" : "Navegación principal",
     home: locale === "pt-BR" ? "Ir para o início de joyas.ai" : locale === "en" ? "Go to joyas.ai home" : "Ir al inicio de joyas.ai",
   };
 

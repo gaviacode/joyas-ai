@@ -45,6 +45,20 @@ const PRIMARY_GEMINI_MODEL = "gemini-2.5-flash-lite";
 const FALLBACK_GEMINI_MODEL = "gemini-2.5-flash";
 const RETRYABLE_GEMINI_STATUS_CODES = new Set([429, 500, 503]);
 const MAX_PRIMARY_ATTEMPTS = 3;
+const GEMINI_TIMEOUT_MS = 18_000;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 20;
+const RATE_LIMIT_CLEANUP_INTERVAL_MS = 10 * 60 * 1000;
+
+type RateLimitEntry = {
+  count: number;
+  resetAt: number;
+};
+
+// Best-effort per-instance limiter. If Railway scales horizontally, replace this
+// with a shared store such as Redis so limits apply across all instances.
+const rateLimitStore = new Map<string, RateLimitEntry>();
+let lastRateLimitCleanup = 0;
 
 type GeminiGenerationOptions = {
   ai: GoogleGenAI;
@@ -54,6 +68,12 @@ type GeminiGenerationOptions = {
 class TemporaryGeminiUnavailableError extends Error {
   constructor(public readonly statusCode: number | undefined) {
     super("Gemini is temporarily unavailable.");
+  }
+}
+
+class GeminiTimeoutError extends Error {
+  constructor() {
+    super("Gemini request timed out.");
   }
 }
 
@@ -71,6 +91,23 @@ type ParsedAdvisorResponse = Omit<AdvisorResponse, "recommendations"> & {
 
 export async function POST(request: Request) {
   try {
+    const rateLimitResult = checkRateLimit(getClientIp(request));
+    if (!rateLimitResult.allowed) {
+      return NextResponse.json(
+        {
+          error: "RATE_LIMITED",
+          message: "Demasiadas consultas. Inténtalo de nuevo más tarde.",
+          retryAfterSeconds: rateLimitResult.retryAfterSeconds,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimitResult.retryAfterSeconds),
+          },
+        },
+      );
+    }
+
     const rawApiKey = process.env.GEMINI_API_KEY;
     const apiKey = rawApiKey?.trim();
 
@@ -111,6 +148,18 @@ export async function POST(request: Request) {
           retryable: true,
         },
         { status: 503 }
+      );
+    }
+
+    if (error instanceof GeminiTimeoutError) {
+      return NextResponse.json(
+        {
+          error: "TEMPORARILY_UNAVAILABLE",
+          message:
+            "El joyero IA está tardando demasiado en responder. Inténtalo de nuevo en unos segundos.",
+          retryable: true,
+        },
+        { status: 503 },
       );
     }
 
@@ -213,16 +262,29 @@ async function generateWithModel({
   fallback: boolean;
 }) {
   logGeminiAttempt({ model, attempt, fallback });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
 
-  return ai.models.generateContent({
-    model,
-    contents,
-    config: {
-      systemInstruction: SYSTEM_PROMPT,
-      maxOutputTokens: 1400,
-      responseMimeType: "application/json",
-    },
-  });
+  try {
+    return await ai.models.generateContent({
+      model,
+      contents,
+      config: {
+        systemInstruction: SYSTEM_PROMPT,
+        maxOutputTokens: 1400,
+        responseMimeType: "application/json",
+        abortSignal: controller.signal,
+      },
+    });
+  } catch (error) {
+    if (controller.signal.aborted || isAbortError(error)) {
+      throw new GeminiTimeoutError();
+    }
+
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 function getGeminiStatusCode(error: unknown) {
@@ -342,6 +404,67 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isSensitiveLogKey(key: string) {
   return /api[-_]?key|authorization|x-goog-api-key|cookie|token|secret|password/i.test(key);
+}
+
+function getClientIp(request: Request) {
+  const headers = request.headers;
+  const forwardedFor = headers.get("x-forwarded-for");
+  const forwardedIp = forwardedFor
+    ?.split(",")
+    .map((value) => value.trim())
+    .find(Boolean);
+
+  return (
+    headers.get("cf-connecting-ip")?.trim() ||
+    headers.get("x-real-ip")?.trim() ||
+    forwardedIp ||
+    "unknown"
+  );
+}
+
+function checkRateLimit(clientIp: string) {
+  const now = Date.now();
+  cleanupRateLimitStore(now);
+
+  const current = rateLimitStore.get(clientIp);
+  if (!current || current.resetAt <= now) {
+    rateLimitStore.set(clientIp, {
+      count: 1,
+      resetAt: now + RATE_LIMIT_WINDOW_MS,
+    });
+    return { allowed: true as const };
+  }
+
+  if (current.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return {
+      allowed: false as const,
+      retryAfterSeconds: Math.max(1, Math.ceil((current.resetAt - now) / 1000)),
+    };
+  }
+
+  current.count += 1;
+  return { allowed: true as const };
+}
+
+function cleanupRateLimitStore(now: number) {
+  if (now - lastRateLimitCleanup < RATE_LIMIT_CLEANUP_INTERVAL_MS) {
+    return;
+  }
+
+  lastRateLimitCleanup = now;
+  for (const [key, entry] of rateLimitStore.entries()) {
+    if (entry.resetAt <= now) {
+      rateLimitStore.delete(key);
+    }
+  }
+}
+
+function isAbortError(error: unknown) {
+  return (
+    error instanceof DOMException && error.name === "AbortError"
+  ) || (
+    error instanceof Error && /aborted|abort/i.test(error.name)
+  );
 }
 
 function logGeminiApiKeyState(rawApiKey: string | undefined, apiKey: string | undefined) {

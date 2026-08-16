@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import {
   getAllLocalizedArticleRoutes,
+  getAllLocalizedInfoRoutes,
   getGuideCategoryAlternates,
   getHomeAlternates,
   getIndexAlternates,
@@ -28,7 +29,6 @@ const staticRoutes = [
   "/aviso-legal",
   "/politica-privacidad",
   "/cookies",
-  "/sobre-nosotros",
   "/transparencia-afiliacion",
 ];
 
@@ -73,18 +73,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     route: item.path,
     languages: item.languages,
   }));
+  const infoRoutes = getAllLocalizedInfoRoutes().map((item) => ({
+    route: item.path,
+    languages: item.languages,
+  }));
 
   const basicRoutes = Array.from(new Set([...routes, ...localizedIndexes])).map((route) => ({
     route,
     languages: undefined,
   }));
 
-  const allRoutes = [...basicRoutes, ...homeRoutes, ...indexRoutes, ...categoryRoutes, ...articleRoutes];
+  const allRoutes = [...basicRoutes, ...homeRoutes, ...indexRoutes, ...categoryRoutes, ...articleRoutes, ...infoRoutes];
   const uniqueRoutes = new Map(allRoutes.map((item) => [item.route, item]));
 
   return Array.from(uniqueRoutes.values()).map(({ route, languages }) => ({
     url: absoluteUrl(route),
-    lastModified: new Date(),
     changeFrequency: route === "/" ? "weekly" : "monthly",
     priority: getPriority(route),
     alternates: languages

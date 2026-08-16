@@ -35,6 +35,31 @@ export const openGraphLocales: Record<Locale, string> = {
   en: "en_US",
 };
 
+export type InfoPageKind =
+  | "como-funciona"
+  | "joyero-ia"
+  | "preguntas-frecuentes"
+  | "sobre-joyas-ai"
+  | "transparencia"
+  | "transparencia-afiliacion"
+  | "contacto"
+  | "aviso-legal"
+  | "politica-privacidad"
+  | "cookies";
+
+const infoPageSlugs: Record<InfoPageKind, Record<Locale, string>> = {
+  "como-funciona": { es: "como-funciona", "pt-BR": "como-funciona", en: "how-it-works" },
+  "joyero-ia": { es: "joyero-ia", "pt-BR": "joalheiro-ia", en: "ai-jewelry-advisor" },
+  "preguntas-frecuentes": { es: "preguntas-frecuentes", "pt-BR": "perguntas-frequentes", en: "faq" },
+  "sobre-joyas-ai": { es: "sobre-joyas-ai", "pt-BR": "sobre-joyas-ai", en: "about-joyas-ai" },
+  transparencia: { es: "transparencia", "pt-BR": "transparencia", en: "transparency" },
+  "transparencia-afiliacion": { es: "transparencia-afiliacion", "pt-BR": "transparencia-afiliacao", en: "affiliate-transparency" },
+  contacto: { es: "contacto", "pt-BR": "contato", en: "contact" },
+  "aviso-legal": { es: "aviso-legal", "pt-BR": "aviso-legal", en: "legal-notice" },
+  "politica-privacidad": { es: "politica-privacidad", "pt-BR": "politica-de-privacidade", en: "privacy-policy" },
+  cookies: { es: "cookies", "pt-BR": "cookies", en: "cookies" },
+};
+
 const localizedSections: Record<LocalizedLocale, Record<ContentKind, string>> = {
   "pt-BR": {
     joyas: "joias",
@@ -583,7 +608,10 @@ const exactText: Record<LocalizedLocale, Record<string, string>> = {
     "Regalo sorpresa": "Presente surpresa",
     "Recomendador": "Recomendador",
     "Como funciona": "Como funciona",
+    "Cómo funciona": "Como funciona",
     "Sobre joyas.ai": "Sobre a joyas.ai",
+    "Transparencia de afiliación": "Transparência de afiliação",
+    "Contacto": "Contato",
     "JOYAS": "JOIAS",
     "OCASIONES": "OCASIÕES",
     "GUIAS": "GUIAS",
@@ -591,8 +619,11 @@ const exactText: Record<LocalizedLocale, Record<string, string>> = {
     "Joyas para boda": "Joias para casamento",
     "Aniversario": "Aniversário",
     "San Valentin": "Dia dos Namorados",
+    "San Valentín": "Dia dos Namorados",
     "Dia de la madre": "Dia das Mães",
+    "Día de la madre": "Dia das Mães",
     "Guias de joyeria": "Guias de joalheria",
+    "Guías de joyería": "Guias de joalheria",
     "Talla de anillo": "Medida do anel",
     "Oro 14k, 18k y 24k": "Ouro 14k, 18k e 24k",
     "Plata 925": "Prata 925",
@@ -600,7 +631,6 @@ const exactText: Record<LocalizedLocale, Record<string, string>> = {
     "Transparencia": "Transparência",
     "Aviso legal": "Aviso legal",
     "Privacidad": "Privacidade",
-    "Guías de joyería": "Guias de joalheria",
     "Guías sobre": "Guias sobre",
     "Todas las categorías": "Todas as categorias",
     "Guías disponibles": "Guias disponíveis",
@@ -631,7 +661,10 @@ const exactText: Record<LocalizedLocale, Record<string, string>> = {
     "Regalo sorpresa": "Surprise gift",
     "Recomendador": "Advisor",
     "Como funciona": "How it works",
+    "Cómo funciona": "How it works",
     "Sobre joyas.ai": "About joyas.ai",
+    "Transparencia de afiliación": "Affiliate transparency",
+    "Contacto": "Contact",
     "JOYAS": "JEWELRY",
     "OCASIONES": "OCCASIONS",
     "GUIAS": "GUIDES",
@@ -641,8 +674,11 @@ const exactText: Record<LocalizedLocale, Record<string, string>> = {
     "Compromiso": "Engagement",
     "Cumpleaños": "Birthday",
     "San Valentin": "Valentine's Day",
+    "San Valentín": "Valentine's Day",
     "Dia de la madre": "Mother's Day",
+    "Día de la madre": "Mother's Day",
     "Guias de joyeria": "Jewelry guides",
+    "Guías de joyería": "Jewelry guides",
     "Talla de anillo": "Ring size",
     "Oro 14k, 18k y 24k": "14k, 18k and 24k gold",
     "Plata 925": "925 silver",
@@ -650,7 +686,6 @@ const exactText: Record<LocalizedLocale, Record<string, string>> = {
     "Transparencia": "Transparency",
     "Aviso legal": "Legal notice",
     "Privacidad": "Privacy",
-    "Guías de joyería": "Jewelry guides",
     "Guías sobre": "Guides to",
     "Todas las categorías": "All categories",
     "Guías disponibles": "Available guides",
@@ -714,6 +749,47 @@ export function getLocaleHomePath(locale: Locale) {
   }
 
   return "/";
+}
+
+export function getLocalizedInfoPath(kind: InfoPageKind, locale: Locale) {
+  const slug = infoPageSlugs[kind][locale];
+  return locale === "es" ? `/${slug}` : `/${localePrefixes[locale]}/${slug}`;
+}
+
+export function getInfoAlternates(kind: InfoPageKind) {
+  return {
+    es: getLocalizedInfoPath(kind, "es"),
+    "pt-BR": getLocalizedInfoPath(kind, "pt-BR"),
+    en: getLocalizedInfoPath(kind, "en"),
+  };
+}
+
+export function getInfoLanguageLinks(kind: InfoPageKind) {
+  const alternates = getInfoAlternates(kind);
+  return locales.map((locale) => ({
+    locale,
+    href: alternates[locale],
+    label: localeLabels[locale],
+  }));
+}
+
+export function getInfoMetadataAlternates(kind: InfoPageKind, locale: Locale) {
+  return buildMetadataAlternates(getInfoAlternates(kind), locale);
+}
+
+export function findInfoPageKindBySlug(slug: string, locale: Locale): InfoPageKind | undefined {
+  return (Object.keys(infoPageSlugs) as InfoPageKind[]).find((kind) => infoPageSlugs[kind][locale] === slug);
+}
+
+export function getAllLocalizedInfoRoutes() {
+  return (Object.keys(infoPageSlugs) as InfoPageKind[]).flatMap((kind) =>
+    locales.map((locale) => ({
+      kind,
+      locale,
+      path: getLocalizedInfoPath(kind, locale),
+      languages: getInfoAlternates(kind),
+    })),
+  );
 }
 
 export function getSectionLabel(kind: ContentKind, locale: Locale) {
@@ -1005,6 +1081,11 @@ export function localizeHref(href: string, locale: Locale) {
 
   if (parts[0] === "joyas" && parts[1] === "anillos" && parts[2] === "como-saber-talla-anillo") {
     return getLocalizedPath("guias", "como-saber-talla-anillo", locale);
+  }
+
+  const infoKind = findInfoPageKindBySlug(parts[0] ?? "", "es");
+  if (infoKind && parts.length === 1) {
+    return `${getLocalizedInfoPath(infoKind, locale)}${hash ? `#${hash}` : ""}`;
   }
 
   if (kind && slug && articleSlugs[kind]?.[slug]) {
