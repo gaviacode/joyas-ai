@@ -1,316 +1,196 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import SiteHeader from "@/components/SiteHeader";
 import JewelryChat from "@/components/JewelryChat";
+import { getHomeMetadataAlternates, openGraphLocales } from "@/lib/i18n";
 
 export const metadata: Metadata = {
-  title: "joyas.ai | Tu joyero experto con IA",
+  title: "Encuentra la joya perfecta con IA | joyas.ai",
   description:
-    "Encuentra la joya perfecta con ayuda de inteligencia artificial: anillos, collares, pulseras, pendientes y regalos especiales según ocasión, presupuesto y estilo.",
+    "Joyero IA para elegir collares, pulseras, pendientes o anillos segun ocasion, presupuesto y estilo de la persona.",
+  alternates: getHomeMetadataAlternates("es"),
+  openGraph: {
+    title: "Encuentra la joya perfecta con IA | joyas.ai",
+    description:
+      "Joyero IA para elegir collares, pulseras, pendientes o anillos segun ocasion, presupuesto y estilo de la persona.",
+    url: "/",
+    siteName: "joyas.ai",
+    locale: openGraphLocales.es,
+    alternateLocale: [openGraphLocales["pt-BR"], openGraphLocales.en],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Encuentra la joya perfecta con IA | joyas.ai",
+    description:
+      "Joyero IA para elegir collares, pulseras, pendientes o anillos segun ocasion, presupuesto y estilo de la persona.",
+  },
 };
 
 const categories = [
-  {
-    title: "Anillos",
-    image: "/images/categories/categoria-anillos.png",
-    alt: "Anillos dorados sobre mármol y satén",
-    description: "Ideas para compromiso, aniversario o regalos especiales.",
-  },
-  {
-    title: "Collares",
-    image: "/images/categories/categoria-collares.png",
-    alt: "Collares dorados sobre mármol y satén",
-    description: "Opciones elegantes, minimalistas o con significado personal.",
-  },
-  {
-    title: "Pulseras",
-    image: "/images/categories/categoria-pulseras.png",
-    alt: "Pulseras doradas sobre mármol y satén",
-    description: "Joyas versátiles para diario, ocasiones especiales o pareja.",
-  },
-  {
-    title: "Pendientes",
-    image: "/images/categories/categoria-pendientes.png",
-    alt: "Pendientes dorados sobre mármol y satén",
-    description: "Recomendaciones según estilo, rostro y tipo de ocasión.",
-  },
-  {
-    title: "Joyas para boda",
-    image: "/images/categories/categoria-joyas-boda.png",
-    alt: "Joyas doradas para boda sobre mármol y satén",
-    description: "Detalles para novia, invitadas, madrinas o aniversario.",
-  },
-  {
-    title: "Regalos especiales",
-    image: "/images/categories/categoria-regalos-especiales.png",
-    alt: "Caja de regalo con joyas doradas sobre mármol y satén",
-    description: "Joyas pensadas para cumpleaños, aniversarios y celebraciones.",
-  },
-];
-
-const steps = [
-  {
-    number: "01",
-    title: "Cuéntanos la ocasión",
-    description:
-      "Indica si buscas una joya para aniversario, boda, cumpleaños, compromiso o un detalle especial.",
-  },
-  {
-    number: "02",
-    title: "La IA actúa como joyero experto",
-    description:
-      "Analiza estilo, presupuesto, tipo de persona, material, ocasión y preferencias.",
-  },
-  {
-    number: "03",
-    title: "Recibe ideas seleccionadas",
-    description:
-      "Obtén recomendaciones claras para comparar y decidir mejor antes de comprar.",
-  },
+  { href: "/joyas/anillos", title: "Anillos", text: "Uso diario, regalo, compromiso, alianzas y talla.", image: "/images/categories/categoria-anillos.png" },
+  { href: "/joyas/collares", title: "Collares", text: "Longitud, colgantes, escotes y materiales.", image: "/images/categories/categoria-collares.png" },
+  { href: "/joyas/pulseras", title: "Pulseras", text: "Cierres, talla, grabados y comodidad.", image: "/images/categories/categoria-pulseras.png" },
+  { href: "/joyas/pendientes", title: "Pendientes", text: "Tamaño, cierre, peso, estilo y ocasion.", image: "/images/categories/categoria-pendientes.png" },
+  { href: "/joyas/boda", title: "Joyas para boda", text: "Alianzas, novia, novio, madrina e invitadas.", image: "/images/categories/categoria-joyas-boda.png" },
+  { href: "/joyas/regalos", title: "Regalos", text: "Ideas para acertar sin conocerlo todo.", image: "/images/categories/categoria-regalos-especiales.png" },
 ];
 
 const occasions = [
-  "Aniversario",
-  "Compromiso",
-  "Boda",
-  "Cumpleaños",
-  "San Valentín",
-  "Día de la madre",
-  "Graduación",
-  "Regalo sorpresa",
+  { href: "/ocasiones/aniversario", label: "Aniversario" },
+  { href: "/ocasiones/compromiso", label: "Compromiso" },
+  { href: "/ocasiones/boda", label: "Boda" },
+  { href: "/ocasiones/cumpleanos", label: "Cumpleaños" },
+  { href: "/ocasiones/san-valentin", label: "San Valentin" },
+  { href: "/ocasiones/dia-de-la-madre", label: "Dia de la madre" },
+  { href: "/ocasiones/graduacion", label: "Graduacion" },
+  { href: "/ocasiones/regalo-sorpresa", label: "Regalo sorpresa" },
+];
+
+const guideLinks = [
+  { href: "/joyas/anillos/como-saber-talla-anillo", label: "Talla de anillo" },
+  { href: "/guias/oro-14k-18k-24k", label: "Oro 14k, 18k y 24k" },
+  { href: "/guias/plata-925", label: "Plata 925" },
+  { href: "/guias/piedras-preciosas", label: "Piedras preciosas" },
 ];
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#fbf7ef] text-[#17120b]">
-      <header className="sticky top-0 z-50 border-b border-[#eadfca] bg-[#fbf7ef]/90 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-10 lg:px-16">
-          <a href="#" className="text-2xl font-semibold tracking-tight">
-            joyas<span className="text-[#b8872f]">.ai</span>
-          </a>
+    <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
+      <SiteHeader />
 
-          <nav className="hidden items-center gap-8 text-sm text-[#625746] md:flex">
-            <a href="#recomendador" className="transition hover:text-[#17120b]">
-              Recomendador
-            </a>
-            <a href="#como-funciona" className="transition hover:text-[#17120b]">
-              Cómo funciona
-            </a>
-            <a href="#categorias" className="transition hover:text-[#17120b]">
-              Categorías
-            </a>
-          </nav>
-
-          <a
-            href="#recomendador"
-            className="hidden rounded-full bg-[#17120b] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2a2116] sm:inline-flex"
-          >
-            Empezar
-          </a>
-        </div>
-      </header>
-
-      <section
-        id="recomendador"
-        className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-16 md:px-10 md:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:px-16 lg:py-24"
-      >
+      <section className="mx-auto grid max-w-7xl gap-10 px-5 pb-10 pt-8 sm:px-8 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:px-10 lg:pb-14 lg:pt-10">
         <div>
-          <p className="mb-5 inline-flex rounded-full border border-[#d9c59a] bg-white/70 px-4 py-2 text-sm font-medium text-[#7a5a1d] shadow-sm">
+          <p className="mb-4 inline-flex rounded-full border border-[#d7a63c]/30 bg-white/80 px-4 py-2 text-sm text-[#9a6b08] shadow-sm">
             Recomendador de joyas con inteligencia artificial
           </p>
-
-          <h1 className="max-w-4xl text-5xl font-semibold leading-[1.02] tracking-[-0.05em] md:text-6xl lg:text-7xl">
+          <h1 className="max-w-3xl text-5xl font-semibold leading-[0.98] tracking-[-0.04em] text-[#17120f] sm:text-6xl lg:text-7xl">
             Encuentra la joya perfecta con IA
           </h1>
-
           <p className="mt-6 max-w-2xl text-lg leading-8 text-[#63584c]">
-            Habla con un joyero experto con inteligencia artificial y descubre
-            anillos, collares, pulseras o pendientes según la ocasión, tu
-            presupuesto y su estilo.
+            Habla con un joyero experto con inteligencia artificial y descubre anillos, collares, pulseras o pendientes segun la ocasion, tu presupuesto y el estilo de la persona.
           </p>
-
-          <div className="mt-9 flex flex-col gap-4 sm:flex-row">
-            <a
-              href="#como-funciona"
-              className="rounded-full bg-[#17120b] px-7 py-4 text-center text-sm font-semibold text-white shadow-lg shadow-[#17120b]/10 transition hover:bg-[#2a2116]"
-            >
-              Ver cómo funcionará
-            </a>
-
-            <a
-              href="#categorias"
-              className="rounded-full border border-[#d9c59a] bg-white px-7 py-4 text-center text-sm font-semibold text-[#17120b] transition hover:border-[#b8872f]"
-            >
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link href="/#joyero-ia" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#b97a05] to-[#d7a63c] px-7 py-4 font-semibold text-white shadow-lg shadow-[#b97a05]/20 transition hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
+              Probar el joyero IA
+            </Link>
+            <Link href="/joyas/regalos" className="inline-flex items-center justify-center rounded-xl border border-[#d7a63c] bg-white px-7 py-4 font-semibold text-[#9a6b08] shadow-sm transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
               Explorar ideas
-            </a>
+            </Link>
           </div>
-
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-[#eadfca] bg-white/70 p-4">
-              <p className="text-sm font-semibold">Sin métricas falsas</p>
-              <p className="mt-2 text-sm leading-6 text-[#625746]">
-                Solo recomendaciones honestas y claras.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-[#eadfca] bg-white/70 p-4">
-              <p className="text-sm font-semibold">Pensado para regalos</p>
-              <p className="mt-2 text-sm leading-6 text-[#625746]">
-                Según ocasión, estilo y presupuesto.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-[#eadfca] bg-white/70 p-4">
-              <p className="text-sm font-semibold">Diseño responsive</p>
-              <p className="mt-2 text-sm leading-6 text-[#625746]">
-                Móvil, tablet y escritorio desde el inicio.
-              </p>
-            </div>
+          <div className="mt-9 grid gap-3 sm:grid-cols-3">
+            <InfoChip title="Recomendaciones honestas" text="Ideas claras, sin inventar productos ni valoraciones falsas." />
+            <InfoChip title="Pensado para regalar" text="Segun ocasion, estilo, presupuesto y persona." />
+            <InfoChip title="Orientacion rapida" text="Dinos que buscas y el joyero IA te ayuda a ordenar opciones." />
           </div>
         </div>
-
         <HeroJewelry />
+      </section>
 
-        <div className="lg:col-span-2">
+      <section className="px-5 py-12 sm:px-8 lg:px-10 lg:py-16">
+        <div className="mx-auto max-w-7xl">
           <JewelryChat />
         </div>
       </section>
 
-      <section
-        id="como-funciona"
-        className="mx-auto max-w-7xl px-6 py-16 md:px-10 lg:px-16"
-      >
+      <section className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:px-10">
         <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">
-            Cómo funcionará
-          </p>
-          <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
-            Una guía sencilla para elegir mejor.
-          </h2>
-        </div>
-
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {steps.map((step) => (
-            <div
-              key={step.number}
-              className="rounded-3xl border border-[#eadfca] bg-white p-6 shadow-sm"
-            >
-              <p className="text-sm font-semibold text-[#b8872f]">
-                {step.number}
-              </p>
-              <h3 className="mt-5 text-xl font-semibold">{step.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-[#625746]">
-                {step.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section
-        id="categorias"
-        className="mx-auto max-w-7xl px-6 py-16 md:px-10 lg:px-16"
-      >
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">
-              Categorías
-            </p>
-            <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
-              Ideas de joyas para empezar.
-            </h2>
-          </div>
-
-          <p className="max-w-md text-sm leading-7 text-[#625746]">
-            La primera versión podrá organizar recomendaciones por tipo de joya,
-            intención de regalo y ocasión.
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">Categorias</p>
+          <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em]">Explora por tipo de joya</h2>
+          <p className="mt-4 text-lg leading-8 text-[#63584c]">
+            Cada guia explica estilos, materiales, momentos de uso y errores frecuentes para elegir con mas criterio.
           </p>
         </div>
-
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((category) => (
-            <article
-              key={category.title}
-              className="group rounded-3xl border border-[#eadfca] bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-[#b8872f]/10"
-            >
-              <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-2xl bg-[#f7ead0]">
-                <Image
-                  src={category.image}
-                  alt={category.alt}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-              <h3 className="text-xl font-semibold">{category.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-[#625746]">
-                {category.description}
-              </p>
-            </article>
+            <CategoryCard key={category.href} {...category} />
           ))}
         </div>
-
-        <p className="mt-6 text-xs leading-6 text-[#7a6b57]">
-          Imágenes ilustrativas. Las recomendaciones finales podrán incluir
-          productos reales de tiendas afiliadas.
-        </p>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-16 md:px-10 lg:px-16">
-        <div className="rounded-[2rem] bg-[#17120b] p-8 text-white md:p-10 lg:p-12">
-          <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#d8ae5d]">
-                Ocasiones
-              </p>
-              <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] md:text-5xl">
-                Para regalos donde acertar importa.
-              </h2>
-              <p className="mt-5 text-sm leading-7 text-[#d8d0c3]">
-                La joya adecuada depende de la relación, el momento, el
-                presupuesto y el mensaje que quieres transmitir.
-              </p>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              {occasions.map((occasion) => (
-                <div
-                  key={occasion}
-                  className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-sm font-medium"
-                >
-                  {occasion}
-                </div>
-              ))}
-            </div>
+      <section className="bg-white/55 px-5 py-14 sm:px-8 lg:px-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">Ocasiones</p>
+            <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em]">Elige segun el momento</h2>
+          </div>
+          <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {occasions.map((occasion) => (
+              <Link key={occasion.href} href={occasion.href} className="rounded-2xl border border-[#ead8b3] bg-white p-5 font-semibold text-[#2b241f] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d7a63c] hover:text-[#9a6b08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
+                {occasion.label}
+              </Link>
+            ))}
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-[#eadfca]">
-        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-8 text-sm text-[#625746] md:flex-row md:items-center md:justify-between md:px-10 lg:px-16">
-          <p>
-            joyas<span className="text-[#b8872f]">.ai</span> — Recomendador de
-            joyas con IA.
+      <section className="mx-auto grid max-w-7xl gap-6 px-5 py-14 sm:px-8 lg:grid-cols-[1fr_1fr] lg:px-10">
+        <article className="rounded-3xl border border-[#ead8b3] bg-white p-6 shadow-sm sm:p-8">
+          <h2 className="text-3xl font-semibold tracking-[-0.04em]">Guias para comprar mejor</h2>
+          <p className="mt-4 leading-8 text-[#625746]">
+            Aprende lo esencial sobre materiales, tallas, cuidados y piedras antes de tomar una decision.
           </p>
-          <p>
-            Proyecto en desarrollo. Las recomendaciones y enlaces comerciales se
-            mostrarán con transparencia.
+          <div className="mt-6 grid gap-3">
+            {guideLinks.map((guide) => (
+              <Link key={guide.href} href={guide.href} className="rounded-2xl border border-[#ead8b3] bg-[#fffdf8] p-4 font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
+                {guide.label}
+              </Link>
+            ))}
+          </div>
+          <Link href="/guias" className="mt-6 inline-flex rounded-xl bg-[#17120b] px-5 py-3 font-semibold text-white transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
+            Ver todas las guias
+          </Link>
+        </article>
+
+        <article className="rounded-3xl border border-[#ead8b3] bg-white p-6 shadow-sm sm:p-8">
+          <h2 className="text-3xl font-semibold tracking-[-0.04em]">Preguntas frecuentes</h2>
+          <p className="mt-4 leading-8 text-[#625746]">
+            Respuestas claras sobre el recomendador, afiliacion, tallas, oro, plata y limites de una recomendacion.
           </p>
-        </div>
-      </footer>
+          <div className="mt-6 grid gap-3">
+            {["joyas.ai vende joyas directamente?", "Como sabe la IA que joya recomendarme?", "Que significa plata 925?"].map((question) => (
+              <Link key={question} href="/preguntas-frecuentes" className="rounded-2xl border border-[#ead8b3] bg-[#fffdf8] p-4 font-semibold text-[#2b241f] transition hover:bg-[#fff5df] hover:text-[#9a6b08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
+                {question}
+              </Link>
+            ))}
+          </div>
+        </article>
+      </section>
     </main>
   );
 }
+
 function HeroJewelry() {
   return (
-    <div className="relative min-h-[320px] overflow-hidden rounded-[2rem] border border-[#ead8b3] bg-[#fff4dd] shadow-2xl shadow-[#805400]/10 sm:min-h-[390px] lg:min-h-[460px]">
-      <Image
-        src="/images/hero-joyas-aniversario.png"
-        alt="Joyas doradas sobre mármol y seda"
-        fill
-        priority
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 680px"
-        className="object-cover object-center"
-      />
-
-      <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-[#fffaf1]/10" />
+    <div className="relative overflow-hidden rounded-[2rem] border border-[#ead8b3] bg-white p-3 shadow-2xl shadow-[#805400]/10 sm:p-4">
+      <div className="relative aspect-[4/3] min-h-[300px] overflow-hidden rounded-[1.5rem] bg-[#f8ecd4] sm:aspect-[16/11] lg:min-h-[430px]">
+        <Image src="/images/hero-joyas-aniversario.png" alt="Joyeria dorada elegante con collar, anillo, pulsera y pendientes sobre marmol claro" fill priority sizes="(max-width: 1024px) 100vw, 640px" className="object-cover object-center" />
+      </div>
     </div>
+  );
+}
+
+function InfoChip({ title, text }: { title: string; text: string }) {
+  return (
+    <div className="rounded-2xl border border-[#ead8b3] bg-white/75 p-4 shadow-sm">
+      <p className="font-semibold">{title}</p>
+      <p className="mt-1 text-sm text-[#7c7064]">{text}</p>
+    </div>
+  );
+}
+
+function CategoryCard({ href, title, text, image }: { href: string; title: string; text: string; image: string }) {
+  return (
+    <Link href={href} className="group overflow-hidden rounded-3xl border border-[#ead8b3] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-[#805400]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
+      <div className="relative h-48 bg-[#f8ecd4]">
+        <Image src={image} alt={`Guia de ${title.toLowerCase()} en joyas.ai`} fill sizes="(max-width: 1024px) 100vw, 420px" className="object-cover transition duration-300 group-hover:scale-[1.03]" />
+      </div>
+      <div className="p-6">
+        <h3 className="text-2xl font-semibold tracking-[-0.03em]">{title}</h3>
+        <p className="mt-2 leading-7 text-[#7c7064]">{text}</p>
+        <span className="mt-5 inline-flex font-semibold text-[#9a6b08]">Ver guia</span>
+      </div>
+    </Link>
   );
 }
