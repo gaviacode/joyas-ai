@@ -42,9 +42,8 @@ const ALLOWED_GUIDED_JEWELRY_TYPES = new Set([
 ]);
 
 const PRIMARY_GEMINI_MODEL = "gemini-2.5-flash-lite";
-const FALLBACK_GEMINI_MODEL = "gemini-2.5-flash";
-const RETRYABLE_GEMINI_STATUS_CODES = new Set([429, 500, 503]);
-const MAX_PRIMARY_ATTEMPTS = 3;
+const FALLBACK_GEMINI_MODEL = "gemini-3.5-flash-lite";
+const FALLBACK_GEMINI_STATUS_CODES = new Set([404, 429, 500, 502, 503, 504]);
 const GEMINI_TIMEOUT_MS = 18_000;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 20;
@@ -172,8 +171,9 @@ export async function POST(request: Request) {
     const statusCode = getGeminiStatusCode(error);
     console.error("Gemini advisor internal error", stringifyLogPayload({
       statusCode,
-      retryable: statusCode ? RETRYABLE_GEMINI_STATUS_CODES.has(statusCode) : false,
+      retryable: statusCode ? FALLBACK_GEMINI_STATUS_CODES.has(statusCode) : false,
       errorName: error instanceof Error ? error.name : typeof error,
+      errorMessage: getSanitizedErrorMessage(error),
     }));
 
     return NextResponse.json(
@@ -190,68 +190,51 @@ async function generateWithRetry({
   ai,
   contents,
 }: GeminiGenerationOptions) {
-  let lastRetryableStatus: number | undefined;
+  const modelAttempts = [
+    { model: PRIMARY_GEMINI_MODEL, fallback: false },
+    { model: FALLBACK_GEMINI_MODEL, fallback: true },
+  ];
+  let lastFallbackStatus: number | undefined;
 
-  for (let attempt = 1; attempt <= MAX_PRIMARY_ATTEMPTS; attempt += 1) {
+  for (const [index, modelAttempt] of modelAttempts.entries()) {
+    const attempt = index + 1;
     try {
       return await generateWithModel({
         ai,
-        model: PRIMARY_GEMINI_MODEL,
+        model: modelAttempt.model,
         contents,
         attempt,
-        fallback: false,
+        fallback: modelAttempt.fallback,
       });
     } catch (error) {
       const statusCode = getGeminiStatusCode(error);
-      const retryable = isRetryableGeminiError(statusCode);
+      const fallbackAllowed = isFallbackGeminiError(statusCode);
 
-      logGeminiAttempt({
-        model: PRIMARY_GEMINI_MODEL,
+      logGeminiError({
+        model: modelAttempt.model,
         attempt,
         statusCode,
-        fallback: false,
+        fallback: modelAttempt.fallback,
+        error,
       });
 
-      if (!retryable) {
+      if (error instanceof GeminiTimeoutError) {
         throw error;
       }
 
-      lastRetryableStatus = statusCode;
-
-      if (attempt < MAX_PRIMARY_ATTEMPTS) {
-        await delay(getRetryDelayMs(attempt));
+      if (!fallbackAllowed) {
+        throw error;
       }
-    }
-  }
 
-  if (lastRetryableStatus === 503) {
-    try {
-      return await generateWithModel({
-        ai,
-        model: FALLBACK_GEMINI_MODEL,
-        contents,
-        attempt: 1,
-        fallback: true,
-      });
-    } catch (error) {
-      const statusCode = getGeminiStatusCode(error);
+      lastFallbackStatus = statusCode;
 
-      logGeminiAttempt({
-        model: FALLBACK_GEMINI_MODEL,
-        attempt: 1,
-        statusCode,
-        fallback: true,
-      });
-
-      if (isRetryableGeminiError(statusCode)) {
+      if (modelAttempt.fallback) {
         throw new TemporaryGeminiUnavailableError(statusCode);
       }
-
-      throw error;
     }
   }
 
-  throw new TemporaryGeminiUnavailableError(lastRetryableStatus);
+  throw new TemporaryGeminiUnavailableError(lastFallbackStatus);
 }
 
 async function generateWithModel({
@@ -270,7 +253,7 @@ async function generateWithModel({
   const timeoutId = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
 
   try {
-    return await ai.models.generateContent({
+    const response = await ai.models.generateContent({
       model,
       contents,
       config: {
@@ -280,6 +263,8 @@ async function generateWithModel({
         abortSignal: controller.signal,
       },
     });
+    logGeminiResponse({ model, statusCode: 200 });
+    return response;
   } catch (error) {
     if (controller.signal.aborted || isAbortError(error)) {
       throw new GeminiTimeoutError();
@@ -329,7 +314,7 @@ function getGeminiStatusCode(error: unknown) {
   }
 
   if (typeof candidate.message === "string") {
-    const statusMatch = candidate.message.match(/\b(400|401|403|404|429|500|503)\b/);
+    const statusMatch = candidate.message.match(/\b(400|401|403|404|429|500|502|503|504)\b/);
     return statusMatch ? Number(statusMatch[1]) : undefined;
   }
 
@@ -426,40 +411,76 @@ function logGeminiApiKeyState(rawApiKey: string | undefined, apiKey: string | un
   }));
 }
 
-function isRetryableGeminiError(statusCode: number | undefined) {
-  return statusCode !== undefined && RETRYABLE_GEMINI_STATUS_CODES.has(statusCode);
-}
-
-function getRetryDelayMs(attempt: number) {
-  const baseDelayMs = attempt === 1 ? 1000 : 2500;
-  const jitterMs = Math.floor(Math.random() * 350);
-
-  return baseDelayMs + jitterMs;
-}
-
-function delay(ms: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
+function isFallbackGeminiError(statusCode: number | undefined) {
+  return statusCode !== undefined && FALLBACK_GEMINI_STATUS_CODES.has(statusCode);
 }
 
 function logGeminiAttempt({
   model,
   attempt,
-  statusCode,
   fallback,
 }: {
   model: string;
   attempt: number;
-  statusCode?: number;
   fallback: boolean;
 }) {
   console.info("Gemini advisor request", stringifyLogPayload({
     model,
     attempt,
-    statusCode,
     fallback,
   }));
+}
+
+function logGeminiResponse({
+  model,
+  statusCode,
+}: {
+  model: string;
+  statusCode: number;
+}) {
+  console.info("Gemini advisor response", stringifyLogPayload({
+    model,
+    statusCode,
+  }));
+}
+
+function logGeminiError({
+  model,
+  attempt,
+  statusCode,
+  fallback,
+  error,
+}: {
+  model: string;
+  attempt: number;
+  statusCode?: number;
+  fallback: boolean;
+  error: unknown;
+}) {
+  console.error("Gemini advisor error", stringifyLogPayload({
+    model,
+    attempt,
+    statusCode,
+    fallback,
+    errorName: error instanceof Error ? error.name : typeof error,
+    errorMessage: getSanitizedErrorMessage(error),
+  }));
+}
+
+function getSanitizedErrorMessage(error: unknown) {
+  const message =
+    error instanceof Error
+      ? error.message
+      : typeof error === "string"
+        ? error
+        : "";
+
+  return message
+    .replace(/AIza[0-9A-Za-z_-]{20,}/g, "[REDACTED_API_KEY]")
+    .replace(/Bearer\s+[0-9A-Za-z._~+/=-]+/gi, "Bearer [REDACTED]")
+    .replace(/key=([0-9A-Za-z_-]+)/gi, "key=[REDACTED]")
+    .replace(/\s+/g, " ")
+    .slice(0, 500);
 }
 
 function stringifyLogPayload(payload: unknown) {
