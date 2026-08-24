@@ -5,7 +5,7 @@ import { localizeHref, localizeText, type Locale } from "@/lib/i18n";
 
 const navLinks = [
   { href: "/#joyero-ia", label: "Recomendador" },
-  { href: "/joyas/regalos", label: "Categorías" },
+  { href: "/joyas/regalos", label: "Joyas" },
   { href: "/ocasiones/aniversario", label: "Ocasiones" },
   { href: "/guias", label: "Guías" },
   { href: "/como-funciona", label: "Cómo funciona" },
@@ -26,7 +26,7 @@ export default function SiteHeader({
   const homeHref = localizeHref("/", locale);
   const labels = {
     mainNav: locale === "pt-BR" ? "Navegação principal" : locale === "en" ? "Main navigation" : "Navegación principal",
-    home: locale === "pt-BR" ? "Ir para o início de Regalos.ai" : locale === "en" ? "Go to Regalos.ai home" : "Ir al inicio de Regalos.ai",
+    home: locale === "pt-BR" ? "Ir para o início de joyas.ai" : locale === "en" ? "Go to joyas.ai home" : "Ir al inicio de joyas.ai",
   };
 
   return (
@@ -63,7 +63,7 @@ export default function SiteHeader({
             href={advisorHref}
             className="rounded-xl border border-[#d7a63c] bg-white px-5 py-3 text-sm font-semibold text-[#9a6b08] shadow-sm transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]"
           >
-            {localizeText("Probar el recomendador IA", locale)}
+            {localizeText("Probar el joyero IA", locale)}
           </Link>
         </div>
         <div className="lg:hidden">

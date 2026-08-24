@@ -10,21 +10,9 @@ import type {
 } from "@/lib/advisor";
 
 const SYSTEM_PROMPT = `
-Eres el asesor IA experto de Regalos.ai.
+Eres el joyero IA experto de joyas.ai.
 
-Tu tarea es recomendar ideas genéricas de regalo según la personalidad, gustos, relación, ocasión y presupuesto de la persona que lo recibirá.
-
-Categorías principales permitidas y orden de referencia:
-1. Perfumes
-2. Libros
-3. Joyas
-4. Experiencias
-5. Ropa
-6. Tecnología
-7. Juegos de mesa
-8. Suscripciones
-
-En Joyas se incluyen también relojes. La categoría Joyas debe poder enlazar posteriormente con https://joyas.ai, pero no incluyas enlaces salvo que se pidan explícitamente en otra fase del producto.
+Tu tarea es recomendar tipos genéricos de joyas, no productos comerciales concretos.
 
 Reglas obligatorias:
 - Responde en el idioma indicado por la petición: español si locale es "es", portugués brasileño natural si locale es "pt-BR" e inglés natural si locale es "en".
@@ -32,21 +20,26 @@ Reglas obligatorias:
 - Incluye exactamente 3 recomendaciones salvo que falten datos esenciales; si faltan, devuelve recomendaciones prudentes y explica la incertidumbre en summary.
 - Cada recomendación debe incluir: id, source, genericName, reason, recommendedMaterials, styles, suitableOccasions, estimatedPriceRange, jewelerTip y disclaimer.
 - source debe ser siempre "generic".
-- recommendedMaterials debe contener la categoría principal y, si ayuda, el formato del regalo. Ejemplo: ["Libros", "Libro ilustrado de viajes"].
-- styles debe reflejar rasgos de personalidad o estilo del regalo.
-- suitableOccasions debe reflejar ocasiones de uso o entrega.
-- jewelerTip debe funcionar como consejo para acertar con el regalo, aunque conserve ese nombre de campo por compatibilidad técnica.
 - No inventes marcas, tiendas, URLs, ASIN, enlaces de afiliado, stock, descuentos, valoraciones, reseñas, disponibilidad ni precios exactos.
-- Usa rangos de precio orientativos, nunca importes exactos, y deja claro que dependen de la categoría, proveedor y calidad.
-- No afirmes que un producto concreto existe en una tienda.
-- No impongas estereotipos por género, edad o relación.
-- La prioridad es: entender a la persona, decidir qué puede gustarle y recomendar regalos.
-- Explica siempre por qué el regalo encaja con esa persona, conectando rasgos y gustos concretos cuando existan.
-- Ten en cuenta detalles para evitar, como "no usa joyas", "ya tiene muchos perfumes" o "no es tecnológica".
+- Usa rangos de precio orientativos, nunca importes exactos, y deja claro que dependen del material y proveedor.
+- No afirmes que una joya concreta existe en una tienda.
+- Trata el género solo como una preferencia comercial indicada por el usuario; no impongas estereotipos.
+- Permite opciones unisex y alternativas si el usuario no está seguro.
 - Indica que las recomendaciones genéricas deben verificarse antes de comprar.
 - No incluyas imágenes salvo que se proporcione una fuente propia o autorizada. En esta versión no incluyas imageUrl.
 - Mantén un tono premium, claro, prudente y útil.
 `;
+
+const ALLOWED_GUIDED_JEWELRY_TYPES = new Set([
+  "anillo",
+  "collar",
+  "colgante",
+  "pulsera",
+  "pendientes",
+  "gemelos",
+  "reloj",
+  "no estoy seguro",
+]);
 
 const PRIMARY_GEMINI_MODEL = "gemini-2.5-flash-lite";
 const FALLBACK_GEMINI_MODEL = "gemini-3.5-flash-lite";
@@ -156,7 +149,7 @@ export async function POST(request: Request) {
         {
           error: "TEMPORARILY_UNAVAILABLE",
           message:
-            "El recomendador IA está recibiendo muchas consultas. Inténtalo de nuevo en unos segundos.",
+            "El joyero IA está recibiendo muchas consultas. Inténtalo de nuevo en unos segundos.",
           retryable: true,
         },
         { status: 503 }
@@ -168,7 +161,7 @@ export async function POST(request: Request) {
         {
           error: "TEMPORARILY_UNAVAILABLE",
           message:
-            "El recomendador IA está tardando demasiado en responder. Inténtalo de nuevo en unos segundos.",
+            "El joyero IA está tardando demasiado en responder. Inténtalo de nuevo en unos segundos.",
           retryable: true,
         },
         { status: 503 },
@@ -582,11 +575,16 @@ function isValidGuidedPreferences(preferences: GuidedPreferences) {
       (typeof preferences.budgetMin === "number" && preferences.budgetMin >= 0)) &&
     (preferences.budgetMax === undefined ||
       (typeof preferences.budgetMax === "number" && preferences.budgetMax >= 0));
+  const jewelryTypeValid =
+    preferences.jewelryType === undefined ||
+    ALLOWED_GUIDED_JEWELRY_TYPES.has(preferences.jewelryType.trim().toLowerCase());
+
   return (
     stringFields.every((field) => field === undefined || typeof field === "string") &&
     isOptionalStringArray(preferences.styles) &&
     isOptionalStringArray(preferences.materials) &&
-    numbersValid
+    numbersValid &&
+    jewelryTypeValid
   );
 }
 
@@ -641,7 +639,7 @@ function buildUserPrompt(request: AdvisorRequest) {
 
   const conversationText = request.conversation?.length
     ? request.conversation
-        .map((message) => `${message.role === "user" ? "Usuario" : "Recomendador IA"}: ${message.content}`)
+        .map((message) => `${message.role === "user" ? "Usuario" : "Joyero IA"}: ${message.content}`)
         .join("\n")
     : "Sin conversación previa.";
 
@@ -653,7 +651,7 @@ Idioma de respuesta solicitado: ${getAdvisorLanguageName(request.locale ?? "es")
 Contexto de conversación para conservar preferencias y refinamientos:
 ${conversationText}
 
-Genera recomendaciones conceptuales personalizadas para Regalos.ai. Devuelve solo JSON.
+Genera recomendaciones conceptuales personalizadas para joyas.ai. Devuelve solo JSON.
 `;
 }
 
@@ -805,7 +803,7 @@ function normalizeRecommendation(
     suitableOccasions: recommendation.suitableOccasions.slice(0, 4),
     disclaimer:
       recommendation.disclaimer ||
-      "Recomendación orientativa: representa una idea de regalo, no un producto concreto disponible en una tienda.",
+      "Recomendación orientativa: representa un tipo de joya, no un producto concreto disponible en una tienda.",
     affiliateUrl: undefined,
     imageUrl: undefined,
     merchant: undefined,
