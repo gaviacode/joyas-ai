@@ -1,5 +1,5 @@
 export const SITE_URL = normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL ?? "https://joyas.ai");
-export const SITE_NAME = "joyas.ai";
+export const SITE_NAME = "Regalos.ai";
 export const PUBLIC_CONTACT_EMAIL = "gaviacode@gmail.com";
 
 export function absoluteUrl(path = "") {

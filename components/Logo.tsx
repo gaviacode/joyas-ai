@@ -9,7 +9,7 @@ type LogoProps = {
 export default function Logo({
   className = "",
   href = "/",
-  ariaLabel = "Ir al inicio de joyas.ai",
+  ariaLabel = "Ir al inicio de Regalos.ai",
 }: LogoProps) {
   return (
     <Link
@@ -21,7 +21,7 @@ export default function Logo({
         className="text-[1.85rem] font-medium leading-none sm:text-[2.15rem] lg:text-[2.35rem]"
         style={{ fontFamily: "Georgia, Cambria, 'Times New Roman', serif" }}
       >
-        joyas
+        regalos
       </span>
       <span
         className="ml-0.5 text-[1.25rem] font-semibold leading-none text-[#5f4a24] transition-colors group-hover:text-[#6f4b09] sm:text-[1.45rem] lg:text-[1.6rem]"

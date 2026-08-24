@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     title: "Joyas por ocasión | joyas.ai",
     description:
       "Guías para elegir joyas en aniversarios, compromiso, boda, cumpleaños, San Valentín, Día de la madre y graduación.",
-    url: "/ocasiónes",
+    url: "/ocasiones",
     siteName: "joyas.ai",
     locale: openGraphLocales.es,
     alternateLocale: [openGraphLocales["pt-BR"], openGraphLocales.en],
@@ -33,7 +33,7 @@ export default function OccasionsIndexPage() {
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
       <SiteHeader languageLinks={getIndexLanguageLinks("ocasiones")} />
       <section className="mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:px-10">
-        <Breadcrumbs items={[{ href: "/ocasiónes", label: "ocasiónes" }]} />
+        <Breadcrumbs items={[{ href: "/ocasiones", label: "ocasiónes" }]} />
         <h1 className="mt-8 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
           Joyas por ocasión
         </h1>
@@ -44,7 +44,7 @@ export default function OccasionsIndexPage() {
           {occasions.map((item) => (
             <Link
               key={item.slug}
-              href={`/ocasiónes/${item.slug}`}
+              href={`/ocasiones/${item.slug}`}
               className="rounded-3xl border border-[#ead8b3] bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-[#805400]/10"
             >
               <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#9b7b3a]">
