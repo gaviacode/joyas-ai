@@ -142,7 +142,7 @@ export const jewelryCategories: ArticleData[] = [
     ],
     related: [
       { href: "/guias/como-elegir-collar", label: "Guia para elegir collar" },
-      { href: "/joyas/regalos", label: "Joyas para regalar" },
+      { href: "/guias", label: "Guías para regalar joyas" },
       advisorLink,
     ],
   },
@@ -278,50 +278,6 @@ export const jewelryCategories: ArticleData[] = [
       advisorLink,
     ],
   },
-  {
-    slug: "regalos",
-    eyebrow: "Joyas",
-    title: "Joyas para regalar: como acertar sin conocerlo todo",
-    description:
-      "Ideas para regalar joyas segun ocasion, relacion, presupuesto, estilo y pistas discretas.",
-    intro:
-      "Regalar una joya puede ser muy especial, pero no deberia basarse solo en una impresion rapida. Conviene observar que usa la persona, que evita y que significado quieres transmitir.",
-    sections: [
-      {
-        title: "Que tener en cuenta",
-        paragraphs: [
-          "La relacion, la ocasion y el presupuesto orientan la eleccion. No es lo mismo un detalle de cumpleaños que una joya de aniversario o graduacion.",
-          "Si no conoces bien sus gustos, elige piezas versatiles, ajustables o discretas.",
-        ],
-      },
-      {
-        title: "Ideas habituales",
-        paragraphs: [
-          "Collares finos, pulseras grabadas, pendientes pequeños y colgantes con inicial suelen ser opciones faciles de adaptar.",
-          "Los anillos pueden ser muy significativos, pero requieren conocer talla y contexto para no generar una interpretacion no deseada.",
-        ],
-      },
-      {
-        title: "Personalizacion",
-        paragraphs: [
-          "Iniciales, fechas, coordenadas, piedras elegidas por recuerdo o grabados breves pueden hacer que una joya sencilla tenga mas intencion.",
-          "La personalizacion reduce margen de devolucion en algunas tiendas, asi que conviene revisar condiciones antes de comprar.",
-        ],
-      },
-      {
-        title: "Consejos para acertar",
-        paragraphs: [
-          "Mira que metal repite, si usa joyas grandes o discretas y si combina colores frios o calidos.",
-          "Cuando haya duda, el joyero IA puede ayudarte a ordenar pistas y proponer tipos de joya sin inventar productos concretos.",
-        ],
-      },
-    ],
-    related: [
-      { href: "/guias/como-elegir-una-joya-para-regalar", label: "Guia para regalar joyas" },
-      { href: "/ocasiones/regalo-sorpresa", label: "Regalo sorpresa" },
-      advisorLink,
-    ],
-  },
 ];
 
 export const occasions: ArticleData[] = [
@@ -357,7 +313,7 @@ export const occasions: ArticleData[] = [
       },
     ],
     related: [
-      { href: "/joyas/regalos", label: "Joyas para regalar" },
+      { href: "/guias", label: "Guías para regalar joyas" },
       { href: "/joyas/anillos/como-saber-talla-anillo", label: "Talla de anillo" },
       advisorLink,
     ],
@@ -466,7 +422,7 @@ export const occasions: ArticleData[] = [
     ],
     related: [
       { href: "/joyas/pendientes", label: "Como elegir pendientes" },
-      { href: "/joyas/regalos", label: "Joyas para regalar" },
+      { href: "/guias", label: "Guías para regalar joyas" },
       advisorLink,
     ],
   },
@@ -571,7 +527,7 @@ export const occasions: ArticleData[] = [
       },
     ],
     related: [
-      { href: "/joyas/regalos", label: "Joyas para regalar" },
+      { href: "/guias", label: "Guías para regalar joyas" },
       { href: "/guias/como-cuidar-joyas", label: "Cuidado de joyas" },
       advisorLink,
     ],

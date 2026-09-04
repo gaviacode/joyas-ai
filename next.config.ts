@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   async redirects() {
     return [
+      { source: "/joyas/regalos", destination: "/guias", permanent: true },
+      { source: "/pt-br/joias/presentes", destination: "/pt-br/guias", permanent: true },
+      { source: "/en/jewelry/jewelry-gifts", destination: "/en/guides", permanent: true },
       { source: "/guias/piedras-preciosas-1", destination: "/guias/piedras-preciosas", permanent: true },
       { source: "/guias/moissanita-vs-diamante-1", destination: "/guias/moissanita-vs-diamante", permanent: true },
       { source: "/guias/como-saber-talla-anillo-1", destination: "/guias/como-saber-talla-anillo", permanent: true },

@@ -557,6 +557,7 @@ function hasGuidedContent(preferences: GuidedPreferences) {
       preferences.budgetLabel ||
       preferences.budgetMin !== undefined ||
       preferences.budgetMax !== undefined ||
+      preferences.age !== undefined ||
       preferences.additionalDetails?.trim()
   );
 }
@@ -574,7 +575,9 @@ function isValidGuidedPreferences(preferences: GuidedPreferences) {
     (preferences.budgetMin === undefined ||
       (typeof preferences.budgetMin === "number" && preferences.budgetMin >= 0)) &&
     (preferences.budgetMax === undefined ||
-      (typeof preferences.budgetMax === "number" && preferences.budgetMax >= 0));
+      (typeof preferences.budgetMax === "number" && preferences.budgetMax >= 0)) &&
+    (preferences.age === undefined ||
+      (typeof preferences.age === "number" && Number.isInteger(preferences.age) && preferences.age >= 1 && preferences.age <= 120));
   const jewelryTypeValid =
     preferences.jewelryType === undefined ||
     ALLOWED_GUIDED_JEWELRY_TYPES.has(preferences.jewelryType.trim().toLowerCase());
@@ -623,6 +626,7 @@ function cleanGuidedPreferences(preferences?: GuidedPreferences) {
     budgetMin: preferences.budgetMin,
     budgetMax: preferences.budgetMax,
     budgetLabel: cleanOptionalString(preferences.budgetLabel),
+    age: preferences.age,
     additionalDetails: cleanOptionalString(preferences.additionalDetails),
   };
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Script from "next/script";
 import SiteHeader from "@/components/SiteHeader";
 import JewelryChat from "@/components/JewelryChat";
+import ExternalGiftIdeasCta from "@/components/ExternalGiftIdeasCta";
 import { getHomeMetadataAlternates, openGraphLocales } from "@/lib/i18n";
 import { absoluteUrl, PUBLIC_CONTACT_EMAIL, SITE_NAME } from "@/lib/site-config";
 
@@ -38,7 +39,6 @@ const categories = [
   { href: "/joyas/pulseras", title: "Pulseras", text: "Cierres, talla, grabados y comodidad.", image: "/images/categories/categoria-pulseras.png" },
   { href: "/joyas/pendientes", title: "Pendientes", text: "Tamaño, cierre, peso, estilo y ocasión.", image: "/images/categories/categoria-pendientes.png" },
   { href: "/joyas/boda", title: "Joyas para boda", text: "Alianzas, novia, novio, madrina e invitadas.", image: "/images/categories/categoria-joyas-boda.png" },
-  { href: "/joyas/regalos", title: "Regalos", text: "Ideas para acertar sin conocerlo todo.", image: "/images/categories/categoria-regalos-especiales.png" },
 ];
 
 const occasions = [
@@ -80,18 +80,10 @@ export default function Home() {
           <p className="mt-6 max-w-2xl text-lg leading-8 text-[#63584c]">
             Habla con un joyero experto con inteligencia artificial y descubre anillos, collares, pulseras o pendientes según la ocasión, tu presupuesto y el estilo de la persona.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="/#joyero-ia" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-[#b97a05] to-[#d7a63c] px-7 py-4 font-semibold text-white shadow-lg shadow-[#b97a05]/20 transition hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
+          <div className="mt-9">
+            <Link href="/#joyero-ia" className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#b97a05] to-[#d7a63c] px-7 py-4 font-semibold text-white shadow-lg shadow-[#b97a05]/20 transition hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-[220px]">
               Probar el joyero IA
             </Link>
-            <Link href="/joyas/regalos" className="inline-flex items-center justify-center rounded-xl border border-[#d7a63c] bg-white px-7 py-4 font-semibold text-[#9a6b08] shadow-sm transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
-              Explorar ideas
-            </Link>
-          </div>
-          <div className="mt-9 grid gap-3 sm:grid-cols-3">
-            <InfoChip title="Recomendaciones honestas" text="Ideas claras, sin inventar productos ni valoraciones falsas." />
-            <InfoChip title="Pensado para regalar" text="según ocasión, estilo, presupuesto y persona." />
-            <InfoChip title="Orientación rápida" text="Dinos qué buscas y el joyero IA te ayuda a ordenar opciones." />
           </div>
         </div>
         <HeroJewelry />
@@ -117,6 +109,12 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <ExternalGiftIdeasCta
+        title="¿Buscas algo más que una joya?"
+        description="Descubre ideas de regalos personalizadas con IA para encontrar otras opciones según la persona, la ocasión y el presupuesto."
+        ctaLabel="Ver ideas de regalos en regalos.ai"
+      />
 
       <section className="bg-white/55 px-5 py-14 sm:px-8 lg:px-10">
         <div className="mx-auto max-w-7xl">
@@ -198,15 +196,6 @@ function HeroJewelry() {
       <div className="relative aspect-[4/3] min-h-[300px] overflow-hidden rounded-[1.5rem] bg-[#f8ecd4] sm:aspect-[16/11] lg:min-h-[430px]">
         <Image src="/images/hero-joyas-aniversario.png" alt="Joyeria dorada elegante con collar, anillo, pulsera y pendientes sobre marmol claro" fill priority sizes="(max-width: 1024px) 100vw, 640px" className="object-cover object-center" />
       </div>
-    </div>
-  );
-}
-
-function InfoChip({ title, text }: { title: string; text: string }) {
-  return (
-    <div className="rounded-2xl border border-[#ead8b3] bg-white/75 p-4 shadow-sm">
-      <p className="font-semibold">{title}</p>
-      <p className="mt-1 text-sm text-[#7c7064]">{text}</p>
     </div>
   );
 }

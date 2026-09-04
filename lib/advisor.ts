@@ -15,6 +15,7 @@ export type GuidedPreferences = {
   budgetMin?: number;
   budgetMax?: number;
   budgetLabel?: string;
+  age?: number;
   additionalDetails?: string;
 };
 

@@ -5,8 +5,8 @@ import { localizeHref, localizeText, type Locale } from "@/lib/i18n";
 
 const navLinks = [
   { href: "/#joyero-ia", label: "Recomendador" },
-  { href: "/joyas/regalos", label: "Joyas" },
-  { href: "/ocasiones/aniversario", label: "Ocasiones" },
+  { href: "/joyas", label: "Joyas" },
+  { href: "/ocasiones", label: "Ocasiones" },
   { href: "/guias", label: "Guías" },
   { href: "/como-funciona", label: "Cómo funciona" },
 ];

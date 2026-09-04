@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import HubPage from "@/components/HubPage";
 import LocalizedInfoPage from "@/components/LocalizedInfoPage";
 import SiteHeader from "@/components/SiteHeader";
+import { getHubSeo } from "@/lib/hub-content";
 import {
   findInfoPageKindBySlug,
   getInfoLanguageLinks,
@@ -12,11 +14,9 @@ import {
   getLocalizedGuideCategories,
   getIndexLanguageLinks,
   getLocalizedIndexPath,
-  getLocalizedPath,
   getLocalizedSection,
   getIndexMetadataAlternates,
   getSectionLabel,
-  localizeArticle,
   localizeText,
   locales,
   openGraphLocales,
@@ -25,7 +25,6 @@ import {
   type LocalizedLocale,
 } from "@/lib/i18n";
 import { getInfoPage } from "@/lib/info-pages";
-import { jewelryCategories, occasions } from "@/lib/site-content";
 
 type PageProps = {
   params: Promise<{ locale: string; section: string }>;
@@ -90,8 +89,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const label = getSectionLabel(kind, locale);
-  const title = `${label} | joyas.ai`;
-  const description = getDescription(kind, locale);
+  const hubSeo = kind === "guias" ? undefined : getHubSeo(kind, locale);
+  const title = hubSeo?.title ?? `${label} | joyas.ai`;
+  const description = hubSeo?.description ?? getDescription(kind, locale);
 
   return {
     title,
@@ -141,24 +141,24 @@ export default async function LocalizedSectionPage({ params }: PageProps) {
     notFound();
   }
 
-  const items = getItems(kind, locale);
-  const indexHref = getLocalizedIndexPath(kind, locale);
+  if (kind !== "guias") {
+    return <HubPage kind={kind} locale={locale} languageLinks={getIndexLanguageLinks(kind)} />;
+  }
+
+  const items = getItems(locale);
+  const indexHref = getLocalizedIndexPath("guias", locale);
 
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
-      <SiteHeader locale={locale} languageLinks={getIndexLanguageLinks(kind)} />
+      <SiteHeader locale={locale} languageLinks={getIndexLanguageLinks("guias")} />
       <section className="mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:px-10">
         <Breadcrumbs
           homeLabel={localizeText("Inicio", locale)}
           homeHref={locale === "pt-BR" ? "/pt-br" : "/en"}
-          items={[{ href: indexHref, label: getSectionLabel(kind, locale) }]}
+          items={[{ href: indexHref, label: getSectionLabel("guias", locale) }]}
         />
-        <h1 className="mt-8 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
-          {getHeading(kind, locale)}
-        </h1>
-        <p className="mt-4 max-w-3xl text-lg leading-8 text-[#63584c]">
-          {getDescription(kind, locale)}
-        </p>
+        <h1 className="mt-8 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">{getHeading("guias", locale)}</h1>
+        <p className="mt-4 max-w-3xl text-lg leading-8 text-[#63584c]">{getDescription("guias", locale)}</p>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
             <Link
@@ -196,21 +196,7 @@ function getLocalizedInfoPageKinds() {
   ] as const;
 }
 
-function getItems(kind: ContentKind, locale: Locale) {
-  if (kind === "joyas") {
-    return jewelryCategories.map((article) => {
-      const localized = localizeArticle(article, kind, locale);
-      return { ...localized, href: getLocalizedPath(kind, article.slug, locale), eyebrow: localized.eyebrow };
-    });
-  }
-
-  if (kind === "ocasiones") {
-    return occasions.map((article) => {
-      const localized = localizeArticle(article, kind, locale);
-      return { ...localized, href: getLocalizedPath(kind, article.slug, locale), eyebrow: localized.eyebrow };
-    });
-  }
-
+function getItems(locale: Locale) {
   return getLocalizedGuideCategories(locale).map((category) => ({
     href: category.href,
     eyebrow: getSectionLabel("guias", locale),

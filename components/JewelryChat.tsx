@@ -3,7 +3,8 @@
 import {
   FormEvent,
   KeyboardEvent,
-  useMemo,
+  useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -71,11 +72,11 @@ const quickExamples = [
 ];
 
 const recipients: Option[] = [
-  { label: "Mujer" },
-  { label: "Hombre" },
-  { label: "Unisex" },
-  { label: "Para mí" },
-  { label: "Prefiero no indicarlo" },
+  { label: "Mujer", icon: <RecipientIcon type="woman" />, accentClassName: "text-[#7c7064]" },
+  { label: "Hombre", icon: <RecipientIcon type="man" />, accentClassName: "text-[#7c7064]" },
+  { label: "Unisex", icon: <RecipientIcon type="unisex" />, accentClassName: "text-[#7c7064]" },
+  { label: "Para mí", icon: <RecipientIcon type="self" />, accentClassName: "text-[#7c7064]" },
+  { label: "Prefiero no indicarlo", icon: <RecipientIcon type="unspecified" />, accentClassName: "text-[#7c7064]" },
 ];
 
 const occasions: Option[] = [
@@ -103,19 +104,20 @@ const styles: Option[] = [
   { label: "Lujo discreto", icon: <StyleIcon type="quietLuxury" />, accentClassName: "text-[#9a722b]" },
 ];
 
-const refinementPrompts = [
-  "Más económico",
-  "Más original",
-  "Más discreto",
-  "Cambiar material",
-  "Evitar piedras",
-  "Ver otras ideas",
-];
-
 const initialPreferences: GuidedPreferences = {
   styles: [],
   materials: [],
 };
+
+const guidedStepKeys = [
+  "recipient",
+  "jewelryType",
+  "occasion",
+  "styles",
+  "materials",
+  "budget",
+  "details",
+] as const;
 
 const chatCopy = {
   es: {
@@ -133,9 +135,23 @@ const chatCopy = {
     directPlaceholder:
       "Ejemplo: Busco un collar para mi pareja por nuestro aniversario. Le gusta la plata, las piedras azules y los diseños elegantes, pero discretos. Mi presupuesto es de hasta 120 €.",
     directTip: "Consejo: cuanto más concreto sea el contexto, más precisa será la recomendación.",
+    clear: "Limpiar",
     askButton: "Preguntar al joyero IA",
     loadingButton: "Analizando...",
     guidedSubmit: "Obtener recomendaciones del joyero IA",
+    guidedFind: "Encontrar mi joya",
+    modifyPreferences: "Ajustar preferencias",
+    preferencesTitle: "Tus preferencias",
+    changePreference: "Cambiar",
+    updateRecommendations: "Actualizar recomendaciones",
+    updatingRecommendations: "Actualizando recomendaciones...",
+    cancel: "Cancelar",
+    done: "Listo",
+    notSpecified: "Sin especificar",
+    continue: "Continuar",
+    back: "Atrás",
+    step: "Paso",
+    of: "de",
     directValidation:
       "Describe brevemente la persona, ocasión o presupuesto para que el joyero IA pueda ayudarte.",
     guidedValidation:
@@ -158,8 +174,10 @@ const chatCopy = {
     min: "Mínimo",
     max: "Máximo",
     details: "Detalles adicionales",
+    age: "Edad",
+    optional: "Opcional",
     detailsPlaceholder:
-      "Puedes añadir algo más: colores favoritos, si tiene alergias, si prefiere joyas discretas, si ya tiene algo parecido...",
+      "Cuéntanos cualquier detalle que pueda ayudarnos a acertar mejor...",
     customBudget: "Presupuesto personalizado",
     noPreference: "Sin preferencia",
     summaryTitle: "Resumen para revisar",
@@ -189,12 +207,12 @@ const chatCopy = {
     recommendedMaterial: "Material recomendado",
     indicativePrice: "Precio orientativo",
     jewelerTip: "Consejo del joyero",
-    refinementTitle: "¿Quieres aclarar o cambiar algo?",
+    refinementTitle: "¿Quieres añadir alguna aclaración?",
     refinementHelp:
-      "El joyero IA recuerda tus preferencias. Puedes pedirle que descarte una opción, cambie el material, reduzca el presupuesto o busque algo más original.",
-    message: "Mensaje",
+      "Puedes añadir cualquier detalle que no hayas indicado antes. Para cambiar material, estilo, presupuesto u otras preferencias, usa “Ajustar preferencias”.",
+    message: "Aclaración opcional",
     refinementPlaceholder:
-      "Ejemplo: No le gustan los collares muy cortos y prefiero una piedra más oscura.",
+      "Ej. Prefiero algo poco común, con significado especial o que pueda llevar todos los días.",
     refining: "Refinando...",
     sendRefinement: "Enviar aclaración",
   },
@@ -213,9 +231,23 @@ const chatCopy = {
     directPlaceholder:
       "Exemplo: Procuro um colar para meu par pelo nosso aniversário de relacionamento. Ela gosta de prata, pedras azuis e designs elegantes, mas discretos. Meu orçamento é de até 120 €.",
     directTip: "Dica: quanto mais concreto for o contexto, mais precisa será a recomendação.",
+    clear: "Limpar",
     askButton: "Perguntar ao joalheiro IA",
     loadingButton: "Analisando...",
     guidedSubmit: "Obter recomendações do joalheiro IA",
+    guidedFind: "Encontrar minha joia",
+    modifyPreferences: "Ajustar preferências",
+    preferencesTitle: "Suas preferências",
+    changePreference: "Mudar",
+    updateRecommendations: "Atualizar recomendações",
+    updatingRecommendations: "Atualizando recomendações...",
+    cancel: "Cancelar",
+    done: "Concluído",
+    notSpecified: "Não especificado",
+    continue: "Continuar",
+    back: "Voltar",
+    step: "Passo",
+    of: "de",
     directValidation:
       "Descreva brevemente a pessoa, a ocasião ou o orçamento para que o joalheiro IA possa ajudar.",
     guidedValidation:
@@ -238,8 +270,10 @@ const chatCopy = {
     min: "Mínimo",
     max: "Máximo",
     details: "Detalhes adicionais",
+    age: "Idade",
+    optional: "Opcional",
     detailsPlaceholder:
-      "Você pode adicionar algo mais: cores favoritas, alergias, preferência por joias discretas, se já tem algo parecido...",
+      "Conte qualquer detalhe que possa nos ajudar a acertar melhor...",
     customBudget: "Orçamento personalizado",
     noPreference: "Sem preferência",
     summaryTitle: "Resumo para revisar",
@@ -269,12 +303,12 @@ const chatCopy = {
     recommendedMaterial: "Material recomendado",
     indicativePrice: "Preço orientativo",
     jewelerTip: "Dica do joalheiro",
-    refinementTitle: "Quer esclarecer ou mudar algo?",
+    refinementTitle: "Quer adicionar algum esclarecimento?",
     refinementHelp:
-      "O joalheiro IA lembra suas preferências. Você pode pedir para descartar uma opção, mudar o material, reduzir o orçamento ou buscar algo mais original.",
-    message: "Mensagem",
+      "Você pode adicionar qualquer detalhe que ainda não tenha informado. Para mudar material, estilo, orçamento ou outras preferências, use “Ajustar preferências”.",
+    message: "Esclarecimento opcional",
     refinementPlaceholder:
-      "Exemplo: Ela não gosta de colares muito curtos e prefiro uma pedra mais escura.",
+      "Ex.: Prefiro algo incomum, com um significado especial ou que possa usar todos os dias.",
     refining: "Refinando...",
     sendRefinement: "Enviar esclarecimento",
   },
@@ -293,9 +327,23 @@ const chatCopy = {
     directPlaceholder:
       "Example: I am looking for a necklace for my partner for our anniversary. She likes silver, blue stones and elegant but understated designs. My budget is up to €120.",
     directTip: "Tip: the more specific the context, the more precise the recommendation.",
+    clear: "Clear",
     askButton: "Ask the AI jeweler",
     loadingButton: "Analyzing...",
     guidedSubmit: "Get AI jeweler recommendations",
+    guidedFind: "Find my jewelry",
+    modifyPreferences: "Adjust preferences",
+    preferencesTitle: "Your preferences",
+    changePreference: "Change",
+    updateRecommendations: "Update recommendations",
+    updatingRecommendations: "Updating recommendations...",
+    cancel: "Cancel",
+    done: "Done",
+    notSpecified: "Not specified",
+    continue: "Continue",
+    back: "Back",
+    step: "Step",
+    of: "of",
     directValidation:
       "Briefly describe the person, occasion or budget so the AI jeweler can help.",
     guidedValidation:
@@ -318,8 +366,10 @@ const chatCopy = {
     min: "Minimum",
     max: "Maximum",
     details: "Additional details",
+    age: "Age",
+    optional: "Optional",
     detailsPlaceholder:
-      "You can add more context: favorite colors, allergies, whether they prefer understated jewelry, whether they already own something similar...",
+      "Tell us any detail that can help us make a better recommendation...",
     customBudget: "Custom budget",
     noPreference: "No preference",
     summaryTitle: "Review summary",
@@ -349,12 +399,12 @@ const chatCopy = {
     recommendedMaterial: "Recommended material",
     indicativePrice: "Indicative price",
     jewelerTip: "Jeweler tip",
-    refinementTitle: "Want to clarify or change something?",
+    refinementTitle: "Would you like to add a clarification?",
     refinementHelp:
-      "The AI jeweler remembers your preferences. You can ask it to discard an option, change the material, lower the budget or look for something more original.",
-    message: "Message",
+      "You can add any detail you have not mentioned before. To change material, style, budget or other preferences, use “Adjust preferences”.",
+    message: "Optional clarification",
     refinementPlaceholder:
-      "Example: She does not like very short necklaces and I would prefer a darker stone.",
+      "E.g. I prefer something unusual, with special meaning, or suitable for everyday wear.",
     refining: "Refining...",
     sendRefinement: "Send clarification",
   },
@@ -419,21 +469,21 @@ function getQuickExamples(locale: Locale) {
 function getRecipients(locale: Locale): Option[] {
   if (locale === "pt-BR") {
     return [
-      { label: "Mulher" },
-      { label: "Homem" },
-      { label: "Unissex" },
-      { label: "Para mim" },
-      { label: "Prefiro não indicar" },
+      { label: "Mulher", icon: <RecipientIcon type="woman" />, accentClassName: "text-[#7c7064]" },
+      { label: "Homem", icon: <RecipientIcon type="man" />, accentClassName: "text-[#7c7064]" },
+      { label: "Unissex", icon: <RecipientIcon type="unisex" />, accentClassName: "text-[#7c7064]" },
+      { label: "Para mim", icon: <RecipientIcon type="self" />, accentClassName: "text-[#7c7064]" },
+      { label: "Prefiro não indicar", icon: <RecipientIcon type="unspecified" />, accentClassName: "text-[#7c7064]" },
     ];
   }
 
   if (locale === "en") {
     return [
-      { label: "Woman" },
-      { label: "Man" },
-      { label: "Unisex" },
-      { label: "For myself" },
-      { label: "Prefer not to say" },
+      { label: "Woman", icon: <RecipientIcon type="woman" />, accentClassName: "text-[#7c7064]" },
+      { label: "Man", icon: <RecipientIcon type="man" />, accentClassName: "text-[#7c7064]" },
+      { label: "Unisex", icon: <RecipientIcon type="unisex" />, accentClassName: "text-[#7c7064]" },
+      { label: "For myself", icon: <RecipientIcon type="self" />, accentClassName: "text-[#7c7064]" },
+      { label: "Prefer not to say", icon: <RecipientIcon type="unspecified" />, accentClassName: "text-[#7c7064]" },
     ];
   }
 
@@ -505,18 +555,6 @@ function getBudgetOptions(locale: Locale, customBudget: string): BudgetOption[] 
   ];
 }
 
-function getRefinementPrompts(locale: Locale) {
-  if (locale === "pt-BR") {
-    return ["Mais econômico", "Mais original", "Mais discreto", "Mudar material", "Evitar pedras", "Ver outras ideias"];
-  }
-
-  if (locale === "en") {
-    return ["More affordable", "More original", "More understated", "Change material", "Avoid stones", "See other ideas"];
-  }
-
-  return refinementPrompts;
-}
-
 export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   const copy = chatCopy[locale];
   const localizedQuickExamples = getQuickExamples(locale);
@@ -526,30 +564,73 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   const localizedStyles = getStyles(locale);
   const localizedMaterials = getMaterials(locale, copy.noPreference);
   const localizedBudgetOptions = getBudgetOptions(locale, copy.customBudget);
-  const localizedRefinementPrompts = getRefinementPrompts(locale);
   const [mode, setMode] = useState<AdvisorMode>("direct");
   const [directDescription, setDirectDescription] = useState("");
   const [preferences, setPreferences] = useState<GuidedPreferences>(initialPreferences);
   const [selectedBudget, setSelectedBudget] = useState("");
   const [customBudgetMin, setCustomBudgetMin] = useState("");
   const [customBudgetMax, setCustomBudgetMax] = useState("");
+  const [isPreferencesEditorOpen, setIsPreferencesEditorOpen] = useState(false);
+  const [draftPreferences, setDraftPreferences] = useState<GuidedPreferences>(initialPreferences);
+  const [draftSelectedBudget, setDraftSelectedBudget] = useState("");
+  const [draftCustomBudgetMin, setDraftCustomBudgetMin] = useState("");
+  const [draftCustomBudgetMax, setDraftCustomBudgetMax] = useState("");
+  const [editingPreference, setEditingPreference] = useState<string | null>(null);
+  const [guidedStep, setGuidedStep] = useState(0);
   const [advisorResponse, setAdvisorResponse] = useState<AdvisorResponse | null>(null);
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
   const [refinementInput, setRefinementInput] = useState("");
   const [error, setError] = useState("");
   const [status, setStatus] = useState<RequestState>("idle");
-  const resultsRef = useRef<HTMLDivElement | null>(null);
+  const preservedScrollYRef = useRef<number | null>(null);
+  const preferencesEditorRef = useRef<HTMLDivElement | null>(null);
 
   const isLoading = status === "loading" || status === "refining";
-  const guidedSummary = useMemo(
-    () => buildGuidedSummary(preferences, selectedBudget, copy, locale),
-    [preferences, selectedBudget, copy, locale]
-  );
-
   function switchMode(nextMode: AdvisorMode) {
+    if (nextMode === mode) {
+      return;
+    }
+
+    preservedScrollYRef.current = window.scrollY;
     setMode(nextMode);
+    if (nextMode === "guided") {
+      setGuidedStep(0);
+    }
     setError("");
   }
+
+  function changeGuidedStep(nextStep: number) {
+    preservedScrollYRef.current = window.scrollY;
+    setGuidedStep(nextStep);
+  }
+
+  useLayoutEffect(() => {
+    const scrollY = preservedScrollYRef.current;
+    if (scrollY === null) {
+      return;
+    }
+
+    preservedScrollYRef.current = null;
+    window.scrollTo({ top: scrollY, behavior: "auto" });
+
+    const frameId = requestAnimationFrame(() => {
+      window.scrollTo({ top: scrollY, behavior: "auto" });
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [mode, guidedStep]);
+
+  useEffect(() => {
+    if (!isPreferencesEditorOpen) {
+      return;
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      preferencesEditorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [isPreferencesEditorOpen]);
 
   function fillExample(text: string) {
     setDirectDescription((current) => {
@@ -666,9 +747,6 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       setConversation(nextConversation);
       setStatus(data.recommendations.length ? "results" : "empty");
       setRefinementInput("");
-      window.setTimeout(() => {
-        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 80);
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -727,10 +805,72 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
     };
   }
 
+  function modifyGuidedPreferences() {
+    setDraftPreferences({
+      ...preferences,
+      styles: [...(preferences.styles ?? [])],
+      materials: [...(preferences.materials ?? [])],
+    });
+    setDraftSelectedBudget(selectedBudget);
+    setDraftCustomBudgetMin(customBudgetMin);
+    setDraftCustomBudgetMax(customBudgetMax);
+    setEditingPreference(null);
+    setIsPreferencesEditorOpen(true);
+    setError("");
+  }
+
+  function cancelGuidedPreferenceChanges() {
+    setIsPreferencesEditorOpen(false);
+    setEditingPreference(null);
+    setError("");
+  }
+
+  async function updateGuidedRecommendations() {
+    if (isLoading) return;
+
+    const hasGuidedInput = Object.values(draftPreferences).some((value) =>
+      Array.isArray(value) ? value.length > 0 : Boolean(typeof value === "string" ? value.trim() : value)
+    );
+    if (!hasGuidedInput) {
+      setError(copy.guidedValidation);
+      setStatus("error");
+      return;
+    }
+
+    setError("");
+    setStatus("loading");
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: "guided", locale, guidedPreferences: draftPreferences, conversation: [] } satisfies AdvisorRequest),
+      });
+      const data = (await response.json()) as Partial<AdvisorResponse> & AdvisorErrorResponse;
+      if (!response.ok) throw new Error(getAdvisorRequestErrorMessage(response.status, data, copy));
+      if (!isAdvisorResponse(data)) throw new Error(copy.invalidResponse);
+
+      setPreferences(draftPreferences);
+      setSelectedBudget(draftSelectedBudget);
+      setCustomBudgetMin(draftCustomBudgetMin);
+      setCustomBudgetMax(draftCustomBudgetMax);
+      setAdvisorResponse(data);
+      setConversation([{ role: "user", content: buildGuidedSummary(draftPreferences, draftPreferences.budgetLabel, copy, locale) }, { role: "assistant", content: data.followUpMessage }]);
+      setStatus(data.recommendations.length ? "results" : "empty");
+      setIsPreferencesEditorOpen(false);
+      setEditingPreference(null);
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : copy.connectionError);
+      setStatus("error");
+    }
+  }
+
+  const isGuidedResultState = mode === "guided" && Boolean(advisorResponse);
+
   return (
     <section
       id="joyero-ia"
       className="w-full max-w-full scroll-mt-24 overflow-hidden rounded-[1.75rem] border border-[#ead8b3] bg-white p-4 shadow-2xl shadow-[#805400]/10 sm:p-6 lg:p-8"
+      style={{ overflowAnchor: "none" }}
     >
       <div className="mx-auto max-w-4xl text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#9b722b]">
@@ -746,7 +886,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
 
       <AdvisorModeTabs mode={mode} copy={copy} onChange={switchMode} />
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.38fr)] lg:items-start">
+      {!isGuidedResultState ? <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.38fr)] lg:items-start">
         <div className="min-w-0 rounded-3xl border border-[#eadfca] bg-[#fffdf8] p-4 sm:p-5 lg:p-6">
           {mode === "direct" ? (
             <DirectAdvisorForm
@@ -761,52 +901,88 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
                 void submitAdvisor();
               }}
             />
+          ) : isLoading ? (
+            <GuidedAdvisorLoading copy={copy} />
           ) : (
-            <GuidedAdvisorForm
-              preferences={preferences}
-              selectedBudget={selectedBudget}
-              customBudgetMin={customBudgetMin}
-              customBudgetMax={customBudgetMax}
-              isLoading={isLoading}
-              copy={copy}
-              recipients={localizedRecipients}
-              jewelryTypes={localizedJewelryTypes}
-              occasions={localizedOccasions}
-              styles={localizedStyles}
-              materials={localizedMaterials}
-              budgetOptions={localizedBudgetOptions}
-              summary={guidedSummary}
-              onSingleSelect={updateSinglePreference}
-              onMultiSelect={toggleListPreference}
-              onBudget={updateBudget}
-              onCustomBudget={updateCustomBudget}
-              onDetails={(value) =>
-                setPreferences((current) => ({
-                  ...current,
-                  additionalDetails: value,
-                }))
-              }
-              onSubmit={(event) => {
-                event.preventDefault();
-                void submitAdvisor();
-              }}
-            />
+            <div>
+              <GuidedAdvisorForm
+                preferences={preferences}
+                selectedBudget={selectedBudget}
+                customBudgetMin={customBudgetMin}
+                customBudgetMax={customBudgetMax}
+                isLoading={isLoading}
+                copy={copy}
+                recipients={localizedRecipients}
+                jewelryTypes={localizedJewelryTypes}
+                occasions={localizedOccasions}
+                styles={localizedStyles}
+                materials={localizedMaterials}
+                budgetOptions={localizedBudgetOptions}
+                currentStep={guidedStep}
+                onStepChange={changeGuidedStep}
+                onSingleSelect={updateSinglePreference}
+                onMultiSelect={toggleListPreference}
+                onBudget={updateBudget}
+                onCustomBudget={updateCustomBudget}
+                onDetails={(value) =>
+                  setPreferences((current) => ({
+                    ...current,
+                    additionalDetails: value,
+                  }))
+                }
+                onAge={(age) =>
+                  setPreferences((current) => ({ ...current, age }))
+                }
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  void submitAdvisor();
+                }}
+              />
+            </div>
           )}
         </div>
 
         <TrustPanel copy={copy} />
-      </div>
+      </div> : null}
 
-      <StatusPanel
+      {!(mode === "guided" && isLoading) ? <StatusPanel
         status={status}
         error={error}
         copy={copy}
         onRetry={() => void submitAdvisor()}
-      />
+      /> : null}
 
-      <div ref={resultsRef} className="scroll-mt-28">
-        <RecommendationResults response={advisorResponse} status={status} copy={copy} />
-      </div>
+      {isGuidedResultState && isPreferencesEditorOpen ? <div ref={preferencesEditorRef} className="scroll-mt-28">
+        <CompactPreferencesEditor
+        preferences={draftPreferences}
+        selectedBudget={draftSelectedBudget}
+        customBudgetMin={draftCustomBudgetMin}
+        customBudgetMax={draftCustomBudgetMax}
+        activeField={editingPreference}
+        isLoading={isLoading}
+        copy={copy}
+        recipients={localizedRecipients}
+        jewelryTypes={localizedJewelryTypes}
+        occasions={localizedOccasions}
+        styles={localizedStyles}
+        materials={localizedMaterials}
+        budgetOptions={localizedBudgetOptions}
+        onActiveFieldChange={setEditingPreference}
+        onPreferencesChange={setDraftPreferences}
+        onBudgetChange={setDraftSelectedBudget}
+        onCustomBudgetMinChange={setDraftCustomBudgetMin}
+        onCustomBudgetMaxChange={setDraftCustomBudgetMax}
+        onUpdate={() => void updateGuidedRecommendations()}
+        onCancel={cancelGuidedPreferenceChanges}
+        />
+      </div> : null}
+
+      <RecommendationResults
+        response={advisorResponse}
+        status={status}
+        copy={copy}
+        onModifyPreferences={isGuidedResultState && !isPreferencesEditorOpen ? modifyGuidedPreferences : undefined}
+      />
 
       {advisorResponse ? (
         <RefinementChat
@@ -814,15 +990,10 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
           value={refinementInput}
           isLoading={isLoading}
           copy={copy}
-          prompts={localizedRefinementPrompts}
           onChange={setRefinementInput}
           onSubmit={(event) => {
             event.preventDefault();
             void submitAdvisor(refinementInput);
-          }}
-          onQuickPrompt={(prompt) => {
-            setRefinementInput(prompt);
-            void submitAdvisor(prompt);
           }}
         />
       ) : null}
@@ -892,6 +1063,13 @@ function DirectAdvisorForm({
   onExample: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  function clearDescription() {
+    onChange("");
+    textareaRef.current?.focus({ preventScroll: true });
+  }
+
   return (
     <form onSubmit={onSubmit}>
       <h3 className="text-xl font-semibold tracking-[-0.03em] text-[#17120b]">
@@ -901,11 +1079,23 @@ function DirectAdvisorForm({
         {copy.directHelp}
       </p>
 
-      <label htmlFor="direct-description" className="mt-5 block text-sm font-semibold text-[#2b241f]">
-        {copy.directLabel}
-      </label>
+      <div className="mt-5 flex min-h-6 flex-wrap items-center justify-between gap-x-3 gap-y-1">
+        <label htmlFor="direct-description" className="text-sm font-semibold text-[#2b241f]">
+          {copy.directLabel}
+        </label>
+        {value ? (
+          <button
+            type="button"
+            onClick={clearDescription}
+            className="min-h-9 rounded-lg px-2 text-sm font-semibold text-[#8a5d07] transition hover:bg-[#fff4dd] hover:text-[#6f4800] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]"
+          >
+            {copy.clear}
+          </button>
+        ) : null}
+      </div>
       <textarea
         id="direct-description"
+        ref={textareaRef}
         value={value}
         maxLength={maxDescriptionLength}
         onChange={(event) => onChange(event.target.value)}
@@ -954,12 +1144,14 @@ function GuidedAdvisorForm({
   styles,
   materials,
   budgetOptions,
-  summary,
+  currentStep,
+  onStepChange,
   onSingleSelect,
   onMultiSelect,
   onBudget,
   onCustomBudget,
   onDetails,
+  onAge,
   onSubmit,
 }: {
   preferences: GuidedPreferences;
@@ -974,137 +1166,82 @@ function GuidedAdvisorForm({
   styles: Option[];
   materials: Option[];
   budgetOptions: BudgetOption[];
-  summary: string;
+  currentStep: number;
+  onStepChange: (step: number) => void;
   onSingleSelect: (key: keyof GuidedPreferences, value: string) => void;
   onMultiSelect: (key: "styles" | "materials", value: string) => void;
   onBudget: (option: BudgetOption) => void;
   onCustomBudget: (min: string, max: string) => void;
   onDetails: (value: string) => void;
+  onAge: (age: number | undefined) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
+  const advanceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [ageInput, setAgeInput] = useState(preferences.age?.toString() ?? "");
+  const totalSteps = guidedStepKeys.length;
+  const lastStep = totalSteps - 1;
+  const safeStep = Math.min(Math.max(currentStep, 0), lastStep);
+
+  useEffect(() => () => {
+    if (advanceTimeoutRef.current) {
+      clearTimeout(advanceTimeoutRef.current);
+    }
+  }, []);
+
+  function goToStep(nextStep: number) {
+    if (advanceTimeoutRef.current) {
+      clearTimeout(advanceTimeoutRef.current);
+      advanceTimeoutRef.current = null;
+    }
+    onStepChange(Math.min(Math.max(nextStep, 0), lastStep));
+  }
+
+  function selectAndAdvance(
+    key: "recipient" | "jewelryType" | "occasion",
+    value: string,
+    selected: boolean,
+  ) {
+    onSingleSelect(key, value);
+    if (!selected) {
+      advanceTimeoutRef.current = setTimeout(() => goToStep(safeStep + 1), 180);
+    }
+  }
+
+  const stepTitleByKey = {
+    recipient: copy.forWhom,
+    jewelryType: copy.jewelryType,
+    occasion: copy.occasion,
+    styles: copy.style,
+    materials: copy.material,
+    budget: copy.budget,
+    details: copy.details,
+  };
+  const stepKey = guidedStepKeys[safeStep];
+  const stepTitle = stepTitleByKey[stepKey];
+
   return (
-    <form onSubmit={onSubmit} className="space-y-7">
-      <OptionGroup title={copy.forWhom}>
-        {recipients.map((option) => (
-          <SelectableOption
-            key={option.label}
-            label={option.label}
-            selected={preferences.recipient === option.label}
-            onClick={() => onSingleSelect("recipient", option.label)}
-          />
-        ))}
-      </OptionGroup>
-
-      <OptionGroup title={copy.jewelryType} layout="jewelry-grid">
-        {jewelryTypes.map((option) => (
-          <VisualOptionCard
-            key={option.value}
-            label={option.label}
-            icon={option.icon}
-            selected={preferences.jewelryType === option.value}
-            onClick={() => onSingleSelect("jewelryType", option.value)}
-          />
-        ))}
-      </OptionGroup>
-
-      <OptionGroup title={copy.occasion}>
-        {occasions.map((option) => (
-          <SelectableOption
-            key={option.label}
-            label={option.label}
-            icon={option.icon}
-            accentClassName={option.accentClassName}
-            selected={preferences.occasion === option.label}
-            onClick={() => onSingleSelect("occasion", option.label)}
-          />
-        ))}
-      </OptionGroup>
-
-      <OptionGroup title={copy.style} hint={copy.styleHint}>
-        {styles.map((option) => (
-          <SelectableOption
-            key={option.label}
-            label={option.label}
-            icon={option.icon}
-            accentClassName={option.accentClassName}
-            selected={preferences.styles?.includes(option.label) ?? false}
-            onClick={() => onMultiSelect("styles", option.label)}
-          />
-        ))}
-      </OptionGroup>
-
-      <OptionGroup title={copy.material} hint={copy.materialHint}>
-        {materials.map((option) => (
-          <SelectableOption
-            key={option.label}
-            label={option.label}
-            icon={<MaterialSwatch material={option.swatchKey ?? option.label} />}
-            selected={preferences.materials?.includes(option.label) ?? false}
-            onClick={() => onMultiSelect("materials", option.label)}
-          />
-        ))}
-      </OptionGroup>
-
-      <OptionGroup title={copy.budget}>
-        {budgetOptions.map((option) => (
-          <SelectableOption
-            key={option.label}
-            label={option.label}
-            selected={selectedBudget === option.label}
-            onClick={() => onBudget(option)}
-          />
-        ))}
-      </OptionGroup>
-
-      {selectedBudget === copy.customBudget ? (
-        <div className="grid gap-3 sm:grid-cols-2">
-          <label className="text-sm font-semibold text-[#2b241f]">
-            {copy.min}
-            <input
-              type="number"
-              min="0"
-              inputMode="numeric"
-              value={customBudgetMin}
-              onChange={(event) => onCustomBudget(event.target.value, customBudgetMax)}
-              className="mt-2 h-12 w-full rounded-2xl border border-[#ead8b3] bg-white px-4 text-sm outline-none focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25"
-              placeholder="Ej. 80"
-            />
-          </label>
-          <label className="text-sm font-semibold text-[#2b241f]">
-            {copy.max}
-            <input
-              type="number"
-              min="0"
-              inputMode="numeric"
-              value={customBudgetMax}
-              onChange={(event) => onCustomBudget(customBudgetMin, event.target.value)}
-              className="mt-2 h-12 w-full rounded-2xl border border-[#ead8b3] bg-white px-4 text-sm outline-none focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25"
-              placeholder="Ej. 180"
-            />
-          </label>
+    <form onSubmit={onSubmit} className="min-w-0">
+      <div className="mb-7">
+        <p className="flex flex-wrap items-center gap-2 text-sm font-semibold text-[#6f5530]">{copy.step} {safeStep + 1} {copy.of} {totalSteps}{safeStep === lastStep ? <span className="rounded-full border border-[#e8cc91] bg-[#fff3d8] px-2.5 py-0.5 text-xs font-semibold text-[#795417]">{copy.optional}</span> : null}</p>
+        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#eee2cb]" role="progressbar" aria-label={`${copy.step} ${safeStep + 1} ${copy.of} ${totalSteps}`} aria-valuemin={1} aria-valuemax={totalSteps} aria-valuenow={safeStep + 1}>
+          <div className="h-full rounded-full bg-[#b97a05] transition-[width] duration-200 motion-reduce:transition-none" style={{ width: `${((safeStep + 1) / totalSteps) * 100}%` }} />
         </div>
-      ) : null}
+      </div>
 
-      <label htmlFor="guided-details" className="block text-sm font-semibold text-[#2b241f]">
-        {copy.details}
-        <textarea
-          id="guided-details"
-          value={preferences.additionalDetails ?? ""}
-          onChange={(event) => onDetails(event.target.value)}
-          placeholder={copy.detailsPlaceholder}
-          className="mt-2 min-h-28 w-full resize-y rounded-2xl border border-[#ead8b3] bg-white px-4 py-3 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25"
-        />
-      </label>
+      <div key={safeStep} className={`guided-step ${safeStep === lastStep ? "rounded-2xl border border-[#e8cc91] bg-[#fff8e8] p-4 sm:p-5" : ""}`}>
+        {safeStep === 0 ? <OptionGroup title={stepTitle}>{recipients.map((option) => <SelectableOption key={option.label} label={option.label} icon={option.icon} accentClassName={option.accentClassName} selectedIconClassName="text-[#9a6b08]" selected={preferences.recipient === option.label} onClick={() => selectAndAdvance("recipient", option.label, preferences.recipient === option.label)} />)}</OptionGroup> : null}
+        {safeStep === 1 ? <OptionGroup title={stepTitle} layout="jewelry-grid">{jewelryTypes.map((option) => <VisualOptionCard key={option.value} label={option.label} icon={option.icon} selected={preferences.jewelryType === option.value} onClick={() => selectAndAdvance("jewelryType", option.value, preferences.jewelryType === option.value)} />)}</OptionGroup> : null}
+        {safeStep === 2 ? <OptionGroup title={stepTitle}>{occasions.map((option) => <SelectableOption key={option.label} label={option.label} icon={option.icon} accentClassName={option.accentClassName} selected={preferences.occasion === option.label} onClick={() => selectAndAdvance("occasion", option.label, preferences.occasion === option.label)} />)}</OptionGroup> : null}
+        {safeStep === 3 ? <OptionGroup title={stepTitle} hint={copy.styleHint}>{styles.map((option) => <SelectableOption key={option.label} label={option.label} icon={option.icon} accentClassName={option.accentClassName} selected={preferences.styles?.includes(option.label) ?? false} onClick={() => onMultiSelect("styles", option.label)} />)}</OptionGroup> : null}
+        {safeStep === 4 ? <OptionGroup title={stepTitle} hint={copy.materialHint}>{materials.map((option) => <SelectableOption key={option.label} label={option.label} icon={<MaterialSwatch material={option.swatchKey ?? option.label} />} selected={preferences.materials?.includes(option.label) ?? false} onClick={() => onMultiSelect("materials", option.label)} />)}</OptionGroup> : null}
+        {safeStep === 5 ? <><OptionGroup title={stepTitle}>{budgetOptions.map((option) => <SelectableOption key={option.label} label={option.label} selected={selectedBudget === option.label} onClick={() => onBudget(option)} />)}</OptionGroup>{selectedBudget === copy.customBudget ? <div className="mt-4 grid gap-3 sm:grid-cols-2"><label className="text-sm font-semibold text-[#2b241f]">{copy.min}<input type="number" min="0" inputMode="numeric" value={customBudgetMin} onChange={(event) => onCustomBudget(event.target.value, customBudgetMax)} className="mt-2 h-12 w-full rounded-2xl border border-[#ead8b3] bg-white px-4 text-sm outline-none focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25" placeholder="Ej. 80" /></label><label className="text-sm font-semibold text-[#2b241f]">{copy.max}<input type="number" min="0" inputMode="numeric" value={customBudgetMax} onChange={(event) => onCustomBudget(customBudgetMin, event.target.value)} className="mt-2 h-12 w-full rounded-2xl border border-[#ead8b3] bg-white px-4 text-sm outline-none focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25" placeholder="Ej. 180" /></label></div> : null}</> : null}
+        {safeStep === 6 ? <div className="space-y-4"><label htmlFor="guided-age" className="block text-sm font-semibold text-[#2b241f]">{copy.age} <span className="ml-1 rounded-full bg-[#f2ede4] px-2 py-0.5 text-xs font-medium text-[#7c7064]">{copy.optional}</span><input id="guided-age" type="number" min="1" max="120" inputMode="numeric" value={ageInput} onChange={(event) => { const value = event.target.value; setAgeInput(value); const age = Number(value); onAge(value && Number.isInteger(age) && age >= 1 && age <= 120 ? age : undefined); }} placeholder="35" className="mt-2 h-12 w-full max-w-xs rounded-2xl border border-[#eadfca] bg-white px-4 text-sm text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25" /></label><label htmlFor="guided-details" className="block text-sm font-semibold text-[#2b241f]">{stepTitle} <span className="ml-1 rounded-full bg-[#f2ede4] px-2 py-0.5 text-xs font-medium text-[#7c7064]">{copy.optional}</span><textarea id="guided-details" value={preferences.additionalDetails ?? ""} onChange={(event) => onDetails(event.target.value)} placeholder={copy.detailsPlaceholder} className="mt-2 min-h-24 w-full resize-y rounded-2xl border border-[#eadfca] bg-white px-4 py-3 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25" /></label></div> : null}
+      </div>
 
-      <PreferenceSummary summary={summary} copy={copy} />
-
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-      >
-        {isLoading ? copy.loadingButton : copy.guidedSubmit}
-      </button>
+      <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+        {safeStep > 0 ? <button type="button" onClick={() => goToStep(safeStep - 1)} className="min-h-12 rounded-2xl px-4 py-3 text-sm font-semibold text-[#5f4a24] outline-none transition hover:bg-[#fff4dd] focus-visible:ring-2 focus-visible:ring-[#b97a05]">← {copy.back}</button> : <span />}
+        {safeStep === lastStep ? <button type="submit" disabled={isLoading} className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto">{isLoading ? copy.loadingButton : copy.guidedFind}</button> : safeStep >= 3 ? <button type="button" onClick={(event) => { event.preventDefault(); goToStep(safeStep + 1); }} className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 sm:w-auto">{copy.continue}</button> : null}
+      </div>
     </form>
   );
 }
@@ -1181,12 +1318,14 @@ function SelectableOption({
   label,
   icon,
   accentClassName,
+  selectedIconClassName,
   selected,
   onClick,
 }: {
   label: string;
   icon?: React.ReactNode;
   accentClassName?: string;
+  selectedIconClassName?: string;
   selected: boolean;
   onClick: () => void;
 }) {
@@ -1205,7 +1344,7 @@ function SelectableOption({
         {icon ? (
           <span
             aria-hidden="true"
-            className={`flex h-6 w-6 shrink-0 items-center justify-center ${accentClassName ?? "text-[#9a6b08]"}`}
+            className={`flex h-6 w-6 shrink-0 items-center justify-center ${selected ? (selectedIconClassName ?? accentClassName ?? "text-[#9a6b08]") : (accentClassName ?? "text-[#9a6b08]")}`}
           >
             {icon}
           </span>
@@ -1251,6 +1390,35 @@ function CheckIcon({ className }: { className: string }) {
       <path d="M3.5 8.2l3 3L12.8 4.8" />
     </svg>
   );
+}
+
+type RecipientIconType = "woman" | "man" | "unisex" | "self" | "unspecified";
+
+function RecipientIcon({ type }: { type: RecipientIconType }) {
+  const shared = {
+    viewBox: "0 0 24 24",
+    className: "h-[18px] w-[18px]",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.8,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+  };
+
+  if (type === "woman") {
+    return <svg {...shared}><circle cx="12" cy="8" r="4" /><path d="M12 12v8M8.5 16h7" /></svg>;
+  }
+  if (type === "man") {
+    return <svg {...shared}><circle cx="9" cy="15" r="4" /><path d="M12 12l7-7M14 5h5v5" /></svg>;
+  }
+  if (type === "unisex") {
+    return <svg {...shared}><circle cx="9" cy="15" r="4" /><circle cx="15" cy="9" r="4" /><path d="M12 12l7-7M14 5h5v5M9 19v2M6.5 19h5" /></svg>;
+  }
+  if (type === "self") {
+    return <svg {...shared}><circle cx="12" cy="8" r="3.5" /><path d="M5.5 20c.8-3.2 3.1-5 6.5-5s5.7 1.8 6.5 5" /></svg>;
+  }
+  return <svg {...shared}><circle cx="12" cy="12" r="8" /><path d="M9.8 9.5a2.4 2.4 0 1 1 3.7 2c-.9.6-1.5 1.1-1.5 2.3M12 16.8h.01" /></svg>;
 }
 
 function MaterialSwatch({ material }: { material: string }) {
@@ -1554,17 +1722,6 @@ function SmallLineIcon({ children }: { children: React.ReactNode }) {
   );
 }
 
-function PreferenceSummary({ summary, copy }: { summary: string; copy: ChatCopy }) {
-  return (
-    <div className="rounded-2xl border border-[#ead8b3] bg-white p-4">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9b722b]">
-        {copy.summaryTitle}
-      </p>
-      <p className="mt-2 text-sm leading-6 text-[#554a40]">{summary}</p>
-    </div>
-  );
-}
-
 function TrustPanel({ copy }: { copy: ChatCopy }) {
   return (
     <aside className="min-w-0 rounded-3xl border border-[#eadfca] bg-[#fbf7ef] p-5">
@@ -1576,6 +1733,15 @@ function TrustPanel({ copy }: { copy: ChatCopy }) {
         <p>{copy.trustSecond}</p>
       </div>
     </aside>
+  );
+}
+
+function GuidedAdvisorLoading({ copy }: { copy: ChatCopy }) {
+  return (
+    <div className="flex min-h-52 flex-col items-center justify-center rounded-2xl bg-white px-5 py-10 text-center" role="status">
+      <span aria-hidden="true" className="h-8 w-8 animate-spin rounded-full border-2 border-[#ead8b3] border-t-[#b97a05] motion-reduce:animate-none" />
+      <p className="mt-4 text-base font-semibold text-[#2b241f]">{copy.statusLoading}</p>
+    </div>
   );
 }
 
@@ -1616,19 +1782,118 @@ function StatusPanel({
   return null;
 }
 
+function CompactPreferencesEditor({
+  preferences, selectedBudget, customBudgetMin, customBudgetMax, activeField, isLoading, copy,
+  recipients, jewelryTypes, occasions, styles, materials, budgetOptions,
+  onActiveFieldChange, onPreferencesChange, onBudgetChange, onCustomBudgetMinChange,
+  onCustomBudgetMaxChange, onUpdate, onCancel,
+}: {
+  preferences: GuidedPreferences;
+  selectedBudget: string;
+  customBudgetMin: string;
+  customBudgetMax: string;
+  activeField: string | null;
+  isLoading: boolean;
+  copy: ChatCopy;
+  recipients: Option[];
+  jewelryTypes: VisualOption[];
+  occasions: Option[];
+  styles: Option[];
+  materials: Option[];
+  budgetOptions: BudgetOption[];
+  onActiveFieldChange: (field: string | null) => void;
+  onPreferencesChange: (preferences: GuidedPreferences) => void;
+  onBudgetChange: (budget: string) => void;
+  onCustomBudgetMinChange: (value: string) => void;
+  onCustomBudgetMaxChange: (value: string) => void;
+  onUpdate: () => void;
+  onCancel: () => void;
+}) {
+  const setSingle = (key: "recipient" | "jewelryType" | "occasion", value: string) => {
+    onPreferencesChange({ ...preferences, [key]: preferences[key] === value ? undefined : value });
+    onActiveFieldChange(null);
+  };
+  const toggle = (key: "styles" | "materials", value: string) => {
+    const current = preferences[key] ?? [];
+    const next = current.includes(value)
+      ? current.filter((item) => item !== value)
+      : key === "materials" && value === copy.noPreference
+        ? [copy.noPreference]
+        : [...current.filter((item) => item !== copy.noPreference), value];
+    onPreferencesChange({ ...preferences, [key]: next });
+  };
+  const setBudget = (option: BudgetOption) => {
+    const next = selectedBudget === option.label ? "" : option.label;
+    onBudgetChange(next);
+    onPreferencesChange({
+      ...preferences,
+      budgetMin: next ? (option.custom ? parseNumber(customBudgetMin) : option.min) : undefined,
+      budgetMax: next ? (option.custom ? parseNumber(customBudgetMax) : option.max) : undefined,
+      budgetLabel: next || undefined,
+    });
+    if (!option.custom) onActiveFieldChange(null);
+  };
+  const setCustomBudget = (min: string, max: string) => {
+    onCustomBudgetMinChange(min);
+    onCustomBudgetMaxChange(max);
+    onPreferencesChange({ ...preferences, budgetMin: parseNumber(min), budgetMax: parseNumber(max), budgetLabel: copy.customBudget });
+  };
+  const display = (value?: string | string[]) => Array.isArray(value) ? value.join(" · ") || copy.notSpecified : value || copy.notSpecified;
+  const fields = [
+    { key: "jewelryType", label: copy.jewelryType, value: display(preferences.jewelryType) },
+    { key: "recipient", label: copy.forWhom, value: display(preferences.recipient) },
+    { key: "age", label: copy.age, value: preferences.age?.toString() ?? copy.notSpecified },
+    { key: "occasion", label: copy.occasion, value: display(preferences.occasion) },
+    { key: "styles", label: copy.style, value: display(preferences.styles) },
+    { key: "materials", label: copy.material, value: display(preferences.materials) },
+    { key: "budget", label: copy.budget, value: display(preferences.budgetLabel) },
+    { key: "details", label: copy.details, value: display(preferences.additionalDetails) },
+  ];
+
+  return <section className="mx-auto mt-8 w-full max-w-3xl rounded-3xl border border-[#ead8b3] bg-[#fffdf8] p-4 sm:p-5" aria-label={copy.preferencesTitle}>
+    <h3 className="text-xl font-semibold tracking-[-0.03em] text-[#17120b]">{copy.preferencesTitle}</h3>
+    <div className="mt-3 divide-y divide-[#eadfca]">
+      {fields.map((field) => <div key={field.key} className="py-3 first:pt-0">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
+          <div className="min-w-0"><p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#806632]">{field.label}</p><p className="mt-1 break-words text-sm text-[#3c342d]">{field.value}</p></div>
+          <button type="button" onClick={() => onActiveFieldChange(activeField === field.key ? null : field.key)} className="min-h-11 shrink-0 self-start rounded-xl border border-[#c89a43] bg-white px-4 py-2 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:self-auto">{copy.changePreference}</button>
+        </div>
+        {activeField === field.key ? <div className="mt-3 rounded-2xl border border-[#ead8b3] bg-white p-3">
+          {field.key === "recipient" ? <div className="flex flex-wrap gap-2">{recipients.map((option) => <SelectableOption key={option.label} label={option.label} selected={preferences.recipient === option.label} onClick={() => setSingle("recipient", option.label)} />)}</div> : null}
+          {field.key === "jewelryType" ? <div className="flex flex-wrap gap-2">{jewelryTypes.map((option) => <SelectableOption key={option.value} label={option.label} selected={preferences.jewelryType === option.value} onClick={() => setSingle("jewelryType", option.value)} />)}</div> : null}
+          {field.key === "occasion" ? <div className="flex flex-wrap gap-2">{occasions.map((option) => <SelectableOption key={option.label} label={option.label} selected={preferences.occasion === option.label} onClick={() => setSingle("occasion", option.label)} />)}</div> : null}
+          {field.key === "styles" ? <div className="flex flex-wrap gap-2">{styles.map((option) => <SelectableOption key={option.label} label={option.label} selected={preferences.styles?.includes(option.label) ?? false} onClick={() => toggle("styles", option.label)} />)}</div> : null}
+          {field.key === "materials" ? <div className="flex flex-wrap gap-2">{materials.map((option) => <SelectableOption key={option.label} label={option.label} selected={preferences.materials?.includes(option.label) ?? false} onClick={() => toggle("materials", option.label)} />)}</div> : null}
+          {field.key === "budget" ? <><div className="flex flex-wrap gap-2">{budgetOptions.map((option) => <SelectableOption key={option.label} label={option.label} selected={selectedBudget === option.label} onClick={() => setBudget(option)} />)}</div>{selectedBudget === copy.customBudget ? <div className="mt-3 grid gap-3 sm:grid-cols-2"><label className="text-sm font-semibold text-[#2b241f]">{copy.min}<input type="number" min="0" inputMode="numeric" value={customBudgetMin} onChange={(event) => setCustomBudget(event.target.value, customBudgetMax)} className="mt-2 h-11 w-full rounded-xl border border-[#ead8b3] px-3 outline-none focus:border-[#b97a05]" /></label><label className="text-sm font-semibold text-[#2b241f]">{copy.max}<input type="number" min="0" inputMode="numeric" value={customBudgetMax} onChange={(event) => setCustomBudget(customBudgetMin, event.target.value)} className="mt-2 h-11 w-full rounded-xl border border-[#ead8b3] px-3 outline-none focus:border-[#b97a05]" /></label></div> : null}</> : null}
+          {field.key === "age" ? <input type="number" min="1" max="120" inputMode="numeric" value={preferences.age ?? ""} onChange={(event) => { const age = Number(event.target.value); onPreferencesChange({ ...preferences, age: event.target.value && Number.isInteger(age) && age >= 1 && age <= 120 ? age : undefined }); }} placeholder="35" className="h-11 w-full max-w-xs rounded-xl border border-[#ead8b3] px-3 text-sm outline-none focus:border-[#b97a05]" /> : null}
+          {field.key === "details" ? <textarea value={preferences.additionalDetails ?? ""} onChange={(event) => onPreferencesChange({ ...preferences, additionalDetails: event.target.value })} placeholder={copy.detailsPlaceholder} className="min-h-24 w-full resize-y rounded-xl border border-[#ead8b3] px-3 py-2 text-sm outline-none focus:border-[#b97a05]" /> : null}
+          {field.key === "styles" || field.key === "materials" || field.key === "budget" || field.key === "age" || field.key === "details" ? <button type="button" onClick={() => onActiveFieldChange(null)} className="mt-3 min-h-10 rounded-xl px-3 text-sm font-semibold text-[#7a540f] hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">{copy.done}</button> : null}
+        </div> : null}
+      </div>)}
+    </div>
+    <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+      <button type="button" disabled={isLoading} onClick={onCancel} className="min-h-12 rounded-2xl px-5 py-3 text-sm font-semibold text-[#5f4a24] hover:bg-[#fff4dd] disabled:opacity-60">{copy.cancel}</button>
+      <button type="button" disabled={isLoading} onClick={onUpdate} className="min-h-12 rounded-2xl bg-[#17120b] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] disabled:cursor-not-allowed disabled:opacity-60">{isLoading ? copy.updatingRecommendations : copy.updateRecommendations}</button>
+    </div>
+  </section>;
+}
+
 function RecommendationResults({
   response,
   status,
   copy,
+  onModifyPreferences,
 }: {
   response: AdvisorResponse | null;
   status: RequestState;
   copy: ChatCopy;
+  onModifyPreferences?: () => void;
 }) {
   if (status === "empty") {
     return (
       <div className="mt-7 rounded-3xl border border-[#ead8b3] bg-white p-5 text-sm leading-6 text-[#625746]">
-        {copy.empty}
+        <p>{copy.empty}</p>
+        {onModifyPreferences ? <button type="button" onClick={onModifyPreferences} className="mt-4 min-h-11 rounded-xl border border-[#c89a43] bg-white px-4 py-2 font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">{copy.modifyPreferences}</button> : null}
       </div>
     );
   }
@@ -1665,6 +1930,8 @@ function RecommendationResults({
           />
         ))}
       </div>
+
+      {onModifyPreferences ? <button type="button" onClick={onModifyPreferences} className="mt-6 min-h-11 rounded-xl border border-[#c89a43] bg-white px-4 py-2 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">{copy.modifyPreferences}</button> : null}
     </section>
   );
 }
@@ -1723,19 +1990,15 @@ function RefinementChat({
   value,
   isLoading,
   copy,
-  prompts,
   onChange,
   onSubmit,
-  onQuickPrompt,
 }: {
   conversation: ConversationMessage[];
   value: string;
   isLoading: boolean;
   copy: ChatCopy;
-  prompts: string[];
   onChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-  onQuickPrompt: (value: string) => void;
 }) {
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
     if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
@@ -1753,32 +2016,14 @@ function RefinementChat({
         {copy.refinementHelp}
       </p>
 
-      <div className="mt-4 max-h-72 space-y-3 overflow-y-auto rounded-2xl border border-[#eadfca] bg-white p-3">
-        {conversation.map((message, index) => (
+      <div className="mt-4 max-h-56 space-y-3 overflow-y-auto rounded-2xl border border-[#eadfca] bg-white p-3">
+        {conversation.filter((message) => message.role === "user").map((message, index) => (
           <div
             key={`${message.role}-${index}`}
-            className={`max-w-[92%] whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-sm leading-6 ${
-              message.role === "user"
-                ? "ml-auto bg-[#17120b] text-white"
-                : "bg-[#fff9ed] text-[#554a40]"
-            }`}
+            className="ml-auto max-w-[92%] whitespace-pre-wrap break-words rounded-2xl bg-[#17120b] px-4 py-3 text-sm leading-6 text-white"
           >
             {message.content}
           </div>
-        ))}
-      </div>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        {prompts.map((prompt) => (
-          <button
-            key={prompt}
-            type="button"
-            disabled={isLoading}
-            onClick={() => onQuickPrompt(prompt)}
-            className="min-h-11 rounded-full border border-[#ead8b3] bg-white px-4 py-2 text-xs font-semibold text-[#5f4a24] transition hover:border-[#b97a05] hover:bg-[#fff4dd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {prompt}
-          </button>
         ))}
       </div>
 
@@ -1791,7 +2036,7 @@ function RefinementChat({
             onKeyDown={handleKeyDown}
             onChange={(event) => onChange(event.target.value)}
             placeholder={copy.refinementPlaceholder}
-            className="mt-2 min-h-24 w-full resize-y rounded-2xl border border-[#ead8b3] bg-white px-4 py-3 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25"
+            className="mt-2 min-h-[4.75rem] w-full resize-y rounded-2xl border border-[#ead8b3] bg-white px-4 py-3 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25"
           />
         </label>
         <button

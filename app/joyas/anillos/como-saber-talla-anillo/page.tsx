@@ -310,7 +310,7 @@ export default function RingSizeSeoPage() {
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
             {[
               { href: "/joyas/anillos", label: "Como elegir un anillo" },
-              { href: "/joyas/regalos", label: "Joyas para regalar" },
+              { href: "/guias", label: "Guías para regalar joyas" },
               { href: "/guias/oro-14k-18k-24k", label: "Oro 14k, 18k y 24k" },
               { href: "/guias/plata-925", label: "Plata 925" },
             ].map((link) => (

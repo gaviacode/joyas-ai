@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import JewelryChat from "@/components/JewelryChat";
+import ExternalGiftIdeasCta from "@/components/ExternalGiftIdeasCta";
 import SiteHeader from "@/components/SiteHeader";
 import {
   getHomeMetadataAlternates,
@@ -85,11 +86,6 @@ export default async function LocalizedHomePage({ params }: PageProps) {
             {copy.guidesCta}
           </Link>
           </div>
-          <div className="mt-9 grid gap-3 sm:grid-cols-3">
-            {copy.chips.map((chip) => (
-              <InfoChip key={chip.title} title={chip.title} text={chip.text} />
-            ))}
-          </div>
         </div>
         <HeroJewelry alt={copy.heroAlt} />
       </section>
@@ -112,6 +108,12 @@ export default async function LocalizedHomePage({ params }: PageProps) {
           ))}
         </div>
       </section>
+
+      <ExternalGiftIdeasCta
+        title={copy.giftIdeasTitle}
+        description={copy.giftIdeasDescription}
+        ctaLabel={copy.giftIdeasCta}
+      />
 
       <section className="bg-white/55 px-5 py-14 sm:px-8 lg:px-10">
         <div className="mx-auto max-w-7xl">
@@ -179,11 +181,9 @@ function getHomeCopy(locale: LocalizedLocale) {
       description: "Fale com um joalheiro especialista com inteligência artificial e descubra anéis, colares, pulseiras ou brincos conforme a ocasião, seu orçamento e o estilo da pessoa.",
       guidesCta: "Ver guias",
       heroAlt: "Joias douradas elegantes com colar, anel, pulseira e brincos sobre mármore claro",
-      chips: [
-        { title: "Recomendações honestas", text: "Ideias claras, sem inventar produtos nem avaliações falsas." },
-        { title: "Pensado para presentear", text: "Conforme ocasião, estilo, orçamento e pessoa." },
-        { title: "Orientação rápida", text: "Diga o que procura e o joalheiro IA ajuda a organizar opções." },
-      ],
+      giftIdeasTitle: "Procura algo além de uma joia?",
+      giftIdeasDescription: "Descubra ideias de presentes personalizadas com IA para encontrar outras opções conforme a pessoa, a ocasião e o orçamento.",
+      giftIdeasCta: "Ver ideias de presentes em regalos.ai",
       categoriesEyebrow: "Categorias",
       categoriesTitle: "Explore por tipo de joia",
       categoriesDescription: "Cada guia explica estilos, materiais, momentos de uso e erros frequentes para escolher com mais critério.",
@@ -194,7 +194,6 @@ function getHomeCopy(locale: LocalizedLocale) {
         { href: "/pt-br/joias/pulseiras", title: "Pulseiras", text: "Fechos, tamanho, gravações e conforto.", image: "/images/categories/categoria-pulseras.png" },
         { href: "/pt-br/joias/brincos", title: "Brincos", text: "Tamanho, fecho, peso, estilo e ocasião.", image: "/images/categories/categoria-pendientes.png" },
         { href: "/pt-br/joias/casamento", title: "Joias para casamento", text: "Alianças, noiva, noivo, madrinha e convidadas.", image: "/images/categories/categoria-joyas-boda.png" },
-        { href: "/pt-br/joias/presentes", title: "Presentes", text: "Ideias para acertar sem conhecer tudo.", image: "/images/categories/categoria-regalos-especiales.png" },
       ],
       occasionsEyebrow: "Ocasiões",
       occasionsTitle: "Escolha conforme o momento",
@@ -230,11 +229,9 @@ function getHomeCopy(locale: LocalizedLocale) {
     description: "Talk to an expert AI jeweler and discover rings, necklaces, bracelets or earrings by occasion, budget and the person's style.",
     guidesCta: "View guides",
     heroAlt: "Elegant gold jewelry with necklace, ring, bracelet and earrings on light marble",
-    chips: [
-      { title: "Honest recommendations", text: "Clear ideas without invented products or fake reviews." },
-      { title: "Built for gifting", text: "By occasion, style, budget and recipient." },
-      { title: "Fast guidance", text: "Tell us what you need and the AI jeweler helps organize options." },
-    ],
+    giftIdeasTitle: "Looking for more than jewelry?",
+    giftIdeasDescription: "Discover personalized AI gift ideas for other options based on the person, occasion, and budget.",
+    giftIdeasCta: "See gift ideas on regalos.ai",
     categoriesEyebrow: "Categories",
     categoriesTitle: "Explore by jewelry type",
     categoriesDescription: "Each guide explains styles, materials, use cases and common mistakes so you can choose with more confidence.",
@@ -245,7 +242,6 @@ function getHomeCopy(locale: LocalizedLocale) {
       { href: "/en/jewelry/bracelets", title: "Bracelets", text: "Clasps, sizing, engraving and comfort.", image: "/images/categories/categoria-pulseras.png" },
       { href: "/en/jewelry/earrings", title: "Earrings", text: "Size, backing, weight, style and occasion.", image: "/images/categories/categoria-pendientes.png" },
       { href: "/en/jewelry/wedding", title: "Wedding jewelry", text: "Wedding bands, bride, groom and guest jewelry.", image: "/images/categories/categoria-joyas-boda.png" },
-      { href: "/en/jewelry/jewelry-gifts", title: "Gifts", text: "Ideas for choosing well without knowing everything.", image: "/images/categories/categoria-regalos-especiales.png" },
     ],
     occasionsEyebrow: "Occasions",
     occasionsTitle: "Choose by the moment",
@@ -281,15 +277,6 @@ function HeroJewelry({ alt }: { alt: string }) {
       <div className="relative aspect-[4/3] min-h-[300px] overflow-hidden rounded-[1.5rem] bg-[#f8ecd4] sm:aspect-[16/11] lg:min-h-[430px]">
         <Image src="/images/hero-joyas-aniversario.png" alt={alt} fill priority sizes="(max-width: 1024px) 100vw, 640px" className="object-cover object-center" />
       </div>
-    </div>
-  );
-}
-
-function InfoChip({ title, text }: { title: string; text: string }) {
-  return (
-    <div className="rounded-2xl border border-[#ead8b3] bg-white/75 p-4 shadow-sm">
-      <p className="font-semibold">{title}</p>
-      <p className="mt-1 text-sm text-[#7c7064]">{text}</p>
     </div>
   );
 }

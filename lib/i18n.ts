@@ -265,7 +265,6 @@ const articleSlugs: Record<ContentKind, Record<string, Record<Locale, string>>> 
     pulseras: { es: "pulseras", "pt-BR": "pulseiras", en: "bracelets" },
     pendientes: { es: "pendientes", "pt-BR": "brincos", en: "earrings" },
     boda: { es: "boda", "pt-BR": "casamento", en: "wedding" },
-    regalos: { es: "regalos", "pt-BR": "presentes", en: "jewelry-gifts" },
   },
   ocasiones: {
     aniversario: { es: "aniversario", "pt-BR": "aniversario", en: "anniversary" },
@@ -318,7 +317,6 @@ const articleTitleOverrides: Record<LocalizedLocale, Record<string, { title: str
     "joyas:pulseras": { title: "Como escolher uma pulseira confortável e elegante", description: "Guia para escolher pulseiras finas, rígidas, de corrente ou personalizadas conforme uso, tamanho e estilo." },
     "joyas:pendientes": { title: "Como escolher brincos: tamanho, fecho, material e estilo", description: "Dicas para escolher brincos discretos, argolas, longos ou com pedras conforme rosto, uso e ocasião." },
     "joyas:boda": { title: "Joias para casamento: alianças, noiva, noivo e convidadas", description: "Guia para escolher joias de casamento, alianças e acessórios para noiva, noivo, madrinha e convidadas." },
-    "joyas:regalos": { title: "Joias para presentear: como acertar sem saber tudo", description: "Ideias para presentear com joias conforme ocasião, relação, orçamento, estilo e pistas discretas." },
     "guias:oro-14k-18k-24k": { title: "Ouro 14k, 18k e 24k: diferenças, pureza e qual escolher", description: "Entenda o que significam 14k, 18k e 24k, a porcentagem de ouro em cada liga e como comparar joias de ouro." },
     "guias:plata-925": { title: "Prata 925: o que significa e como reconhecer", description: "Saiba o que é prata 925, sua composição de 92,5% de prata e os cuidados para avaliar joias de prata." },
     "guias:como-saber-si-una-joya-es-de-oro": { title: "Como saber se uma joia é de ouro: marcas e testes", description: "Veja como avaliar marcas, documentação e testes confiáveis para saber se uma joia é de ouro." },
@@ -364,7 +362,6 @@ const articleTitleOverrides: Record<LocalizedLocale, Record<string, { title: str
     "joyas:pulseras": { title: "How to Choose a Comfortable, Elegant Bracelet", description: "Guide to choosing delicate, bangle, chain or personalized bracelets by fit, use and style." },
     "joyas:pendientes": { title: "How to Choose Earrings: Size, Backing, Material and Style", description: "Tips for choosing studs, hoops, drop earrings or gemstone earrings by face, use and occasion." },
     "joyas:boda": { title: "Wedding Jewelry: Rings, Bride, Groom and Guests", description: "Guide to wedding bands, bridal jewelry and accessories for the groom, mother of the bride and guests." },
-    "joyas:regalos": { title: "Jewelry Gifts: How to Get It Right Without Knowing Everything", description: "Jewelry gift ideas by occasion, relationship, budget, style and subtle clues." },
     "guias:oro-14k-18k-24k": { title: "14k vs 18k vs 24k Gold: Differences, Purity and Which to Choose", description: "Learn what 14k, 18k and 24k mean, how much gold each alloy contains and how to compare gold jewelry." },
     "guias:plata-925": { title: "925 Sterling Silver: Meaning, Marks and How to Identify It", description: "Understand what 925 sterling silver means, its 92.5% silver content and what to check before buying silver jewelry." },
     "guias:como-saber-si-una-joya-es-de-oro": { title: "How to Tell if Jewelry Is Gold: Marks, Tests and Reliable Checks", description: "Learn how to check marks, documentation and reliable tests when you need to know whether jewelry is real gold." },
