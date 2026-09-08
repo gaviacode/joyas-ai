@@ -16,6 +16,9 @@ import type {
   ConversationMessage,
   GuidedPreferences,
 } from "@/lib/advisor";
+import { amazonProvider } from "@/lib/affiliate";
+import { resetAdvisorEvent } from "@/components/AdvisorResetLink";
+import { trackGAEvent } from "@/lib/google-analytics-events";
 import type { Locale } from "@/lib/i18n";
 
 type Option = {
@@ -109,7 +112,13 @@ const initialPreferences: GuidedPreferences = {
   materials: [],
 };
 
-const guidedStepKeys = [
+type PieceDetailOption = {
+  value: string;
+  label: string;
+  icon: React.ReactNode;
+};
+
+const baseGuidedStepKeys = [
   "recipient",
   "jewelryType",
   "occasion",
@@ -161,20 +170,23 @@ const chatCopy = {
     retryableError:
       "El joyero IA está recibiendo muchas consultas. Espera unos segundos y vuelve a intentarlo.",
     rateLimitedError:
-      "Has realizado demasiadas consultas. Inténtalo de nuevo en unos minutos.",
+      "Has realizado demasiadas búsquedas en poco tiempo. Espera unos minutos antes de volver a intentarlo.",
+    serviceBusyError: "El servicio está temporalmente ocupado. Inténtalo de nuevo más tarde.",
     genericRequestError: "No he podido generar recomendaciones.",
     forWhom: "¿Para quién es?",
     jewelryType: "¿Qué tipo de joya buscas?",
+    pieceDetails: "Detalles de la pieza",
+    pieceDetailsHint: "Puedes elegir hasta 2 opciones o seleccionar “No tengo preferencia”.",
     occasion: "¿Cuál es la ocasión?",
     style: "¿Qué estilo prefieres?",
-    styleHint: "Puedes elegir más de uno.",
+    styleHint: "Puedes elegir varias opciones.",
     material: "Material",
-    materialHint: "Puedes elegir más de uno o marcar sin preferencia.",
+    materialHint: "Puedes elegir varias opciones o seleccionar “Sin preferencia”.",
     budget: "Presupuesto",
     min: "Mínimo",
     max: "Máximo",
     details: "Detalles adicionales",
-    age: "Edad",
+    age: "Edad aproximada",
     optional: "Opcional",
     detailsPlaceholder:
       "Cuéntanos cualquier detalle que pueda ayudarnos a acertar mejor...",
@@ -207,6 +219,7 @@ const chatCopy = {
     recommendedMaterial: "Material recomendado",
     indicativePrice: "Precio orientativo",
     jewelerTip: "Consejo del joyero",
+    viewOnAmazon: "Ver en Amazon",
     refinementTitle: "¿Quieres añadir alguna aclaración?",
     refinementHelp:
       "Puedes añadir cualquier detalle que no hayas indicado antes. Para cambiar material, estilo, presupuesto u otras preferencias, usa “Ajustar preferencias”.",
@@ -257,20 +270,23 @@ const chatCopy = {
     retryableError:
       "O joalheiro IA está recebendo muitas consultas. Aguarde alguns segundos e tente novamente.",
     rateLimitedError:
-      "Você fez consultas demais. Tente novamente em alguns minutos.",
+      "Você fez muitas buscas em pouco tempo. Aguarde alguns minutos antes de tentar novamente.",
+    serviceBusyError: "O serviço está temporariamente ocupado. Tente novamente mais tarde.",
     genericRequestError: "Não consegui gerar recomendações.",
     forWhom: "Para quem é?",
     jewelryType: "Que tipo de joia você procura?",
+    pieceDetails: "Detalhes da peça",
+    pieceDetailsHint: "Você pode escolher até 2 opções ou selecionar “Sem preferência”.",
     occasion: "Qual é a ocasião?",
     style: "Que estilo você prefere?",
-    styleHint: "Você pode escolher mais de um.",
+    styleHint: "Você pode escolher várias opções.",
     material: "Material",
-    materialHint: "Você pode escolher mais de um ou marcar sem preferência.",
+    materialHint: "Você pode escolher várias opções ou selecionar “Sem preferência”.",
     budget: "Orçamento",
     min: "Mínimo",
     max: "Máximo",
     details: "Detalhes adicionais",
-    age: "Idade",
+    age: "Faixa etária aproximada",
     optional: "Opcional",
     detailsPlaceholder:
       "Conte qualquer detalhe que possa nos ajudar a acertar melhor...",
@@ -303,6 +319,7 @@ const chatCopy = {
     recommendedMaterial: "Material recomendado",
     indicativePrice: "Preço orientativo",
     jewelerTip: "Dica do joalheiro",
+    viewOnAmazon: "Ver na Amazon",
     refinementTitle: "Quer adicionar algum esclarecimento?",
     refinementHelp:
       "Você pode adicionar qualquer detalhe que ainda não tenha informado. Para mudar material, estilo, orçamento ou outras preferências, use “Ajustar preferências”.",
@@ -353,20 +370,23 @@ const chatCopy = {
     retryableError:
       "The AI jeweler is receiving many requests. Wait a few seconds and try again.",
     rateLimitedError:
-      "You have made too many requests. Please try again in a few minutes.",
+      "You've made too many searches in a short time. Please wait a few minutes before trying again.",
+    serviceBusyError: "The service is temporarily busy. Please try again later.",
     genericRequestError: "I could not generate recommendations.",
     forWhom: "Who is it for?",
     jewelryType: "What type of jewelry are you looking for?",
+    pieceDetails: "Piece details",
+    pieceDetailsHint: "You can choose up to 2 options or select “No preference”.",
     occasion: "What is the occasion?",
     style: "What style do you prefer?",
-    styleHint: "You can choose more than one.",
+    styleHint: "You can choose multiple options.",
     material: "Material",
-    materialHint: "You can choose more than one or select no preference.",
+    materialHint: "You can choose multiple options or select “No preference”.",
     budget: "Budget",
     min: "Minimum",
     max: "Maximum",
     details: "Additional details",
-    age: "Age",
+    age: "Approximate age",
     optional: "Optional",
     detailsPlaceholder:
       "Tell us any detail that can help us make a better recommendation...",
@@ -399,6 +419,7 @@ const chatCopy = {
     recommendedMaterial: "Recommended material",
     indicativePrice: "Indicative price",
     jewelerTip: "Jeweler tip",
+    viewOnAmazon: "View on Amazon",
     refinementTitle: "Would you like to add a clarification?",
     refinementHelp:
       "You can add any detail you have not mentioned before. To change material, style, budget or other preferences, use “Adjust preferences”.",
@@ -567,6 +588,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   const [mode, setMode] = useState<AdvisorMode>("direct");
   const [directDescription, setDirectDescription] = useState("");
   const [preferences, setPreferences] = useState<GuidedPreferences>(initialPreferences);
+  const localizedPieceDetails = getPieceDetails(preferences.jewelryType, locale);
   const [selectedBudget, setSelectedBudget] = useState("");
   const [customBudgetMin, setCustomBudgetMin] = useState("");
   const [customBudgetMax, setCustomBudgetMax] = useState("");
@@ -582,19 +604,47 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   const [refinementInput, setRefinementInput] = useState("");
   const [error, setError] = useState("");
   const [status, setStatus] = useState<RequestState>("idle");
+  const [resultsGeneration, setResultsGeneration] = useState(0);
+  const [isCooldownActive, setIsCooldownActive] = useState(false);
   const preservedScrollYRef = useRef<number | null>(null);
   const preferencesEditorRef = useRef<HTMLDivElement | null>(null);
+  const recommenderRef = useRef<HTMLElement | null>(null);
+  const resultsRef = useRef<HTMLElement | null>(null);
+  const [shouldScrollToGuided, setShouldScrollToGuided] = useState(false);
+  const cooldownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isLoading = status === "loading" || status === "refining";
+  const isSubmissionBlocked = isLoading || isCooldownActive;
+
+  useEffect(() => () => {
+    if (cooldownTimeoutRef.current) {
+      clearTimeout(cooldownTimeoutRef.current);
+    }
+  }, []);
+
+  function startCooldown() {
+    if (cooldownTimeoutRef.current) {
+      clearTimeout(cooldownTimeoutRef.current);
+    }
+
+    setIsCooldownActive(true);
+    cooldownTimeoutRef.current = setTimeout(() => {
+      setIsCooldownActive(false);
+      cooldownTimeoutRef.current = null;
+    }, 5_000);
+  }
   function switchMode(nextMode: AdvisorMode) {
     if (nextMode === mode) {
+      if (nextMode === "guided") {
+        setShouldScrollToGuided(true);
+      }
       return;
     }
 
-    preservedScrollYRef.current = window.scrollY;
+    preservedScrollYRef.current = nextMode === "guided" ? null : window.scrollY;
     setMode(nextMode);
     if (nextMode === "guided") {
-      setGuidedStep(0);
+      setShouldScrollToGuided(true);
     }
     setError("");
   }
@@ -621,6 +671,31 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   }, [mode, guidedStep]);
 
   useEffect(() => {
+    if (mode !== "guided" || !shouldScrollToGuided) {
+      return;
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      recommenderRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      setShouldScrollToGuided(false);
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [mode, shouldScrollToGuided]);
+
+  useEffect(() => {
+    if (resultsGeneration === 0) {
+      return;
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [resultsGeneration]);
+
+  useEffect(() => {
     if (!isPreferencesEditorOpen) {
       return;
     }
@@ -631,6 +706,37 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
 
     return () => cancelAnimationFrame(frameId);
   }, [isPreferencesEditorOpen]);
+
+  useEffect(() => {
+    function resetAdvisor(event: Event) {
+      if (status !== "results") {
+        return;
+      }
+
+      event.preventDefault();
+      setMode("direct");
+      setDirectDescription("");
+      setPreferences(initialPreferences);
+      setSelectedBudget("");
+      setCustomBudgetMin("");
+      setCustomBudgetMax("");
+      setIsPreferencesEditorOpen(false);
+      setDraftPreferences(initialPreferences);
+      setDraftSelectedBudget("");
+      setDraftCustomBudgetMin("");
+      setDraftCustomBudgetMax("");
+      setEditingPreference(null);
+      setGuidedStep(0);
+      setAdvisorResponse(null);
+      setConversation([]);
+      setRefinementInput("");
+      setError("");
+      setStatus("idle");
+    }
+
+    window.addEventListener(resetAdvisorEvent, resetAdvisor);
+    return () => window.removeEventListener(resetAdvisorEvent, resetAdvisor);
+  }, [status]);
 
   function fillExample(text: string) {
     setDirectDescription((current) => {
@@ -643,6 +749,14 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
     setPreferences((current) => ({
       ...current,
       [key]: current[key] === value ? undefined : value,
+      ...(key === "jewelryType" ? { pieceDetails: [] } : {}),
+    }));
+  }
+
+  function togglePieceDetails(value: string) {
+    setPreferences((current) => ({
+      ...current,
+      pieceDetails: getNextPieceDetails(current.pieceDetails ?? [], value, current.jewelryType),
     }));
   }
 
@@ -683,7 +797,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   }
 
   async function submitAdvisor(refinement?: string) {
-    if (isLoading) {
+    if (isSubmissionBlocked) {
       return;
     }
 
@@ -746,7 +860,11 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       setAdvisorResponse(data);
       setConversation(nextConversation);
       setStatus(data.recommendations.length ? "results" : "empty");
+      if (data.recommendations.length) {
+        setResultsGeneration((generation) => generation + 1);
+      }
       setRefinementInput("");
+      startCooldown();
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -826,7 +944,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   }
 
   async function updateGuidedRecommendations() {
-    if (isLoading) return;
+    if (isSubmissionBlocked) return;
 
     const hasGuidedInput = Object.values(draftPreferences).some((value) =>
       Array.isArray(value) ? value.length > 0 : Boolean(typeof value === "string" ? value.trim() : value)
@@ -856,8 +974,12 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       setAdvisorResponse(data);
       setConversation([{ role: "user", content: buildGuidedSummary(draftPreferences, draftPreferences.budgetLabel, copy, locale) }, { role: "assistant", content: data.followUpMessage }]);
       setStatus(data.recommendations.length ? "results" : "empty");
+      if (data.recommendations.length) {
+        setResultsGeneration((generation) => generation + 1);
+      }
       setIsPreferencesEditorOpen(false);
       setEditingPreference(null);
+      startCooldown();
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : copy.connectionError);
       setStatus("error");
@@ -868,6 +990,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
 
   return (
     <section
+      ref={recommenderRef}
       id="joyero-ia"
       className="w-full max-w-full scroll-mt-24 overflow-hidden rounded-[1.75rem] border border-[#ead8b3] bg-white p-4 shadow-2xl shadow-[#805400]/10 sm:p-6 lg:p-8"
       style={{ overflowAnchor: "none" }}
@@ -892,6 +1015,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
             <DirectAdvisorForm
               value={directDescription}
               isLoading={isLoading}
+              isRequestBlocked={isCooldownActive}
               copy={copy}
               examples={localizedQuickExamples}
               onChange={setDirectDescription}
@@ -911,9 +1035,11 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
                 customBudgetMin={customBudgetMin}
                 customBudgetMax={customBudgetMax}
                 isLoading={isLoading}
+                isRequestBlocked={isCooldownActive}
                 copy={copy}
                 recipients={localizedRecipients}
                 jewelryTypes={localizedJewelryTypes}
+                pieceDetails={localizedPieceDetails}
                 occasions={localizedOccasions}
                 styles={localizedStyles}
                 materials={localizedMaterials}
@@ -922,6 +1048,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
                 onStepChange={changeGuidedStep}
                 onSingleSelect={updateSinglePreference}
                 onMultiSelect={toggleListPreference}
+                onPieceDetails={togglePieceDetails}
                 onBudget={updateBudget}
                 onCustomBudget={updateCustomBudget}
                 onDetails={(value) =>
@@ -960,6 +1087,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
         customBudgetMax={draftCustomBudgetMax}
         activeField={editingPreference}
         isLoading={isLoading}
+        isRequestBlocked={isCooldownActive}
         copy={copy}
         recipients={localizedRecipients}
         jewelryTypes={localizedJewelryTypes}
@@ -981,6 +1109,8 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
         response={advisorResponse}
         status={status}
         copy={copy}
+        locale={locale}
+        resultsRef={resultsRef}
         onModifyPreferences={isGuidedResultState && !isPreferencesEditorOpen ? modifyGuidedPreferences : undefined}
       />
 
@@ -989,6 +1119,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
           conversation={conversation}
           value={refinementInput}
           isLoading={isLoading}
+          isRequestBlocked={isCooldownActive}
           copy={copy}
           onChange={setRefinementInput}
           onSubmit={(event) => {
@@ -1049,6 +1180,7 @@ function AdvisorModeTabs({
 function DirectAdvisorForm({
   value,
   isLoading,
+  isRequestBlocked,
   copy,
   examples,
   onChange,
@@ -1057,6 +1189,7 @@ function DirectAdvisorForm({
 }: {
   value: string;
   isLoading: boolean;
+  isRequestBlocked: boolean;
   copy: ChatCopy;
   examples: Array<{ label: string; text: string }>;
   onChange: (value: string) => void;
@@ -1122,7 +1255,7 @@ function DirectAdvisorForm({
 
       <button
         type="submit"
-        disabled={isLoading || !value.trim()}
+        disabled={isLoading || isRequestBlocked || !value.trim()}
         className="mt-6 min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {isLoading ? copy.loadingButton : copy.askButton}
@@ -1137,9 +1270,11 @@ function GuidedAdvisorForm({
   customBudgetMin,
   customBudgetMax,
   isLoading,
+  isRequestBlocked,
   copy,
   recipients,
   jewelryTypes,
+  pieceDetails,
   occasions,
   styles,
   materials,
@@ -1148,6 +1283,7 @@ function GuidedAdvisorForm({
   onStepChange,
   onSingleSelect,
   onMultiSelect,
+  onPieceDetails,
   onBudget,
   onCustomBudget,
   onDetails,
@@ -1159,9 +1295,11 @@ function GuidedAdvisorForm({
   customBudgetMin: string;
   customBudgetMax: string;
   isLoading: boolean;
+  isRequestBlocked: boolean;
   copy: ChatCopy;
   recipients: Option[];
   jewelryTypes: VisualOption[];
+  pieceDetails: PieceDetailOption[];
   occasions: Option[];
   styles: Option[];
   materials: Option[];
@@ -1170,6 +1308,7 @@ function GuidedAdvisorForm({
   onStepChange: (step: number) => void;
   onSingleSelect: (key: keyof GuidedPreferences, value: string) => void;
   onMultiSelect: (key: "styles" | "materials", value: string) => void;
+  onPieceDetails: (value: string) => void;
   onBudget: (option: BudgetOption) => void;
   onCustomBudget: (min: string, max: string) => void;
   onDetails: (value: string) => void;
@@ -1178,6 +1317,9 @@ function GuidedAdvisorForm({
 }) {
   const advanceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [ageInput, setAgeInput] = useState(preferences.age?.toString() ?? "");
+  const guidedStepKeys = preferences.jewelryType && preferences.jewelryType !== "no estoy seguro"
+    ? [...baseGuidedStepKeys.slice(0, 2), "pieceDetails", ...baseGuidedStepKeys.slice(2)]
+    : baseGuidedStepKeys;
   const totalSteps = guidedStepKeys.length;
   const lastStep = totalSteps - 1;
   const safeStep = Math.min(Math.max(currentStep, 0), lastStep);
@@ -1210,13 +1352,14 @@ function GuidedAdvisorForm({
   const stepTitleByKey = {
     recipient: copy.forWhom,
     jewelryType: copy.jewelryType,
+    pieceDetails: copy.pieceDetails,
     occasion: copy.occasion,
     styles: copy.style,
     materials: copy.material,
     budget: copy.budget,
     details: copy.details,
   };
-  const stepKey = guidedStepKeys[safeStep];
+  const stepKey = guidedStepKeys[safeStep] as keyof typeof stepTitleByKey;
   const stepTitle = stepTitleByKey[stepKey];
 
   return (
@@ -1229,21 +1372,61 @@ function GuidedAdvisorForm({
       </div>
 
       <div key={safeStep} className={`guided-step ${safeStep === lastStep ? "rounded-2xl border border-[#e8cc91] bg-[#fff8e8] p-4 sm:p-5" : ""}`}>
-        {safeStep === 0 ? <OptionGroup title={stepTitle}>{recipients.map((option) => <SelectableOption key={option.label} label={option.label} icon={option.icon} accentClassName={option.accentClassName} selectedIconClassName="text-[#9a6b08]" selected={preferences.recipient === option.label} onClick={() => selectAndAdvance("recipient", option.label, preferences.recipient === option.label)} />)}</OptionGroup> : null}
-        {safeStep === 1 ? <OptionGroup title={stepTitle} layout="jewelry-grid">{jewelryTypes.map((option) => <VisualOptionCard key={option.value} label={option.label} icon={option.icon} selected={preferences.jewelryType === option.value} onClick={() => selectAndAdvance("jewelryType", option.value, preferences.jewelryType === option.value)} />)}</OptionGroup> : null}
-        {safeStep === 2 ? <OptionGroup title={stepTitle}>{occasions.map((option) => <SelectableOption key={option.label} label={option.label} icon={option.icon} accentClassName={option.accentClassName} selected={preferences.occasion === option.label} onClick={() => selectAndAdvance("occasion", option.label, preferences.occasion === option.label)} />)}</OptionGroup> : null}
-        {safeStep === 3 ? <OptionGroup title={stepTitle} hint={copy.styleHint}>{styles.map((option) => <SelectableOption key={option.label} label={option.label} icon={option.icon} accentClassName={option.accentClassName} selected={preferences.styles?.includes(option.label) ?? false} onClick={() => onMultiSelect("styles", option.label)} />)}</OptionGroup> : null}
-        {safeStep === 4 ? <OptionGroup title={stepTitle} hint={copy.materialHint}>{materials.map((option) => <SelectableOption key={option.label} label={option.label} icon={<MaterialSwatch material={option.swatchKey ?? option.label} />} selected={preferences.materials?.includes(option.label) ?? false} onClick={() => onMultiSelect("materials", option.label)} />)}</OptionGroup> : null}
-        {safeStep === 5 ? <><OptionGroup title={stepTitle}>{budgetOptions.map((option) => <SelectableOption key={option.label} label={option.label} selected={selectedBudget === option.label} onClick={() => onBudget(option)} />)}</OptionGroup>{selectedBudget === copy.customBudget ? <div className="mt-4 grid gap-3 sm:grid-cols-2"><label className="text-sm font-semibold text-[#2b241f]">{copy.min}<input type="number" min="0" inputMode="numeric" value={customBudgetMin} onChange={(event) => onCustomBudget(event.target.value, customBudgetMax)} className="mt-2 h-12 w-full rounded-2xl border border-[#ead8b3] bg-white px-4 text-sm outline-none focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25" placeholder="Ej. 80" /></label><label className="text-sm font-semibold text-[#2b241f]">{copy.max}<input type="number" min="0" inputMode="numeric" value={customBudgetMax} onChange={(event) => onCustomBudget(customBudgetMin, event.target.value)} className="mt-2 h-12 w-full rounded-2xl border border-[#ead8b3] bg-white px-4 text-sm outline-none focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25" placeholder="Ej. 180" /></label></div> : null}</> : null}
-        {safeStep === 6 ? <div className="space-y-4"><label htmlFor="guided-age" className="block text-sm font-semibold text-[#2b241f]">{copy.age} <span className="ml-1 rounded-full bg-[#f2ede4] px-2 py-0.5 text-xs font-medium text-[#7c7064]">{copy.optional}</span><input id="guided-age" type="number" min="1" max="120" inputMode="numeric" value={ageInput} onChange={(event) => { const value = event.target.value; setAgeInput(value); const age = Number(value); onAge(value && Number.isInteger(age) && age >= 1 && age <= 120 ? age : undefined); }} placeholder="35" className="mt-2 h-12 w-full max-w-xs rounded-2xl border border-[#eadfca] bg-white px-4 text-sm text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25" /></label><label htmlFor="guided-details" className="block text-sm font-semibold text-[#2b241f]">{stepTitle} <span className="ml-1 rounded-full bg-[#f2ede4] px-2 py-0.5 text-xs font-medium text-[#7c7064]">{copy.optional}</span><textarea id="guided-details" value={preferences.additionalDetails ?? ""} onChange={(event) => onDetails(event.target.value)} placeholder={copy.detailsPlaceholder} className="mt-2 min-h-24 w-full resize-y rounded-2xl border border-[#eadfca] bg-white px-4 py-3 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25" /></label></div> : null}
+        {stepKey === "recipient" ? <OptionGroup title={stepTitle}>{recipients.map((option) => <SelectableOption key={option.label} label={option.label} icon={option.icon} accentClassName={option.accentClassName} selectedIconClassName="text-[#9a6b08]" selected={preferences.recipient === option.label} onClick={() => selectAndAdvance("recipient", option.label, preferences.recipient === option.label)} />)}</OptionGroup> : null}
+        {stepKey === "jewelryType" ? <OptionGroup title={stepTitle} layout="jewelry-grid">{jewelryTypes.map((option) => <VisualOptionCard key={option.value} label={option.label} icon={option.icon} selected={preferences.jewelryType === option.value} onClick={() => selectAndAdvance("jewelryType", option.value, preferences.jewelryType === option.value)} />)}</OptionGroup> : null}
+        {stepKey === "pieceDetails" ? <OptionGroup title={stepTitle} hint={copy.pieceDetailsHint} layout="jewelry-grid">{pieceDetails.map((option) => <VisualOptionCard key={option.value} label={option.label} icon={option.icon} selected={preferences.pieceDetails?.includes(option.value) ?? false} onClick={() => onPieceDetails(option.value)} />)}</OptionGroup> : null}
+        {stepKey === "occasion" ? <OptionGroup title={stepTitle}>{occasions.map((option) => <SelectableOption key={option.label} label={option.label} icon={option.icon} accentClassName={option.accentClassName} selected={preferences.occasion === option.label} onClick={() => selectAndAdvance("occasion", option.label, preferences.occasion === option.label)} />)}</OptionGroup> : null}
+        {stepKey === "styles" ? <OptionGroup title={stepTitle} hint={copy.styleHint}>{styles.map((option) => <SelectableOption key={option.label} label={option.label} icon={option.icon} accentClassName={option.accentClassName} selected={preferences.styles?.includes(option.label) ?? false} onClick={() => onMultiSelect("styles", option.label)} />)}</OptionGroup> : null}
+        {stepKey === "materials" ? <OptionGroup title={stepTitle} hint={copy.materialHint}>{materials.map((option) => <SelectableOption key={option.label} label={option.label} icon={<MaterialSwatch material={option.swatchKey ?? option.label} />} selected={preferences.materials?.includes(option.label) ?? false} onClick={() => onMultiSelect("materials", option.label)} />)}</OptionGroup> : null}
+        {stepKey === "budget" ? <><OptionGroup title={stepTitle}>{budgetOptions.map((option) => <SelectableOption key={option.label} label={option.label} selected={selectedBudget === option.label} onClick={() => onBudget(option)} />)}</OptionGroup>{selectedBudget === copy.customBudget ? <div className="mt-4 grid gap-3 sm:grid-cols-2"><label className="text-sm font-semibold text-[#2b241f]">{copy.min}<input type="number" min="0" inputMode="numeric" value={customBudgetMin} onChange={(event) => onCustomBudget(event.target.value, customBudgetMax)} className="mt-2 h-12 w-full rounded-2xl border border-[#ead8b3] bg-white px-4 text-sm outline-none focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25" placeholder="Ej. 80" /></label><label className="text-sm font-semibold text-[#2b241f]">{copy.max}<input type="number" min="0" inputMode="numeric" value={customBudgetMax} onChange={(event) => onCustomBudget(customBudgetMin, event.target.value)} className="mt-2 h-12 w-full rounded-2xl border border-[#ead8b3] bg-white px-4 text-sm outline-none focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25" placeholder="Ej. 180" /></label></div> : null}</> : null}
+        {stepKey === "details" ? <div className="space-y-4"><label htmlFor="guided-age" className="block text-sm font-semibold text-[#2b241f]">{copy.age} <span className="ml-1 rounded-full bg-[#f2ede4] px-2 py-0.5 text-xs font-medium text-[#7c7064]">{copy.optional}</span><input id="guided-age" type="number" min="1" max="120" inputMode="numeric" value={ageInput} onChange={(event) => { const value = event.target.value; setAgeInput(value); const age = Number(value); onAge(value && Number.isInteger(age) && age >= 1 && age <= 120 ? age : undefined); }} placeholder="Ej. 10" className="mt-2 h-12 w-full max-w-xs rounded-2xl border border-[#eadfca] bg-white px-4 text-sm text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25" /></label><label htmlFor="guided-details" className="block text-sm font-semibold text-[#2b241f]">{stepTitle} <span className="ml-1 rounded-full bg-[#f2ede4] px-2 py-0.5 text-xs font-medium text-[#7c7064]">{copy.optional}</span><textarea id="guided-details" value={preferences.additionalDetails ?? ""} onChange={(event) => onDetails(event.target.value)} placeholder={copy.detailsPlaceholder} className="mt-2 min-h-24 w-full resize-y rounded-2xl border border-[#eadfca] bg-white px-4 py-3 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25" /></label></div> : null}
       </div>
 
       <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
         {safeStep > 0 ? <button type="button" onClick={() => goToStep(safeStep - 1)} className="min-h-12 rounded-2xl px-4 py-3 text-sm font-semibold text-[#5f4a24] outline-none transition hover:bg-[#fff4dd] focus-visible:ring-2 focus-visible:ring-[#b97a05]">← {copy.back}</button> : <span />}
-        {safeStep === lastStep ? <button type="submit" disabled={isLoading} className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto">{isLoading ? copy.loadingButton : copy.guidedFind}</button> : safeStep >= 3 ? <button type="button" onClick={(event) => { event.preventDefault(); goToStep(safeStep + 1); }} className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 sm:w-auto">{copy.continue}</button> : null}
+        {safeStep === lastStep ? <button type="submit" disabled={isLoading || isRequestBlocked} className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto">{isLoading ? copy.loadingButton : copy.guidedFind}</button> : safeStep >= 3 || stepKey === "pieceDetails" ? <button type="button" onClick={(event) => { event.preventDefault(); goToStep(safeStep + 1); }} className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 sm:w-auto">{copy.continue}</button> : null}
       </div>
     </form>
   );
+}
+
+const pieceDetailIdsByType: Record<string, string[]> = {
+  anillo: ["fine", "medium_band", "wide", "open", "gemstone", "no_gemstone", "signet", "no_preference"],
+  collar: ["short", "medium_length", "long", "v_drop", "fine_chain", "bold_chain", "layers", "no_preference"],
+  colgante: ["small", "geometric", "initial", "meaningful_symbol", "gemstone", "medallion", "vertical_drop", "no_preference"],
+  pulsera: ["fine_chain", "bold_chain", "bangle", "adjustable", "charms", "gemstone", "minimal", "no_preference"],
+  pendientes: ["stud", "small_hoops", "large_hoops", "drop", "climbers", "gemstone", "geometric", "no_preference"],
+  gemelos: ["classic", "minimal", "geometric", "original", "formal", "personalizable", "gemstone", "no_preference"],
+  reloj: ["case_small", "case_medium", "case_large", "dress", "minimal", "sport", "metal_bracelet", "leather_strap", "no_preference"],
+};
+
+const pieceDetailLabels: Record<Locale, Record<string, string>> = {
+  es: { fine: "Fino y discreto", medium_band: "Banda media", wide: "Ancho / con presencia", open: "Abierto", gemstone: "Con piedra", no_gemstone: "Sin piedra", signet: "Tipo sello", short: "Corto / cerca del cuello", medium_length: "Longitud media", long: "Largo", v_drop: "Caída en V", fine_chain: "Cadena fina", bold_chain: "Cadena con presencia", layers: "Capas / varias cadenas", small: "Pequeño y discreto", geometric: "Geométrico", initial: "Inicial / letra", meaningful_symbol: "Símbolo con significado", medallion: "Medallón", vertical_drop: "Alargado / caída vertical", bangle: "Rígida / brazalete", adjustable: "Ajustable", charms: "Con charms", minimal: "Minimalista", stud: "Botón / pequeños", small_hoops: "Aros pequeños", large_hoops: "Aros grandes", drop: "Largos / colgantes", climbers: "Trepadores", classic: "Clásicos", original: "Originales", formal: "Elegantes / formales", personalizable: "Personalizables", case_small: "Caja pequeña", case_medium: "Caja mediana", case_large: "Caja grande", dress: "Clásico / vestir", sport: "Deportivo", metal_bracelet: "Correa metálica", leather_strap: "Correa de piel", no_preference: "No tengo preferencia" },
+  en: { fine: "Slim and understated", medium_band: "Medium band", wide: "Wide / statement", open: "Open", gemstone: "With gemstone", no_gemstone: "Without gemstone", signet: "Signet style", short: "Short / close to the neck", medium_length: "Medium length", long: "Long", v_drop: "V drop", fine_chain: "Fine chain", bold_chain: "Statement chain", layers: "Layered chains", small: "Small and understated", geometric: "Geometric", initial: "Initial / letter", meaningful_symbol: "Meaningful symbol", medallion: "Medallion", vertical_drop: "Long / vertical drop", bangle: "Rigid / bangle", adjustable: "Adjustable", charms: "With charms", minimal: "Minimal", stud: "Stud / small", small_hoops: "Small hoops", large_hoops: "Large hoops", drop: "Long / drop", climbers: "Climbers", classic: "Classic", original: "Original", formal: "Elegant / formal", personalizable: "Personalizable", case_small: "Small case", case_medium: "Medium case", case_large: "Large case", dress: "Classic / dress", sport: "Sport", metal_bracelet: "Metal bracelet", leather_strap: "Leather strap", no_preference: "No preference" },
+  "pt-BR": { fine: "Fino e discreto", medium_band: "Aro médio", wide: "Largo / marcante", open: "Aberto", gemstone: "Com pedra", no_gemstone: "Sem pedra", signet: "Tipo sinete", short: "Curto / junto ao pescoço", medium_length: "Comprimento médio", long: "Longo", v_drop: "Caída em V", fine_chain: "Corrente fina", bold_chain: "Corrente marcante", layers: "Camadas / várias correntes", small: "Pequeno e discreto", geometric: "Geométrico", initial: "Inicial / letra", meaningful_symbol: "Símbolo com significado", medallion: "Medalhão", vertical_drop: "Alongado / queda vertical", bangle: "Rígida / bracelete", adjustable: "Ajustável", charms: "Com charms", minimal: "Minimalista", stud: "Botão / pequenos", small_hoops: "Argolas pequenas", large_hoops: "Argolas grandes", drop: "Longos / pendentes", climbers: "Trepadores", classic: "Clássicos", original: "Originais", formal: "Elegantes / formais", personalizable: "Personalizáveis", case_small: "Caixa pequena", case_medium: "Caixa média", case_large: "Caixa grande", dress: "Clássico / social", sport: "Esportivo", metal_bracelet: "Pulseira metálica", leather_strap: "Pulseira de couro", no_preference: "Sem preferência" },
+};
+
+function getPieceDetails(jewelryType: string | undefined, locale: Locale): PieceDetailOption[] {
+  return (jewelryType ? pieceDetailIdsByType[jewelryType] : undefined)?.map((value) => ({
+    value,
+    label: pieceDetailLabels[locale][value],
+    icon: <PieceDetailIcon type={value} />,
+  })) ?? [];
+}
+
+function getNextPieceDetails(current: string[], value: string, jewelryType?: string) {
+  if (value === "no_preference") return ["no_preference"];
+
+  const withoutNoPreference = current.filter((detail) => detail !== "no_preference");
+  if (withoutNoPreference.includes(value)) return withoutNoPreference.filter((detail) => detail !== value);
+
+  if (jewelryType === "reloj") {
+    if (value.startsWith("case_")) return [...withoutNoPreference.filter((detail) => !detail.startsWith("case_")), value];
+    const additionalDetails = withoutNoPreference.filter((detail) => !detail.startsWith("case_"));
+    return additionalDetails.length >= 2 ? withoutNoPreference : [...withoutNoPreference, value];
+  }
+
+  return withoutNoPreference.length >= 2 ? withoutNoPreference : [...withoutNoPreference, value];
 }
 
 function OptionGroup({
@@ -1373,6 +1556,52 @@ function SelectionCheck({ selected }: { selected: boolean }) {
       <CheckIcon className="h-3.5 w-3.5" />
     </span>
   );
+}
+
+function PieceDetailIcon({ type }: { type: string }) {
+  const shared = { viewBox: "0 0 24 24", className: "h-7 w-7", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
+
+  if (type === "fine_chain" || type === "metal_bracelet") return <svg {...shared}><path d="M8.5 8.5l-2 2a3 3 0 0 0 4.2 4.2l2-2M15.5 15.5l2-2a3 3 0 0 0-4.2-4.2l-2 2M9.5 14.5l5-5" /></svg>;
+  if (type === "bold_chain") return <svg {...shared}><path d="M7 7l2-2 3 3-2 2zM12 12l2-2 3 3-2 2zM5 12l2-2 3 3-2 2z" /></svg>;
+  if (type === "bangle") return <svg {...shared}><circle cx="12" cy="12" r="7.5" /><path d="M8.5 5.4c2.2-1.2 4.8-1.2 7 0" /></svg>;
+  if (type === "adjustable") return <svg {...shared}><path d="M5 7h14M5 12h14M5 17h14" /><circle cx="9" cy="7" r="1.5" /><circle cx="15" cy="12" r="1.5" /><circle cx="11" cy="17" r="1.5" /></svg>;
+  if (type === "charms") return <svg {...shared}><path d="M12 4l1.2 3.3L16.5 8.5l-3.3 1.2L12 13l-1.2-3.3-3.3-1.2 3.3-1.2zM18 14l.7 1.8 1.8.7-1.8.7L18 19l-.7-1.8-1.8-.7 1.8-.7zM6 15l.7 1.8 1.8.7-1.8.7L6 20l-.7-1.8-1.8-.7 1.8-.7z" /></svg>;
+  if (type === "gemstone") return <svg {...shared}><path d="M12 4l6 6-6 10-6-10zM6 10h12M9 4l3 6 3-6" /></svg>;
+  if (type === "minimal") return <svg {...shared}><path d="M6 12h12" /></svg>;
+  if (type === "no_preference") return <svg {...shared}><circle cx="12" cy="12" r="8" /><path d="M9.8 9.5a2.5 2.5 0 1 1 3.8 2.1c-.9.6-1.6 1.1-1.6 2.4M12 17h.01" /></svg>;
+  if (type === "fine") return <svg {...shared}><circle cx="12" cy="12" r="5" /></svg>;
+  if (type === "medium_band") return <svg {...shared}><circle cx="12" cy="12" r="7" /><circle cx="12" cy="12" r="4" /></svg>;
+  if (type === "wide") return <svg {...shared}><circle cx="12" cy="12" r="6" strokeWidth="3" /></svg>;
+  if (type === "open") return <svg {...shared}><path d="M8 6.5a7 7 0 1 0 8 0M8 6.5h2M14 6.5h2" /></svg>;
+  if (type === "no_gemstone") return <svg {...shared}><circle cx="12" cy="12" r="6" /><path d="M7 7l10 10" /></svg>;
+  if (type === "signet") return <svg {...shared}><path d="M7 8l5-3 5 3v7l-5 4-5-4zM9.5 10h5v3h-5z" /></svg>;
+  if (type === "short") return <svg {...shared}><path d="M5 12h14" /></svg>;
+  if (type === "medium_length") return <svg {...shared}><path d="M12 5v14M9 8l3-3 3 3M9 16l3 3 3-3" /></svg>;
+  if (type === "long" || type === "vertical_drop" || type === "drop") return <svg {...shared}><path d="M12 4v14M8 14l4 4 4-4M7 20h10" /></svg>;
+  if (type === "v_drop") return <svg {...shared}><path d="M5 7l7 9 7-9" /></svg>;
+  if (type === "layers") return <svg {...shared}><path d="M6 8h12M8 12h8M10 16h4" /></svg>;
+  if (type === "small") return <svg {...shared}><circle cx="12" cy="12" r="2" /></svg>;
+  if (type === "geometric") return <svg {...shared}><path d="M8 5h8l4 7-4 7H8l-4-7z" /></svg>;
+  if (type === "initial") return <svg {...shared}><path d="M7 18l5-12 5 12M9 14h6" /></svg>;
+  if (type === "meaningful_symbol") return <svg {...shared}><path d="M12 19s-7-4.3-7-9.1C5 7.7 6.6 6 8.8 6c1.4 0 2.6.8 3.2 1.9C12.6 6.8 13.8 6 15.2 6 17.4 6 19 7.7 19 9.9 19 14.7 12 19 12 19z" /></svg>;
+  if (type === "medallion") return <svg {...shared}><circle cx="12" cy="13" r="6" /><path d="M12 4v3M10 11h4M10 14h4" /></svg>;
+  if (type === "stud") return <svg {...shared}><circle cx="12" cy="12" r="4" /><circle cx="12" cy="12" r="1" /></svg>;
+  if (type === "small_hoops") return <svg {...shared}><circle cx="12" cy="12" r="5" /><path d="M12 7v2" /></svg>;
+  if (type === "large_hoops") return <svg {...shared}><circle cx="12" cy="12" r="8" /><path d="M12 4v2" /></svg>;
+  if (type === "climbers") return <svg {...shared}><path d="M7 17l3-4 2 2 5-7M15 8h2v2" /></svg>;
+  if (type === "classic") return <svg {...shared}><rect x="7" y="7" width="10" height="10" rx="1" /></svg>;
+  if (type === "original") return <svg {...shared}><path d="M12 4l1.2 3.8L17 9l-3.8 1.2L12 14l-1.2-3.8L7 9l3.8-1.2zM18 15l.6 1.6 1.6.6-1.6.6L18 19l-.6-1.6-1.6-.6 1.6-.6z" /></svg>;
+  if (type === "formal" || type === "dress") return <svg {...shared}><path d="M6 10h12v8H6zM9 10V7h6v3M8 18v2M16 18v2" /></svg>;
+  if (type === "personalizable") return <svg {...shared}><path d="M6 18l2.5-.6L18 8l-2-2-9.5 9.4zM14.5 7.5l2 2" /></svg>;
+  if (type === "case_small" || type === "case_medium" || type === "case_large") {
+    const size = type === "case_small" ? 8 : type === "case_medium" ? 11 : 14;
+    const offset = (24 - size) / 2;
+    return <svg {...shared}><rect x={offset} y={offset} width={size} height={size} rx="2" /><path d={`M12 ${offset + 2}v${Math.max(2, size / 3)}l${Math.max(1, size / 4)} ${Math.max(1, size / 5)}`} /></svg>;
+  }
+  if (type === "sport") return <svg {...shared}><path d="M5 14l4-4 3 3 7-8M15 5h4v4" /></svg>;
+  if (type === "leather_strap") return <svg {...shared}><path d="M8 4h8l-1 5h-6zM8 20h8l-1-5H9zM9 9h6v6H9z" /></svg>;
+
+  return <svg {...shared}><path d="M6 12h12" /></svg>;
 }
 
 function CheckIcon({ className }: { className: string }) {
@@ -1783,7 +2012,7 @@ function StatusPanel({
 }
 
 function CompactPreferencesEditor({
-  preferences, selectedBudget, customBudgetMin, customBudgetMax, activeField, isLoading, copy,
+  preferences, selectedBudget, customBudgetMin, customBudgetMax, activeField, isLoading, isRequestBlocked, copy,
   recipients, jewelryTypes, occasions, styles, materials, budgetOptions,
   onActiveFieldChange, onPreferencesChange, onBudgetChange, onCustomBudgetMinChange,
   onCustomBudgetMaxChange, onUpdate, onCancel,
@@ -1794,6 +2023,7 @@ function CompactPreferencesEditor({
   customBudgetMax: string;
   activeField: string | null;
   isLoading: boolean;
+  isRequestBlocked: boolean;
   copy: ChatCopy;
   recipients: Option[];
   jewelryTypes: VisualOption[];
@@ -1810,7 +2040,7 @@ function CompactPreferencesEditor({
   onCancel: () => void;
 }) {
   const setSingle = (key: "recipient" | "jewelryType" | "occasion", value: string) => {
-    onPreferencesChange({ ...preferences, [key]: preferences[key] === value ? undefined : value });
+    onPreferencesChange({ ...preferences, [key]: preferences[key] === value ? undefined : value, ...(key === "jewelryType" ? { pieceDetails: [] } : {}) });
     onActiveFieldChange(null);
   };
   const toggle = (key: "styles" | "materials", value: string) => {
@@ -1865,7 +2095,7 @@ function CompactPreferencesEditor({
           {field.key === "styles" ? <div className="flex flex-wrap gap-2">{styles.map((option) => <SelectableOption key={option.label} label={option.label} selected={preferences.styles?.includes(option.label) ?? false} onClick={() => toggle("styles", option.label)} />)}</div> : null}
           {field.key === "materials" ? <div className="flex flex-wrap gap-2">{materials.map((option) => <SelectableOption key={option.label} label={option.label} selected={preferences.materials?.includes(option.label) ?? false} onClick={() => toggle("materials", option.label)} />)}</div> : null}
           {field.key === "budget" ? <><div className="flex flex-wrap gap-2">{budgetOptions.map((option) => <SelectableOption key={option.label} label={option.label} selected={selectedBudget === option.label} onClick={() => setBudget(option)} />)}</div>{selectedBudget === copy.customBudget ? <div className="mt-3 grid gap-3 sm:grid-cols-2"><label className="text-sm font-semibold text-[#2b241f]">{copy.min}<input type="number" min="0" inputMode="numeric" value={customBudgetMin} onChange={(event) => setCustomBudget(event.target.value, customBudgetMax)} className="mt-2 h-11 w-full rounded-xl border border-[#ead8b3] px-3 outline-none focus:border-[#b97a05]" /></label><label className="text-sm font-semibold text-[#2b241f]">{copy.max}<input type="number" min="0" inputMode="numeric" value={customBudgetMax} onChange={(event) => setCustomBudget(customBudgetMin, event.target.value)} className="mt-2 h-11 w-full rounded-xl border border-[#ead8b3] px-3 outline-none focus:border-[#b97a05]" /></label></div> : null}</> : null}
-          {field.key === "age" ? <input type="number" min="1" max="120" inputMode="numeric" value={preferences.age ?? ""} onChange={(event) => { const age = Number(event.target.value); onPreferencesChange({ ...preferences, age: event.target.value && Number.isInteger(age) && age >= 1 && age <= 120 ? age : undefined }); }} placeholder="35" className="h-11 w-full max-w-xs rounded-xl border border-[#ead8b3] px-3 text-sm outline-none focus:border-[#b97a05]" /> : null}
+          {field.key === "age" ? <input type="number" min="1" max="120" inputMode="numeric" value={preferences.age ?? ""} onChange={(event) => { const age = Number(event.target.value); onPreferencesChange({ ...preferences, age: event.target.value && Number.isInteger(age) && age >= 1 && age <= 120 ? age : undefined }); }} placeholder="Ej. 10" className="h-11 w-full max-w-xs rounded-xl border border-[#ead8b3] px-3 text-sm outline-none focus:border-[#b97a05]" /> : null}
           {field.key === "details" ? <textarea value={preferences.additionalDetails ?? ""} onChange={(event) => onPreferencesChange({ ...preferences, additionalDetails: event.target.value })} placeholder={copy.detailsPlaceholder} className="min-h-24 w-full resize-y rounded-xl border border-[#ead8b3] px-3 py-2 text-sm outline-none focus:border-[#b97a05]" /> : null}
           {field.key === "styles" || field.key === "materials" || field.key === "budget" || field.key === "age" || field.key === "details" ? <button type="button" onClick={() => onActiveFieldChange(null)} className="mt-3 min-h-10 rounded-xl px-3 text-sm font-semibold text-[#7a540f] hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">{copy.done}</button> : null}
         </div> : null}
@@ -1873,7 +2103,7 @@ function CompactPreferencesEditor({
     </div>
     <div className="mt-4 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
       <button type="button" disabled={isLoading} onClick={onCancel} className="min-h-12 rounded-2xl px-5 py-3 text-sm font-semibold text-[#5f4a24] hover:bg-[#fff4dd] disabled:opacity-60">{copy.cancel}</button>
-      <button type="button" disabled={isLoading} onClick={onUpdate} className="min-h-12 rounded-2xl bg-[#17120b] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] disabled:cursor-not-allowed disabled:opacity-60">{isLoading ? copy.updatingRecommendations : copy.updateRecommendations}</button>
+      <button type="button" disabled={isLoading || isRequestBlocked} onClick={onUpdate} className="min-h-12 rounded-2xl bg-[#17120b] px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] disabled:cursor-not-allowed disabled:opacity-60">{isLoading ? copy.updatingRecommendations : copy.updateRecommendations}</button>
     </div>
   </section>;
 }
@@ -1882,11 +2112,15 @@ function RecommendationResults({
   response,
   status,
   copy,
+  locale,
+  resultsRef,
   onModifyPreferences,
 }: {
   response: AdvisorResponse | null;
   status: RequestState;
   copy: ChatCopy;
+  locale: Locale;
+  resultsRef: React.RefObject<HTMLElement | null>;
   onModifyPreferences?: () => void;
 }) {
   if (status === "empty") {
@@ -1903,7 +2137,7 @@ function RecommendationResults({
   }
 
   return (
-    <section className="mt-8">
+    <section ref={resultsRef} className="mt-8 scroll-mt-24">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9b722b]">
@@ -1927,6 +2161,7 @@ function RecommendationResults({
             recommendation={recommendation}
             index={index}
             copy={copy}
+            locale={locale}
           />
         ))}
       </div>
@@ -1940,16 +2175,22 @@ function RecommendationCard({
   recommendation,
   index,
   copy,
+  locale,
 }: {
   recommendation: AdvisorRecommendation;
   index: number;
   copy: ChatCopy;
+  locale: Locale;
 }) {
   const tags = [
     ...recommendation.styles,
     ...recommendation.recommendedMaterials.slice(0, 1),
     ...recommendation.suitableOccasions.slice(0, 1),
   ].slice(0, 4);
+  // Gemini supplies a validated, text-only search query. Never substitute a
+  // product name here: the affiliate URL must be built only from searchQuery.
+  const searchQuery = recommendation.searchQuery?.trim() || "";
+  const amazonUrl = amazonProvider.buildSearchUrl?.(searchQuery, locale);
 
   return (
     <article className="rounded-3xl border border-[#ead8b3] bg-white p-5 shadow-sm">
@@ -1960,8 +2201,23 @@ function RecommendationCard({
         {recommendation.genericName}
       </h4>
       <InfoBlock title={copy.whyFits} text={recommendation.reason} />
-      <InfoBlock title={copy.recommendedMaterial} text={recommendation.recommendedMaterials.join(", ")} />
-      <InfoBlock title={copy.indicativePrice} text={recommendation.estimatedPriceRange} />
+      {amazonUrl ? (
+        <a
+          href={amazonUrl}
+          target="_blank"
+          rel="noopener noreferrer sponsored"
+          onClick={() => {
+            try {
+              trackGAEvent("affiliate_click", { provider: amazonProvider.id, searchQuery, recommendationTitle: recommendation.genericName, locale });
+            } catch {
+              // Analytics must not interfere with the affiliate link.
+            }
+          }}
+          className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-[#c89a43] bg-white px-4 py-2 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-auto"
+        >
+          {copy.viewOnAmazon}
+        </a>
+      ) : null}
       <InfoBlock title={copy.jewelerTip} text={recommendation.jewelerTip} />
       <div className="mt-4 flex flex-wrap gap-2">
         {tags.map((tag) => (
@@ -1989,6 +2245,7 @@ function RefinementChat({
   conversation,
   value,
   isLoading,
+  isRequestBlocked,
   copy,
   onChange,
   onSubmit,
@@ -1996,6 +2253,7 @@ function RefinementChat({
   conversation: ConversationMessage[];
   value: string;
   isLoading: boolean;
+  isRequestBlocked: boolean;
   copy: ChatCopy;
   onChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -2020,7 +2278,7 @@ function RefinementChat({
         {conversation.filter((message) => message.role === "user").map((message, index) => (
           <div
             key={`${message.role}-${index}`}
-            className="ml-auto max-w-[92%] whitespace-pre-wrap break-words rounded-2xl bg-[#17120b] px-4 py-3 text-sm leading-6 text-white"
+            className="ml-auto max-w-[92%] whitespace-pre-wrap break-words rounded-2xl border border-[#ead8b3] bg-[#fff9ed] px-4 py-3 text-sm leading-6 text-[#2b241f]"
           >
             {message.content}
           </div>
@@ -2041,7 +2299,7 @@ function RefinementChat({
         </label>
         <button
           type="submit"
-          disabled={isLoading || !value.trim()}
+          disabled={isLoading || isRequestBlocked || !value.trim()}
           className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
           {isLoading ? copy.refining : copy.sendRefinement}
@@ -2061,10 +2319,16 @@ function buildGuidedSummary(
     return copy.summaryFallback;
   }
 
+  const selectedPieceDetails = (preferences.pieceDetails ?? [])
+    .filter((detail) => detail !== "no_preference")
+    .map((detail) => pieceDetailLabels[locale][detail])
+    .filter(Boolean);
+
   const parts = [
     preferences.jewelryType
       ? `${copy.summarySearchPrefix} ${withArticle(preferences.jewelryType, locale)}`
       : copy.summarySearch,
+    selectedPieceDetails.length ? joinList(selectedPieceDetails, copy.listAnd) : "",
     preferences.recipient ? `${copy.summaryFor} ${preferences.recipient.toLowerCase()}` : "",
     preferences.occasion ? `${copy.summaryFor} ${preferences.occasion.toLowerCase()}` : "",
     preferences.styles?.length ? `${copy.summaryStyle} ${joinList(preferences.styles, copy.listAnd)}${locale === "en" ? " style" : ""}` : "",
@@ -2119,7 +2383,9 @@ function getAdvisorRequestErrorMessage(
   }
 
   if (status === 429) {
-    return copy.rateLimitedError;
+    return data.error === "TEMPORARILY_UNAVAILABLE"
+      ? copy.serviceBusyError
+      : copy.rateLimitedError;
   }
 
   return copy.genericRequestError;
