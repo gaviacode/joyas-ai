@@ -9,6 +9,7 @@ export type ConversationMessage = {
 export type GuidedPreferences = {
   recipient?: string;
   jewelryType?: string;
+  pieceDetails?: string[];
   occasion?: string;
   styles?: string[];
   materials?: string[];
@@ -27,26 +28,17 @@ export type AdvisorRequest = {
   conversation?: ConversationMessage[];
 };
 
-export type RecommendationSource = "generic" | "awin" | "amazon";
-
 export type AdvisorRecommendation = {
   id: string;
-  source: RecommendationSource;
   genericName: string;
   reason: string;
+  searchQuery: string;
   recommendedMaterials: string[];
   styles: string[];
   suitableOccasions: string[];
   estimatedPriceRange: string;
   jewelerTip: string;
   disclaimer: string;
-  country?: string;
-  currency?: string;
-  merchant?: string;
-  productId?: string;
-  affiliateUrl?: string;
-  imageUrl?: string;
-  currentPrice?: number;
 };
 
 export type AdvisorResponse = {
