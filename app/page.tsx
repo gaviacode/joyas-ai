@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Script from "next/script";
 import SiteHeader from "@/components/SiteHeader";
+import AdvisorResetLink from "@/components/AdvisorResetLink";
 import JewelryChat from "@/components/JewelryChat";
 import ExternalGiftIdeasCta from "@/components/ExternalGiftIdeasCta";
 import { getHomeMetadataAlternates, openGraphLocales } from "@/lib/i18n";
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
     title: "Encuentra la joya perfecta con IA | joyas.ai",
     description:
       "Joyero IA para elegir collares, pulseras, pendientes o anillos según ocasión, presupuesto y estilo de la persona.",
-    url: "/",
+    url: "/es",
     siteName: "joyas.ai",
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "joyas.ai - Tu joyero IA" }],
     locale: openGraphLocales.es,
@@ -81,9 +82,9 @@ export default function Home() {
             Habla con un joyero experto con inteligencia artificial y descubre anillos, collares, pulseras o pendientes según la ocasión, tu presupuesto y el estilo de la persona.
           </p>
           <div className="mt-9">
-            <Link href="/#joyero-ia" className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#b97a05] to-[#d7a63c] px-7 py-4 font-semibold text-white shadow-lg shadow-[#b97a05]/20 transition hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-[220px]">
+            <AdvisorResetLink href="/#joyero-ia" className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#b97a05] to-[#d7a63c] px-7 py-4 font-semibold text-white shadow-lg shadow-[#b97a05]/20 transition hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-[220px]">
               Probar el joyero IA
-            </Link>
+            </AdvisorResetLink>
           </div>
         </div>
         <HeroJewelry />

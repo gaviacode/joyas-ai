@@ -31,10 +31,6 @@ export function proxy(request: NextRequest) {
     : detectLocaleFromAcceptLanguage(request.headers.get("accept-language"));
   const destinationPath = localePath(preferredLocale);
 
-  if (destinationPath === "/") {
-    return nextResponse;
-  }
-
   const url = request.nextUrl.clone();
   url.pathname = destinationPath;
   return NextResponse.redirect(url, 307);

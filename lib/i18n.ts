@@ -738,6 +738,10 @@ export function getLocalizedSection(kind: ContentKind, locale: Locale) {
 }
 
 export function getLocaleHomePath(locale: Locale) {
+  if (locale === "es") {
+    return "/es";
+  }
+
   if (locale === "pt-BR") {
     return "/pt-br";
   }
@@ -746,7 +750,7 @@ export function getLocaleHomePath(locale: Locale) {
     return "/en";
   }
 
-  return "/";
+  return "/en";
 }
 
 export function getLocalizedInfoPath(kind: InfoPageKind, locale: Locale) {

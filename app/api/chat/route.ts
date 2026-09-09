@@ -9,7 +9,9 @@ import type {
   AdvisorLocale,
   ConversationMessage,
   GuidedPreferences,
+  GuidedJewelryType,
 } from "@/lib/advisor";
+import { ADVISOR_RECOMMENDATION_COUNT, guidedJewelryTypes } from "@/lib/advisor";
 
 const SYSTEM_PROMPT = `
 Eres el joyero IA experto de joyas.ai.
@@ -19,9 +21,12 @@ Tu tarea es recomendar tipos genéricos de joyas, no productos comerciales concr
 Reglas obligatorias:
 - Responde en el idioma indicado por la petición: español si locale es "es", portugués brasileño natural si locale es "pt-BR" e inglés natural si locale es "en".
 - Devuelve exclusivamente JSON válido con esta forma: {"summary":"...","recommendations":[...],"followUpMessage":"..."}.
-- Incluye exactamente 3 recomendaciones salvo que falten datos esenciales; si faltan, devuelve recomendaciones prudentes y explica la incertidumbre en summary.
+- Incluye exactamente 6 recomendaciones, ordenadas de mejor a peor encaje con las preferencias del usuario. Si faltan datos esenciales, mantén seis alternativas prudentes y explica la incertidumbre en summary.
 - Cada recomendación debe incluir: id, genericName, reason, searchQuery, recommendedMaterials, styles, suitableOccasions, estimatedPriceRange, jewelerTip y disclaimer.
 - searchQuery debe ser una consulta de compra limpia de 3 a 8 términos útiles, describiendo el tipo de joya y, cuando proceda, material, estilo o destinatario. No debe contener frases conversacionales, URLs, Amazon, Awin, marketplaces, marcas, ASIN ni identificadores de producto.
+- Las 6 recomendaciones deben ser materialmente distintas: no repitas el mismo tipo, diseño o enfoque con variaciones mínimas, y no repitas ni uses consultas searchQuery prácticamente idénticas. Si se han indicado varios tipos de joya, reparte las recomendaciones entre ellos cuando sea coherente con las preferencias.
+- Si el tipo solicitado es "conjuntos", genera búsquedas concretas de sets coordinados, como "conjunto collar y pendientes", "conjunto collar pulsera pendientes" o "set de joyería elegante", incorporando material, estilo, ocasión o destinatario cuando aporte precisión. Nunca uses consultas genéricas como "conjuntos" o "joyas conjunto".
+- Si el tipo solicitado es "charms / abalorios", genera búsquedas concretas como "charm pulsera plata", "abalorio plata mujer", "charm corazón" o "charm regalo mujer", incorporando material, estilo, ocasión o destinatario cuando aporte precisión.
 - No inventes marcas, tiendas, URLs, ASIN, enlaces de afiliado, stock, descuentos, valoraciones, reseñas, disponibilidad ni precios exactos.
 - Usa rangos de precio orientativos, nunca importes exactos, y deja claro que dependen del material y proveedor.
 - No afirmes que una joya concreta existe en una tienda.
@@ -33,16 +38,7 @@ Reglas obligatorias:
 - Mantén un tono premium, claro, prudente y útil.
 `;
 
-const ALLOWED_GUIDED_JEWELRY_TYPES = new Set([
-  "anillo",
-  "collar",
-  "colgante",
-  "pulsera",
-  "pendientes",
-  "gemelos",
-  "reloj",
-  "no estoy seguro",
-]);
+const ALLOWED_GUIDED_JEWELRY_TYPES = new Set<string>(guidedJewelryTypes);
 
 const PIECE_DETAILS_BY_TYPE: Record<string, readonly string[]> = {
   anillo: ["fine", "medium_band", "wide", "open", "gemstone", "no_gemstone", "signet", "no_preference"],
@@ -52,12 +48,14 @@ const PIECE_DETAILS_BY_TYPE: Record<string, readonly string[]> = {
   pendientes: ["stud", "small_hoops", "large_hoops", "drop", "climbers", "gemstone", "geometric", "no_preference"],
   gemelos: ["classic", "minimal", "geometric", "original", "formal", "personalizable", "gemstone", "no_preference"],
   reloj: ["case_small", "case_medium", "case_large", "dress", "minimal", "sport", "metal_bracelet", "leather_strap", "no_preference"],
+  "charms / abalorios": ["heart_charm", "meaningful_symbol", "initial", "gemstone", "fine_chain", "gold_tone", "silver_tone", "no_preference"],
+  conjuntos: ["necklace_earrings", "necklace_bracelet", "three_piece_set", "minimal", "gemstone", "gold_tone", "silver_tone", "no_preference"],
 };
 
 const PIECE_DETAIL_LABELS: Record<AdvisorLocale, Record<string, string>> = {
-  es: { fine: "fino y discreto", medium_band: "banda media", wide: "ancho con presencia", open: "abierto", gemstone: "con piedra", no_gemstone: "sin piedra", signet: "tipo sello", short: "corto cerca del cuello", medium_length: "longitud media", long: "largo", v_drop: "caída en V", fine_chain: "cadena fina", bold_chain: "cadena con presencia", layers: "capas", small: "pequeño y discreto", geometric: "geométrico", initial: "inicial o letra", meaningful_symbol: "símbolo con significado", medallion: "medallón", vertical_drop: "caída vertical", bangle: "rígida o brazalete", adjustable: "ajustable", charms: "con charms", minimal: "minimalista", stud: "botón o pequeños", small_hoops: "aros pequeños", large_hoops: "aros grandes", drop: "largos o colgantes", climbers: "trepadores", classic: "clásicos", original: "originales", formal: "elegantes o formales", personalizable: "personalizables", case_small: "caja pequeña", case_medium: "caja mediana", case_large: "caja grande", dress: "clásico o de vestir", sport: "deportivo", metal_bracelet: "correa metálica", leather_strap: "correa de piel", no_preference: "" },
-  en: { fine: "slim and understated", medium_band: "medium band", wide: "wide and statement", open: "open", gemstone: "with gemstone", no_gemstone: "without gemstone", signet: "signet style", short: "short, close to the neck", medium_length: "medium length", long: "long", v_drop: "V drop", fine_chain: "fine chain", bold_chain: "statement chain", layers: "layered chains", small: "small and understated", geometric: "geometric", initial: "initial or letter", meaningful_symbol: "meaningful symbol", medallion: "medallion", vertical_drop: "vertical drop", bangle: "rigid bangle", adjustable: "adjustable", charms: "with charms", minimal: "minimal", stud: "stud or small", small_hoops: "small hoops", large_hoops: "large hoops", drop: "long or drop", climbers: "climbers", classic: "classic", original: "original", formal: "elegant or formal", personalizable: "personalizable", case_small: "small case", case_medium: "medium case", case_large: "large case", dress: "dress style", sport: "sport", metal_bracelet: "metal bracelet", leather_strap: "leather strap", no_preference: "" },
-  "pt-BR": { fine: "fino e discreto", medium_band: "aro médio", wide: "largo e marcante", open: "aberto", gemstone: "com pedra", no_gemstone: "sem pedra", signet: "tipo sinete", short: "curto, junto ao pescoço", medium_length: "comprimento médio", long: "longo", v_drop: "caída em V", fine_chain: "corrente fina", bold_chain: "corrente marcante", layers: "camadas", small: "pequeno e discreto", geometric: "geométrico", initial: "inicial ou letra", meaningful_symbol: "símbolo com significado", medallion: "medalhão", vertical_drop: "queda vertical", bangle: "rígida ou bracelete", adjustable: "ajustável", charms: "com charms", minimal: "minimalista", stud: "botão ou pequenos", small_hoops: "argolas pequenas", large_hoops: "argolas grandes", drop: "longos ou pendentes", climbers: "ear climbers", classic: "clássicos", original: "originais", formal: "elegantes ou formais", personalizable: "personalizáveis", case_small: "caixa pequena", case_medium: "caixa média", case_large: "caixa grande", dress: "clássico ou social", sport: "esportivo", metal_bracelet: "pulseira metálica", leather_strap: "pulseira de couro", no_preference: "" },
+  es: { fine: "fino y discreto", medium_band: "banda media", wide: "ancho con presencia", open: "abierto", gemstone: "con piedra", no_gemstone: "sin piedra", signet: "tipo sello", short: "corto cerca del cuello", medium_length: "longitud media", long: "largo", v_drop: "caída en V", fine_chain: "cadena fina", bold_chain: "cadena con presencia", layers: "capas", small: "pequeño y discreto", geometric: "geométrico", initial: "inicial o letra", meaningful_symbol: "símbolo con significado", medallion: "medallón", vertical_drop: "caída vertical", bangle: "rígida o brazalete", adjustable: "ajustable", charms: "con charms", heart_charm: "charm de corazón", gold_tone: "tono oro", silver_tone: "tono plata", necklace_earrings: "collar y pendientes", necklace_bracelet: "collar y pulsera", three_piece_set: "collar, pulsera y pendientes", minimal: "minimalista", stud: "botón o pequeños", small_hoops: "aros pequeños", large_hoops: "aros grandes", drop: "largos o colgantes", climbers: "trepadores", classic: "clásicos", original: "originales", formal: "elegantes o formales", personalizable: "personalizables", case_small: "caja pequeña", case_medium: "caja mediana", case_large: "caja grande", dress: "clásico o de vestir", sport: "deportivo", metal_bracelet: "correa metálica", leather_strap: "correa de piel", no_preference: "" },
+  en: { fine: "slim and understated", medium_band: "medium band", wide: "wide and statement", open: "open", gemstone: "with gemstone", no_gemstone: "without gemstone", signet: "signet style", short: "short, close to the neck", medium_length: "medium length", long: "long", v_drop: "V drop", fine_chain: "fine chain", bold_chain: "statement chain", layers: "layered chains", small: "small and understated", geometric: "geometric", initial: "initial or letter", meaningful_symbol: "meaningful symbol", medallion: "medallion", vertical_drop: "vertical drop", bangle: "rigid bangle", adjustable: "adjustable", charms: "with charms", heart_charm: "heart charm", gold_tone: "gold tone", silver_tone: "silver tone", necklace_earrings: "necklace and earrings", necklace_bracelet: "necklace and bracelet", three_piece_set: "necklace, bracelet and earrings", minimal: "minimal", stud: "stud or small", small_hoops: "small hoops", large_hoops: "large hoops", drop: "long or drop", climbers: "climbers", classic: "classic", original: "original", formal: "elegant or formal", personalizable: "personalizable", case_small: "small case", case_medium: "medium case", case_large: "large case", dress: "dress style", sport: "sport", metal_bracelet: "metal bracelet", leather_strap: "leather strap", no_preference: "" },
+  "pt-BR": { fine: "fino e discreto", medium_band: "aro médio", wide: "largo e marcante", open: "aberto", gemstone: "com pedra", no_gemstone: "sem pedra", signet: "tipo sinete", short: "curto, junto ao pescoço", medium_length: "comprimento médio", long: "longo", v_drop: "caída em V", fine_chain: "corrente fina", bold_chain: "corrente marcante", layers: "camadas", small: "pequeno e discreto", geometric: "geométrico", initial: "inicial ou letra", meaningful_symbol: "símbolo com significado", medallion: "medalhão", vertical_drop: "queda vertical", bangle: "rígida ou bracelete", adjustable: "ajustável", charms: "com charms", heart_charm: "charm de coração", gold_tone: "tom dourado", silver_tone: "tom prateado", necklace_earrings: "colar e brincos", necklace_bracelet: "colar e pulseira", three_piece_set: "colar, pulseira e brincos", minimal: "minimalista", stud: "botão ou pequenos", small_hoops: "argolas pequenas", large_hoops: "argolas grandes", drop: "longos ou pendentes", climbers: "ear climbers", classic: "clássicos", original: "originais", formal: "elegantes ou formais", personalizable: "personalizáveis", case_small: "caixa pequena", case_medium: "caixa média", case_large: "caixa grande", dress: "clássico ou social", sport: "esportivo", metal_bracelet: "pulseira metálica", leather_strap: "pulseira de couro", no_preference: "" },
 };
 
 const PRIMARY_GEMINI_MODEL = "gemini-2.5-flash-lite";
@@ -146,30 +144,36 @@ export async function POST(request: Request) {
       );
     }
 
-    const rateLimitResult = await checkRateLimit({
-      ip: getClientIp(request),
-      visitorId: anonymousVisitor.value,
-    });
+    const rateLimitDisabled =
+      process.env.NODE_ENV !== "production" &&
+      process.env.DISABLE_RATE_LIMIT === "true";
 
-    if (!rateLimitResult.allowed) {
-      const isGlobalLimit = rateLimitResult.reason === "global";
-      const locale = validation.value.locale ?? "es";
-      return withAnonymousVisitorCookie(
-        NextResponse.json(
-          {
-            error: isGlobalLimit ? "TEMPORARILY_UNAVAILABLE" : "RATE_LIMITED",
-            message: getRateLimitMessage(locale, isGlobalLimit),
-            retryable: isGlobalLimit,
-          },
-          {
-            status: 429,
-            headers: {
-              "Retry-After": String(rateLimitResult.retryAfterSeconds),
+    if (!rateLimitDisabled) {
+      const rateLimitResult = await checkRateLimit({
+        ip: getClientIp(request),
+        visitorId: anonymousVisitor.value,
+      });
+
+      if (!rateLimitResult.allowed) {
+        const isGlobalLimit = rateLimitResult.reason === "global";
+        const locale = validation.value.locale ?? "es";
+        return withAnonymousVisitorCookie(
+          NextResponse.json(
+            {
+              error: isGlobalLimit ? "TEMPORARILY_UNAVAILABLE" : "RATE_LIMITED",
+              message: getRateLimitMessage(locale, isGlobalLimit),
+              retryable: isGlobalLimit,
             },
-          },
-        ),
-        anonymousVisitor,
-      );
+            {
+              status: 429,
+              headers: {
+                "Retry-After": String(rateLimitResult.retryAfterSeconds),
+              },
+            },
+          ),
+          anonymousVisitor,
+        );
+      }
     }
 
     const rawApiKey = process.env.GEMINI_API_KEY;
@@ -333,7 +337,7 @@ async function generateWithModel({
       contents,
       config: {
         systemInstruction: SYSTEM_PROMPT,
-        maxOutputTokens: 1400,
+        maxOutputTokens: 3200,
         responseMimeType: "application/json",
         abortSignal: controller.signal,
       },
@@ -782,14 +786,14 @@ function isConversationMessage(message: unknown): message is ConversationMessage
   );
 }
 
-function cleanGuidedPreferences(preferences?: GuidedPreferences) {
+function cleanGuidedPreferences(preferences?: GuidedPreferences): GuidedPreferences | undefined {
   if (!preferences) {
     return undefined;
   }
 
   return {
     recipient: cleanOptionalString(preferences.recipient),
-    jewelryType: cleanOptionalString(preferences.jewelryType),
+    jewelryType: cleanGuidedJewelryType(preferences.jewelryType),
     pieceDetails: preferences.pieceDetails?.filter((item) => typeof item === "string").slice(0, 3),
     occasion: cleanOptionalString(preferences.occasion),
     styles: preferences.styles?.map((item) => item.trim()).filter(Boolean).slice(0, 10),
@@ -870,7 +874,7 @@ function parseAdvisorResponse(text: string): AdvisorResponse {
 
   return {
     summary: parsed.summary,
-    recommendations: parsed.recommendations.slice(0, 3).map(normalizeRecommendation),
+    recommendations: parsed.recommendations.slice(0, ADVISOR_RECOMMENDATION_COUNT).map(normalizeRecommendation),
     followUpMessage: parsed.followUpMessage,
   };
 }
@@ -900,10 +904,32 @@ function getAdvisorResponseValidationIssues(value: unknown) {
     return issues;
   }
 
+  if (candidate.recommendations.length !== ADVISOR_RECOMMENDATION_COUNT) {
+    issues.push(`recommendations debe tener exactamente ${ADVISOR_RECOMMENDATION_COUNT} elementos`);
+  }
+
+  const normalizedNames = new Set<string>();
+  const normalizedSearchQueries = new Set<string>();
+
   candidate.recommendations.forEach((recommendation, index) => {
     getRecommendationValidationIssues(recommendation).forEach((issue) => {
       issues.push(`recommendations[${index}].${issue}`);
     });
+
+    if (recommendation && typeof recommendation === "object") {
+      const candidateRecommendation = recommendation as Partial<AdvisorRecommendation>;
+      const genericName = normalizeRecommendationIdentity(candidateRecommendation.genericName);
+      const searchQuery = normalizeRecommendationIdentity(candidateRecommendation.searchQuery);
+
+      if (genericName && normalizedNames.has(genericName)) {
+        issues.push(`recommendations[${index}].genericName está duplicado`);
+      }
+      if (searchQuery && normalizedSearchQueries.has(searchQuery)) {
+        issues.push(`recommendations[${index}].searchQuery está duplicada`);
+      }
+      if (genericName) normalizedNames.add(genericName);
+      if (searchQuery) normalizedSearchQueries.add(searchQuery);
+    }
   });
 
   return issues;
@@ -967,6 +993,17 @@ function getRecommendationValidationIssues(value: unknown) {
 
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+function normalizeRecommendationIdentity(value: unknown) {
+  return typeof value === "string" ? value.trim().toLocaleLowerCase().replace(/\s+/g, " ") : "";
+}
+
+function cleanGuidedJewelryType(value: unknown): GuidedJewelryType | undefined {
+  const cleaned = cleanOptionalString(value);
+  return cleaned && ALLOWED_GUIDED_JEWELRY_TYPES.has(cleaned.toLowerCase())
+    ? cleaned.toLowerCase() as GuidedJewelryType
+    : undefined;
 }
 
 function isValidPieceDetails(jewelryType: string | undefined, details: string[] | undefined) {

@@ -1,5 +1,21 @@
 export type AdvisorMode = "direct" | "guided";
 export type AdvisorLocale = "es" | "pt-BR" | "en";
+export const ADVISOR_RECOMMENDATION_COUNT = 6;
+
+export const guidedJewelryTypes = [
+  "anillo",
+  "collar",
+  "colgante",
+  "pulsera",
+  "pendientes",
+  "gemelos",
+  "reloj",
+  "charms / abalorios",
+  "conjuntos",
+  "no estoy seguro",
+] as const;
+
+export type GuidedJewelryType = (typeof guidedJewelryTypes)[number];
 
 export type ConversationMessage = {
   role: "user" | "assistant";
@@ -8,7 +24,7 @@ export type ConversationMessage = {
 
 export type GuidedPreferences = {
   recipient?: string;
-  jewelryType?: string;
+  jewelryType?: GuidedJewelryType;
   pieceDetails?: string[];
   occasion?: string;
   styles?: string[];

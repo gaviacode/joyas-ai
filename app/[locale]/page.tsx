@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import SpanishHome from "@/app/page";
+import AdvisorResetLink from "@/components/AdvisorResetLink";
 import JewelryChat from "@/components/JewelryChat";
 import ExternalGiftIdeasCta from "@/components/ExternalGiftIdeasCta";
 import SiteHeader from "@/components/SiteHeader";
@@ -12,6 +14,7 @@ import {
   localizeText,
   openGraphLocales,
   locales,
+  type Locale,
   type LocalizedLocale,
 } from "@/lib/i18n";
 
@@ -23,6 +26,28 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const locale = parseLocale((await params).locale);
   if (!locale) {
     return {};
+  }
+
+  if (locale === "es") {
+    const title = "Encuentra la joya perfecta con IA | joyas.ai";
+    const description = "Joyero IA para elegir collares, pulseras, pendientes o anillos según ocasión, presupuesto y estilo de la persona.";
+
+    return {
+      title,
+      description,
+      alternates: getHomeMetadataAlternates(locale),
+      openGraph: {
+        title,
+        description,
+        url: getLocaleHomePath(locale),
+        siteName: "joyas.ai",
+        images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "joyas.ai - Tu joyero IA" }],
+        locale: openGraphLocales[locale],
+        alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),
+        type: "website",
+      },
+      twitter: { card: "summary_large_image", title, description, images: ["/opengraph-image"] },
+    };
   }
 
   const title = locale === "pt-BR" ? "Encontre a joia perfeita com IA | joyas.ai" : "Find the Perfect Jewelry With AI | joyas.ai";
@@ -61,6 +86,9 @@ export default async function LocalizedHomePage({ params }: PageProps) {
   if (!locale) {
     notFound();
   }
+  if (locale === "es") {
+    return <SpanishHome />;
+  }
   const copy = getHomeCopy(locale);
   const localizedPrefix = locale === "pt-BR" ? "/pt-br" : "/en";
 
@@ -79,9 +107,9 @@ export default async function LocalizedHomePage({ params }: PageProps) {
             {copy.description}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Link href={`${localizedPrefix}#joyero-ia`} className="inline-flex justify-center rounded-xl bg-[#17120b] px-6 py-3 font-semibold text-white transition hover:bg-[#2b241f]">
+          <AdvisorResetLink href={`${localizedPrefix}#joyero-ia`} className="inline-flex justify-center rounded-xl bg-[#17120b] px-6 py-3 font-semibold text-white transition hover:bg-[#2b241f]">
             {localizeText("Probar el joyero IA", locale)}
-          </Link>
+          </AdvisorResetLink>
           <Link href={getLocalizedIndexPath("guias", locale)} className="inline-flex justify-center rounded-xl border border-[#d7a63c] bg-white px-6 py-3 font-semibold text-[#9a6b08] transition hover:bg-[#fff5df]">
             {copy.guidesCta}
           </Link>
@@ -163,7 +191,10 @@ export default async function LocalizedHomePage({ params }: PageProps) {
   );
 }
 
-function parseLocale(value: string): LocalizedLocale | undefined {
+function parseLocale(value: string): Locale | undefined {
+  if (value === "es") {
+    return "es";
+  }
   if (value === "pt-br") {
     return "pt-BR";
   }

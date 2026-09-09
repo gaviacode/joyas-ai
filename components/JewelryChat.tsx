@@ -15,7 +15,9 @@ import type {
   AdvisorResponse,
   ConversationMessage,
   GuidedPreferences,
+  GuidedJewelryType,
 } from "@/lib/advisor";
+import { ADVISOR_RECOMMENDATION_COUNT, guidedJewelryTypes } from "@/lib/advisor";
 import { amazonProvider } from "@/lib/affiliate";
 import { resetAdvisorEvent } from "@/components/AdvisorResetLink";
 import { trackGAEvent } from "@/lib/google-analytics-events";
@@ -29,7 +31,7 @@ type Option = {
 };
 
 type VisualOption = {
-  value: string;
+  value: GuidedJewelryType;
   label: string;
   icon: React.ReactNode;
 };
@@ -211,7 +213,7 @@ const chatCopy = {
     empty:
       "No se han encontrado recomendaciones claras. Añade algún detalle más sobre estilo, ocasión o presupuesto y vuelve a intentarlo.",
     resultsEyebrow: "Recomendaciones del joyero IA",
-    resultsTitle: "Tres ideas personalizadas",
+    resultsTitle: "Seis ideas personalizadas",
     resultsDisclaimer:
       "Recomendación orientativa: representa un tipo de joya, no un producto concreto disponible en una tienda.",
     recommendation: "Recomendación",
@@ -311,7 +313,7 @@ const chatCopy = {
     empty:
       "Não foram encontradas recomendações claras. Adicione mais algum detalhe sobre estilo, ocasião ou orçamento e tente novamente.",
     resultsEyebrow: "Recomendações do joalheiro IA",
-    resultsTitle: "Três ideias personalizadas",
+    resultsTitle: "Seis ideias personalizadas",
     resultsDisclaimer:
       "Recomendação orientativa: representa um tipo de joia, não um produto concreto disponível em uma loja.",
     recommendation: "Recomendação",
@@ -411,7 +413,7 @@ const chatCopy = {
     empty:
       "No clear recommendations were found. Add another detail about style, occasion or budget and try again.",
     resultsEyebrow: "AI jeweler recommendations",
-    resultsTitle: "Three personalized ideas",
+    resultsTitle: "Six personalized ideas",
     resultsDisclaimer:
       "Indicative recommendation: this represents a jewelry type, not a specific product available in a store.",
     recommendation: "Recommendation",
@@ -514,14 +516,13 @@ function getRecipients(locale: Locale): Option[] {
 function getJewelryTypes(locale: Locale): VisualOption[] {
   const labels =
     locale === "pt-BR"
-      ? ["Anel", "Colar", "Pingente", "Pulseira", "Brincos", "Abotoaduras", "Relógio", "Não tenho certeza"]
+      ? ["Anel", "Colar", "Pingente", "Pulseira", "Brincos", "Abotoaduras", "Relógio", "Charms", "Conjuntos de joias", "Não tenho certeza"]
       : locale === "en"
-        ? ["Ring", "Necklace", "Pendant", "Bracelet", "Earrings", "Cufflinks", "Watch", "Not sure"]
-        : ["Anillo", "Collar", "Colgante", "Pulsera", "Pendientes", "Gemelos", "Reloj", "No estoy seguro"];
-  const values = ["anillo", "collar", "colgante", "pulsera", "pendientes", "gemelos", "reloj", "no estoy seguro"];
-  const icons: JewelryIconType[] = ["ring", "necklace", "pendant", "bracelet", "earrings", "cufflinks", "watch", "unsure"];
+        ? ["Ring", "Necklace", "Pendant", "Bracelet", "Earrings", "Cufflinks", "Watch", "Charms", "Jewelry sets", "Not sure"]
+        : ["Anillo", "Collar", "Colgante", "Pulsera", "Pendientes", "Gemelos", "Reloj", "Charms / abalorios", "Conjuntos", "No estoy seguro"];
+  const icons: JewelryIconType[] = ["ring", "necklace", "pendant", "bracelet", "earrings", "cufflinks", "watch", "charm", "set", "unsure"];
 
-  return values.map((value, index) => ({
+  return guidedJewelryTypes.map((value, index) => ({
     value,
     label: labels[index],
     icon: <JewelryTypeIcon type={icons[index]} />,
@@ -650,7 +651,6 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   }
 
   function changeGuidedStep(nextStep: number) {
-    preservedScrollYRef.current = window.scrollY;
     setGuidedStep(nextStep);
   }
 
@@ -1110,6 +1110,8 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
         status={status}
         copy={copy}
         locale={locale}
+        preferences={mode === "guided" ? preferences : undefined}
+        selectedBudget={mode === "guided" ? selectedBudget : undefined}
         resultsRef={resultsRef}
         onModifyPreferences={isGuidedResultState && !isPreferencesEditorOpen ? modifyGuidedPreferences : undefined}
       />
@@ -1316,6 +1318,8 @@ function GuidedAdvisorForm({
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
   const advanceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const activeStepRef = useRef<HTMLFormElement | null>(null);
+  const previousStepRef = useRef<string | null>(null);
   const [ageInput, setAgeInput] = useState(preferences.age?.toString() ?? "");
   const guidedStepKeys = preferences.jewelryType && preferences.jewelryType !== "no estoy seguro"
     ? [...baseGuidedStepKeys.slice(0, 2), "pieceDetails", ...baseGuidedStepKeys.slice(2)]
@@ -1362,8 +1366,39 @@ function GuidedAdvisorForm({
   const stepKey = guidedStepKeys[safeStep] as keyof typeof stepTitleByKey;
   const stepTitle = stepTitleByKey[stepKey];
 
+  useLayoutEffect(() => {
+    const stepIdentifier = `${stepKey}:${totalSteps}`;
+    if (previousStepRef.current === null) {
+      previousStepRef.current = stepIdentifier;
+      return;
+    }
+
+    if (previousStepRef.current === stepIdentifier) {
+      return;
+    }
+
+    previousStepRef.current = stepIdentifier;
+    const frameId = requestAnimationFrame(() => {
+      const activeStep = activeStepRef.current;
+      if (!activeStep) {
+        return;
+      }
+
+      const stickyHeaderHeight = document.querySelector<HTMLElement>("header.sticky")
+        ?.getBoundingClientRect().height ?? 0;
+      const targetPosition = window.scrollY + activeStep.getBoundingClientRect().top - stickyHeaderHeight - 24;
+
+      window.scrollTo({
+        top: Math.max(0, targetPosition),
+        behavior: "smooth",
+      });
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [stepKey, totalSteps]);
+
   return (
-    <form onSubmit={onSubmit} className="min-w-0">
+    <form ref={activeStepRef} onSubmit={onSubmit} className="min-w-0">
       <div className="mb-7">
         <p className="flex flex-wrap items-center gap-2 text-sm font-semibold text-[#6f5530]">{copy.step} {safeStep + 1} {copy.of} {totalSteps}{safeStep === lastStep ? <span className="rounded-full border border-[#e8cc91] bg-[#fff3d8] px-2.5 py-0.5 text-xs font-semibold text-[#795417]">{copy.optional}</span> : null}</p>
         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#eee2cb]" role="progressbar" aria-label={`${copy.step} ${safeStep + 1} ${copy.of} ${totalSteps}`} aria-valuemin={1} aria-valuemax={totalSteps} aria-valuenow={safeStep + 1}>
@@ -1398,12 +1433,14 @@ const pieceDetailIdsByType: Record<string, string[]> = {
   pendientes: ["stud", "small_hoops", "large_hoops", "drop", "climbers", "gemstone", "geometric", "no_preference"],
   gemelos: ["classic", "minimal", "geometric", "original", "formal", "personalizable", "gemstone", "no_preference"],
   reloj: ["case_small", "case_medium", "case_large", "dress", "minimal", "sport", "metal_bracelet", "leather_strap", "no_preference"],
+  "charms / abalorios": ["heart_charm", "meaningful_symbol", "initial", "gemstone", "fine_chain", "gold_tone", "silver_tone", "no_preference"],
+  conjuntos: ["necklace_earrings", "necklace_bracelet", "three_piece_set", "minimal", "gemstone", "gold_tone", "silver_tone", "no_preference"],
 };
 
 const pieceDetailLabels: Record<Locale, Record<string, string>> = {
-  es: { fine: "Fino y discreto", medium_band: "Banda media", wide: "Ancho / con presencia", open: "Abierto", gemstone: "Con piedra", no_gemstone: "Sin piedra", signet: "Tipo sello", short: "Corto / cerca del cuello", medium_length: "Longitud media", long: "Largo", v_drop: "Caída en V", fine_chain: "Cadena fina", bold_chain: "Cadena con presencia", layers: "Capas / varias cadenas", small: "Pequeño y discreto", geometric: "Geométrico", initial: "Inicial / letra", meaningful_symbol: "Símbolo con significado", medallion: "Medallón", vertical_drop: "Alargado / caída vertical", bangle: "Rígida / brazalete", adjustable: "Ajustable", charms: "Con charms", minimal: "Minimalista", stud: "Botón / pequeños", small_hoops: "Aros pequeños", large_hoops: "Aros grandes", drop: "Largos / colgantes", climbers: "Trepadores", classic: "Clásicos", original: "Originales", formal: "Elegantes / formales", personalizable: "Personalizables", case_small: "Caja pequeña", case_medium: "Caja mediana", case_large: "Caja grande", dress: "Clásico / vestir", sport: "Deportivo", metal_bracelet: "Correa metálica", leather_strap: "Correa de piel", no_preference: "No tengo preferencia" },
-  en: { fine: "Slim and understated", medium_band: "Medium band", wide: "Wide / statement", open: "Open", gemstone: "With gemstone", no_gemstone: "Without gemstone", signet: "Signet style", short: "Short / close to the neck", medium_length: "Medium length", long: "Long", v_drop: "V drop", fine_chain: "Fine chain", bold_chain: "Statement chain", layers: "Layered chains", small: "Small and understated", geometric: "Geometric", initial: "Initial / letter", meaningful_symbol: "Meaningful symbol", medallion: "Medallion", vertical_drop: "Long / vertical drop", bangle: "Rigid / bangle", adjustable: "Adjustable", charms: "With charms", minimal: "Minimal", stud: "Stud / small", small_hoops: "Small hoops", large_hoops: "Large hoops", drop: "Long / drop", climbers: "Climbers", classic: "Classic", original: "Original", formal: "Elegant / formal", personalizable: "Personalizable", case_small: "Small case", case_medium: "Medium case", case_large: "Large case", dress: "Classic / dress", sport: "Sport", metal_bracelet: "Metal bracelet", leather_strap: "Leather strap", no_preference: "No preference" },
-  "pt-BR": { fine: "Fino e discreto", medium_band: "Aro médio", wide: "Largo / marcante", open: "Aberto", gemstone: "Com pedra", no_gemstone: "Sem pedra", signet: "Tipo sinete", short: "Curto / junto ao pescoço", medium_length: "Comprimento médio", long: "Longo", v_drop: "Caída em V", fine_chain: "Corrente fina", bold_chain: "Corrente marcante", layers: "Camadas / várias correntes", small: "Pequeno e discreto", geometric: "Geométrico", initial: "Inicial / letra", meaningful_symbol: "Símbolo com significado", medallion: "Medalhão", vertical_drop: "Alongado / queda vertical", bangle: "Rígida / bracelete", adjustable: "Ajustável", charms: "Com charms", minimal: "Minimalista", stud: "Botão / pequenos", small_hoops: "Argolas pequenas", large_hoops: "Argolas grandes", drop: "Longos / pendentes", climbers: "Trepadores", classic: "Clássicos", original: "Originais", formal: "Elegantes / formais", personalizable: "Personalizáveis", case_small: "Caixa pequena", case_medium: "Caixa média", case_large: "Caixa grande", dress: "Clássico / social", sport: "Esportivo", metal_bracelet: "Pulseira metálica", leather_strap: "Pulseira de couro", no_preference: "Sem preferência" },
+  es: { fine: "Fino y discreto", medium_band: "Banda media", wide: "Ancho / con presencia", open: "Abierto", gemstone: "Con piedra", no_gemstone: "Sin piedra", signet: "Tipo sello", short: "Corto / cerca del cuello", medium_length: "Longitud media", long: "Largo", v_drop: "Caída en V", fine_chain: "Cadena fina", bold_chain: "Cadena con presencia", layers: "Capas / varias cadenas", small: "Pequeño y discreto", geometric: "Geométrico", initial: "Inicial / letra", meaningful_symbol: "Símbolo con significado", medallion: "Medallón", vertical_drop: "Alargado / caída vertical", bangle: "Rígida / brazalete", adjustable: "Ajustable", charms: "Con charms", heart_charm: "Charm de corazón", gold_tone: "Tono oro", silver_tone: "Tono plata", necklace_earrings: "Collar y pendientes", necklace_bracelet: "Collar y pulsera", three_piece_set: "Collar, pulsera y pendientes", minimal: "Minimalista", stud: "Botón / pequeños", small_hoops: "Aros pequeños", large_hoops: "Aros grandes", drop: "Largos / colgantes", climbers: "Trepadores", classic: "Clásicos", original: "Originales", formal: "Elegantes / formales", personalizable: "Personalizables", case_small: "Caja pequeña", case_medium: "Caja mediana", case_large: "Caja grande", dress: "Clásico / vestir", sport: "Deportivo", metal_bracelet: "Correa metálica", leather_strap: "Correa de piel", no_preference: "No tengo preferencia" },
+  en: { fine: "Slim and understated", medium_band: "Medium band", wide: "Wide / statement", open: "Open", gemstone: "With gemstone", no_gemstone: "Without gemstone", signet: "Signet style", short: "Short / close to the neck", medium_length: "Medium length", long: "Long", v_drop: "V drop", fine_chain: "Fine chain", bold_chain: "Statement chain", layers: "Layered chains", small: "Small and understated", geometric: "Geometric", initial: "Initial / letter", meaningful_symbol: "Meaningful symbol", medallion: "Medallion", vertical_drop: "Long / vertical drop", bangle: "Rigid / bangle", adjustable: "Adjustable", charms: "With charms", heart_charm: "Heart charm", gold_tone: "Gold tone", silver_tone: "Silver tone", necklace_earrings: "Necklace and earrings", necklace_bracelet: "Necklace and bracelet", three_piece_set: "Necklace, bracelet and earrings", minimal: "Minimal", stud: "Stud / small", small_hoops: "Small hoops", large_hoops: "Large hoops", drop: "Long / drop", climbers: "Climbers", classic: "Classic", original: "Original", formal: "Elegant / formal", personalizable: "Personalizable", case_small: "Small case", case_medium: "Medium case", case_large: "Large case", dress: "Classic / dress", sport: "Sport", metal_bracelet: "Metal bracelet", leather_strap: "Leather strap", no_preference: "No preference" },
+  "pt-BR": { fine: "Fino e discreto", medium_band: "Aro médio", wide: "Largo / marcante", open: "Aberto", gemstone: "Com pedra", no_gemstone: "Sem pedra", signet: "Tipo sinete", short: "Curto / junto ao pescoço", medium_length: "Comprimento médio", long: "Longo", v_drop: "Caída em V", fine_chain: "Corrente fina", bold_chain: "Corrente marcante", layers: "Camadas / várias correntes", small: "Pequeno e discreto", geometric: "Geométrico", initial: "Inicial / letra", meaningful_symbol: "Símbolo com significado", medallion: "Medalhão", vertical_drop: "Alongado / queda vertical", bangle: "Rígida / bracelete", adjustable: "Ajustável", charms: "Com charms", heart_charm: "Charm de coração", gold_tone: "Tom dourado", silver_tone: "Tom prateado", necklace_earrings: "Colar e brincos", necklace_bracelet: "Colar e pulseira", three_piece_set: "Colar, pulseira e brincos", minimal: "Minimalista", stud: "Botão / pequenos", small_hoops: "Argolas pequenas", large_hoops: "Argolas grandes", drop: "Longos / pendentes", climbers: "Trepadores", classic: "Clássicos", original: "Originais", formal: "Elegantes / formais", personalizable: "Personalizáveis", case_small: "Caixa pequena", case_medium: "Caixa média", case_large: "Caixa grande", dress: "Clássico / social", sport: "Esportivo", metal_bracelet: "Pulseira metálica", leather_strap: "Pulseira de couro", no_preference: "Sem preferência" },
 };
 
 function getPieceDetails(jewelryType: string | undefined, locale: Locale): PieceDetailOption[] {
@@ -1692,6 +1729,8 @@ type JewelryIconType =
   | "earrings"
   | "cufflinks"
   | "watch"
+  | "charm"
+  | "set"
   | "unsure";
 
 function JewelryTypeIcon({ type }: { type: JewelryIconType }) {
@@ -1766,6 +1805,25 @@ function JewelryTypeIcon({ type }: { type: JewelryIconType }) {
           <path d="M27 45h10l2 13H25l2-13z" {...common} />
           <path d="M28 19h8" {...common} opacity="0.55" />
           <path d="M28 45h8" {...common} opacity="0.55" />
+        </>
+      ) : null}
+      {type === "charm" ? (
+        <>
+          <path d="M18 16c2 14 7 23 14 23s12-9 14-23" {...common} />
+          <path d="M32 39v5" {...common} />
+          <path d="M32 44c-5-6-12-1-8 5l8 8 8-8c4-6-3-11-8-5z" {...common} />
+          <circle cx="20" cy="24" r="2" fill="currentColor" opacity="0.25" />
+          <circle cx="44" cy="24" r="2" fill="currentColor" opacity="0.25" />
+        </>
+      ) : null}
+      {type === "set" ? (
+        <>
+          <path d="M13 16c2 13 7 21 14 21s12-8 14-21" {...common} />
+          <path d="M27 37v6" {...common} />
+          <path d="M27 43l-4 5 4 5 4-5-4-5z" {...common} />
+          <path d="M45 20v8M52 20v8" {...common} />
+          <circle cx="45" cy="34" r="4" {...common} />
+          <circle cx="52" cy="34" r="4" {...common} />
         </>
       ) : null}
       {type === "unsure" ? (
@@ -2113,6 +2171,8 @@ function RecommendationResults({
   status,
   copy,
   locale,
+  preferences,
+  selectedBudget,
   resultsRef,
   onModifyPreferences,
 }: {
@@ -2120,6 +2180,8 @@ function RecommendationResults({
   status: RequestState;
   copy: ChatCopy;
   locale: Locale;
+  preferences?: GuidedPreferences;
+  selectedBudget?: string;
   resultsRef: React.RefObject<HTMLElement | null>;
   onModifyPreferences?: () => void;
 }) {
@@ -2136,6 +2198,8 @@ function RecommendationResults({
     return null;
   }
 
+  const preferenceChips = buildPreferenceChips(preferences, selectedBudget, locale);
+
   return (
     <section ref={resultsRef} className="mt-8 scroll-mt-24">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -2146,16 +2210,21 @@ function RecommendationResults({
           <h3 className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-[#17120b]">
             {copy.resultsTitle}
           </h3>
+          {preferenceChips.length ? <div className="mt-3 flex max-w-3xl flex-wrap gap-2">
+            {preferenceChips.map((chip) => <span key={chip} className="rounded-full border border-[#ead8b3] bg-[#fff9ed] px-3 py-1.5 text-xs font-semibold leading-4 text-[#68420c]">
+              {chip}
+            </span>)}
+          </div> : null}
         </div>
         <p className="max-w-xl rounded-2xl border border-[#ead8b3] bg-[#fff9ed] px-4 py-3 text-xs leading-5 text-[#6d6256]">
           {copy.resultsDisclaimer}
         </p>
       </div>
 
-      <p className="mt-4 text-sm leading-6 text-[#625746]">{response.summary}</p>
+      <p className="mt-4 max-w-3xl text-sm leading-6 text-[#75695d]">{response.summary}</p>
 
-      <div className="mt-5 grid gap-4 lg:grid-cols-3">
-        {response.recommendations.slice(0, 3).map((recommendation, index) => (
+      <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {response.recommendations.slice(0, ADVISOR_RECOMMENDATION_COUNT).map((recommendation, index) => (
           <RecommendationCard
             key={recommendation.id}
             recommendation={recommendation}
@@ -2193,15 +2262,29 @@ function RecommendationCard({
   const amazonUrl = amazonProvider.buildSearchUrl?.(searchQuery, locale);
 
   return (
-    <article className="rounded-3xl border border-[#ead8b3] bg-white p-5 shadow-sm">
+    <article className="flex h-full flex-col rounded-3xl border border-[#ead8b3] bg-white p-5 shadow-sm sm:p-6">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9b722b]">
         {copy.recommendation} {index + 1}
       </p>
-      <h4 className="mt-3 text-xl font-semibold leading-tight tracking-[-0.03em] text-[#17120b]">
+      <h4 className="mt-3 line-clamp-3 text-xl font-semibold leading-snug tracking-[-0.03em] text-[#17120b]">
         {recommendation.genericName}
       </h4>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <span key={tag} className="rounded-full bg-[#fff1d2] px-3 py-1 text-xs font-semibold leading-4 text-[#68420c]">
+            {tag}
+          </span>
+        ))}
+      </div>
       <InfoBlock title={copy.whyFits} text={recommendation.reason} />
-      {amazonUrl ? (
+      <div className="mt-5 rounded-2xl border border-[#eadfca] bg-[#fff9ed] p-4">
+        <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#806632]">
+          <span aria-hidden="true" className="flex h-6 w-6 items-center justify-center rounded-full border border-[#e8cc91] bg-white text-[#8f610d]"><JewelerTipIcon /></span>
+          {copy.jewelerTip}
+        </div>
+        <p className="mt-2 text-sm leading-6 text-[#5d5148]">{recommendation.jewelerTip}</p>
+      </div>
+      {amazonUrl ? <div className="mt-auto pt-5">
         <a
           href={amazonUrl}
           target="_blank"
@@ -2213,21 +2296,38 @@ function RecommendationCard({
               // Analytics must not interfere with the affiliate link.
             }
           }}
-          className="mt-5 inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-[#c89a43] bg-white px-4 py-2 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-auto"
+          className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-[#c89a43] bg-white px-4 py-3 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-auto"
         >
-          {copy.viewOnAmazon}
+          {copy.viewOnAmazon} <span aria-hidden="true" className="ml-2">→</span>
         </a>
-      ) : null}
-      <InfoBlock title={copy.jewelerTip} text={recommendation.jewelerTip} />
-      <div className="mt-4 flex flex-wrap gap-2">
-        {tags.map((tag) => (
-          <span key={tag} className="rounded-full bg-[#fff1d2] px-3 py-1 text-xs font-semibold text-[#68420c]">
-            {tag}
-          </span>
-        ))}
-      </div>
+      </div> : null}
     </article>
   );
+}
+
+function buildPreferenceChips(
+  preferences: GuidedPreferences | undefined,
+  selectedBudget: string | undefined,
+  locale: Locale,
+) {
+  if (!preferences) return [];
+
+  const jewelryType = preferences.jewelryType
+    ? getJewelryTypes(locale).find((option) => option.value === preferences.jewelryType)?.label
+    : undefined;
+
+  return [
+    preferences.occasion,
+    preferences.recipient,
+    jewelryType,
+    preferences.styles?.filter((style) => style !== chatCopy[locale].noPreference).slice(0, 2).join(" + "),
+    preferences.materials?.filter((material) => material !== chatCopy[locale].noPreference).slice(0, 1).join(" + "),
+    selectedBudget,
+  ].filter((value): value is string => Boolean(value));
+}
+
+function JewelerTipIcon() {
+  return <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18h6M10 21h4M8.3 14.5A6.5 6.5 0 1 1 15.7 14.5c-1 .8-1.7 1.7-1.7 2.5h-4c0-.8-.7-1.7-1.7-2.5z" /></svg>;
 }
 
 function InfoBlock({ title, text }: { title: string; text: string }) {

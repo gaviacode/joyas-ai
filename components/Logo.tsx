@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 type LogoProps = {
   className?: string;
@@ -14,20 +13,23 @@ export default function Logo({
   href = "/",
   ariaLabel = "Ir al inicio de joyas.ai",
 }: LogoProps) {
-  const pathname = usePathname();
-  const isCurrentHome = pathname === href;
-
   return (
     <Link
       href={href}
       aria-label={ariaLabel}
       onClick={(event) => {
-        if (!isCurrentHome) {
+        if (
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey
+        ) {
           return;
         }
 
         event.preventDefault();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.location.assign(href);
       }}
       className={`group inline-flex shrink-0 items-baseline text-[#a66f08] transition-colors hover:text-[#8f5f06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-4 ${className}`}
     >

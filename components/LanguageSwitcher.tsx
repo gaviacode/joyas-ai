@@ -12,7 +12,7 @@ export type LanguageLink = {
 };
 
 const defaultLinks: LanguageLink[] = [
-  { locale: "es", href: "/", label: "ES" },
+  { locale: "es", href: "/es", label: "ES" },
   { locale: "pt-BR", href: "/pt-br", label: "PT-BR" },
   { locale: "en", href: "/en", label: "EN" },
 ];

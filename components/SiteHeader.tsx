@@ -1,5 +1,6 @@
 import Link from "next/link";
 import LanguageSwitcher, { type LanguageLink } from "@/components/LanguageSwitcher";
+import AdvisorResetLink from "@/components/AdvisorResetLink";
 import Logo from "@/components/Logo";
 import { localizeHref, localizeText, type Locale } from "@/lib/i18n";
 
@@ -34,12 +35,12 @@ export default function SiteHeader({
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-4 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-10">
         <div className="flex items-center justify-between gap-4">
           <Logo href={homeHref} ariaLabel={labels.home} />
-          <Link
+          <AdvisorResetLink
             href={advisorHref}
             className="inline-flex rounded-xl border border-[#d7a63c] bg-white px-4 py-2 text-sm font-semibold text-[#9a6b08] shadow-sm transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] md:hidden"
           >
             {locale === "en" ? "Try AI" : locale === "pt-BR" ? "Testar IA" : "Probar IA"}
-          </Link>
+          </AdvisorResetLink>
         </div>
 
         <nav
@@ -59,12 +60,12 @@ export default function SiteHeader({
 
         <div className="hidden items-center gap-3 lg:flex">
           <LanguageSwitcher links={languageLinks} />
-          <Link
+          <AdvisorResetLink
             href={advisorHref}
             className="rounded-xl border border-[#d7a63c] bg-white px-5 py-3 text-sm font-semibold text-[#9a6b08] shadow-sm transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]"
           >
             {localizeText("Probar el joyero IA", locale)}
-          </Link>
+          </AdvisorResetLink>
         </div>
         <div className="lg:hidden">
           <LanguageSwitcher links={languageLinks} />

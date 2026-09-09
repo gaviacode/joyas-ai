@@ -9,6 +9,10 @@ export function isSupportedLocale(value: string | undefined): value is Locale {
 }
 
 export function localePath(locale: Locale) {
+  if (locale === "es") {
+    return "/es";
+  }
+
   if (locale === "pt-BR") {
     return "/pt-br";
   }
@@ -17,10 +21,14 @@ export function localePath(locale: Locale) {
     return "/en";
   }
 
-  return "/";
+  return "/en";
 }
 
 export function localeFromPath(pathname: string): Locale {
+  if (pathname === "/es" || pathname.startsWith("/es/")) {
+    return "es";
+  }
+
   if (pathname === "/pt-br" || pathname.startsWith("/pt-br/")) {
     return "pt-BR";
   }
@@ -33,33 +41,35 @@ export function localeFromPath(pathname: string): Locale {
 }
 
 export function detectLocaleFromAcceptLanguage(header: string | null): Locale {
-  const primaryLanguage = getPrimaryLanguageTag(header);
+  for (const languageTag of getLanguageTags(header)) {
+    const normalized = languageTag.toLowerCase();
 
-  if (!primaryLanguage) {
-    return "es";
+    if (normalized === "es" || normalized.startsWith("es-")) {
+      return "es";
+    }
+
+    if (normalized === "pt" || normalized.startsWith("pt-")) {
+      return "pt-BR";
+    }
+
+    if (normalized === "en" || normalized.startsWith("en-")) {
+      return "en";
+    }
   }
 
-  const normalized = primaryLanguage.toLowerCase();
-
-  if (normalized === "pt-br" || normalized === "pt") {
-    return "pt-BR";
-  }
-
-  if (normalized === "en" || normalized.startsWith("en-")) {
-    return "en";
-  }
-
-  return "es";
+  return "en";
 }
 
-function getPrimaryLanguageTag(header: string | null) {
-  return header
-    ?.split(",")
-    .map((part) => part.trim())
-    .filter(Boolean)
-    .sort((a, b) => getQuality(b) - getQuality(a))[0]
-    ?.split(";")[0]
-    ?.trim();
+function getLanguageTags(header: string | null) {
+  return (
+    header
+      ?.split(",")
+      .map((part) => part.trim())
+      .filter((part) => Boolean(part) && getQuality(part) > 0)
+      .sort((a, b) => getQuality(b) - getQuality(a))
+      .map((part) => part.split(";")[0]?.trim())
+      .filter((part): part is string => Boolean(part)) ?? []
+  );
 }
 
 function getQuality(languageRange: string) {
