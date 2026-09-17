@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Script from "next/script";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import type { LanguageLink } from "@/components/LanguageSwitcher";
 import SiteHeader from "@/components/SiteHeader";
@@ -89,7 +88,7 @@ const structuredData = {
 export default function GoldIdentificationGuide({ languageLinks }: { languageLinks?: LanguageLink[] }) {
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
-      <Script
+      <script
         id="gold-identification-structured-data"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -114,7 +113,7 @@ export default function GoldIdentificationGuide({ languageLinks }: { languageLin
           </h1>
           <div className="mt-6 space-y-4 text-lg leading-8 text-[#63584c]">
             <p>
-              Ningún método casero aislado ofrece siempre certeza absoluta para saber si una joya es de oro. Las marcas, el aspecto o el imán pueden orientar, pero no sustituyen una comprobación fiable.
+              Para saber si es oro, las marcas, el aspecto o el imán pueden orientar, pero ningún método casero aislado ofrece certeza absoluta ni sustituye una comprobación fiable.
             </p>
             <p>
               La forma más prudente combina contrastes, documentación, vendedor fiable y, cuando haya dudas, análisis profesional. Si quieres entender qué significan 585, 750, 14k o 18k, consulta nuestra{" "}
@@ -225,6 +224,7 @@ export default function GoldIdentificationGuide({ languageLinks }: { languageLin
             {[
               { href: "/guias/oro-14k-18k-24k", label: "Oro 14k, 18k y 24k" },
               { href: "/guias/plata-925", label: "Plata 925 o plata de ley" },
+              { href: "/guias/como-saber-si-es-plata", label: "Cómo saber si una joya es de plata" },
               { href: "/guias/platino", label: "Platino en joyería" },
               { href: "/guias/como-cuidar-joyas", label: "Cómo cuidar joyas sin dañarlas" },
             ].map((link) => (

@@ -2,12 +2,13 @@
 
 import {
   FormEvent,
-  KeyboardEvent,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
+import { ListChecks, MessageCircle } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type {
   AdvisorMode,
   AdvisorRecommendation,
@@ -16,6 +17,7 @@ import type {
   ConversationMessage,
   GuidedPreferences,
   GuidedJewelryType,
+  RefinementPreferences,
 } from "@/lib/advisor";
 import { ADVISOR_RECOMMENDATION_COUNT, guidedJewelryTypes } from "@/lib/advisor";
 import { amazonProvider } from "@/lib/affiliate";
@@ -52,29 +54,8 @@ type AdvisorErrorResponse = {
 };
 
 const maxDescriptionLength = 650;
-
-const quickExamples = [
-  {
-    label: "Regalo de aniversario",
-    text: "Busco una joya para mi pareja por nuestro aniversario. Le gustan los diseños elegantes, discretos y con algún detalle especial. Mi presupuesto aproximado es de 100 a 200 €.",
-  },
-  {
-    label: "Joya para hombre",
-    text: "Quiero una joya para hombre, sobria y fácil de llevar a diario. Prefiero materiales resistentes y un estilo elegante sin ser llamativo.",
-  },
-  {
-    label: "Pendientes elegantes",
-    text: "Busco pendientes elegantes para una ocasión especial. Me gustaría algo luminoso, discreto y que combine bien con vestidos sencillos.",
-  },
-  {
-    label: "Pulsera minimalista",
-    text: "Quiero una pulsera minimalista para uso diario. Busco algo fino, cómodo y con aspecto premium sin resultar demasiado formal.",
-  },
-  {
-    label: "Regalo por menos de 100 €",
-    text: "Necesito una idea de joya para regalar por menos de 100 €. Quiero que parezca cuidada, elegante y fácil de acertar aunque no conozco todos sus gustos.",
-  },
-];
+const maxRefinementAvoidLength = 280;
+const emptyRefinementPreferences: RefinementPreferences = {};
 
 const recipients: Option[] = [
   { label: "Mujer", icon: <RecipientIcon type="woman" />, accentClassName: "text-[#7c7064]" },
@@ -139,6 +120,14 @@ const chatCopy = {
     tabsLabel: "Modos del recomendador",
     directTab: "Describe lo que buscas",
     guidedTab: "Déjate guiar por el joyero IA",
+    modeSelectorTitle: "¿Cómo quieres encontrar tu joya?",
+    modeSelectorSubtitle: "Elige una opción para empezar",
+    directModeTitle: "Cuéntame qué buscas",
+    directModeDescription: "Escribe libremente como si hablaras con un joyero.",
+    directModeCta: "Describir lo que busco",
+    guidedModeTitle: "Prefiero que me guíes",
+    guidedModeDescription: "Responde unas preguntas sencillas sobre persona, ocasión, estilo y presupuesto.",
+    guidedModeCta: "Empezar paso a paso",
     directTitle: "Describe lo que buscas",
     directHelp:
       "Escribe como hablarías con un joyero: persona, ocasión, estilo, materiales y presupuesto si lo tienes claro.",
@@ -207,7 +196,7 @@ const chatCopy = {
     trustFirst:
       "El joyero IA propone tipos de joya personalizados. En esta fase no muestra productos concretos, tiendas, marcas, stock ni precios exactos.",
     trustSecond:
-      "Los rangos son orientativos y conviene verificarlos antes de comprar según material, acabado y proveedor.",
+      "Podemos mostrar enlaces a opciones de compra. La disponibilidad, el precio final y los detalles del producto se verifican siempre en la tienda.",
     statusLoading: "El joyero IA está analizando tus preferencias...",
     retry: "Reintentar",
     empty:
@@ -221,15 +210,25 @@ const chatCopy = {
     recommendedMaterial: "Material recomendado",
     indicativePrice: "Precio orientativo",
     jewelerTip: "Consejo del joyero",
-    viewOnAmazon: "Ver en Amazon",
-    refinementTitle: "¿Quieres añadir alguna aclaración?",
-    refinementHelp:
-      "Puedes añadir cualquier detalle que no hayas indicado antes. Para cambiar material, estilo, presupuesto u otras preferencias, usa “Ajustar preferencias”.",
-    message: "Aclaración opcional",
-    refinementPlaceholder:
-      "Ej. Prefiero algo poco común, con significado especial o que pueda llevar todos los días.",
+    viewOnAmazon: "Ver opciones en Amazon →",
+    refineButton: "✨ Afinar recomendaciones",
+    refinementTitle: "Afina tus recomendaciones",
+    refinementHelp: "Estas preferencias son opcionales y no sustituyen tus criterios originales.",
+    improvementGoal: "¿Qué quieres mejorar de estas recomendaciones?",
+    prominence: "¿Qué nivel de protagonismo prefieres?",
+    usage: "¿La quieres para uso diario o para ocasiones especiales?",
+    meaningful: "¿Quieres que tenga un significado especial?",
+    personalizable: "¿Quieres que pueda personalizarse?",
+    additionalAvoid: "¿Quieres evitar algo más?",
+    additionalAvoidPlaceholder: "Por ejemplo: nada demasiado grande, sin corazones, no quiero algo muy clásico...",
+    optionalRefinement: "Opcional",
+    noRefinementSelected: "Selecciona alguna opción para afinar tus recomendaciones.",
+    moreOriginal: "Más original", moreDiscreet: "Más discreto", moreElegant: "Más elegante", moreSpecial: "Más especial", moreAffordable: "Más económico",
+    discreet: "Discreto", balanced: "Equilibrado", statement: "Llamativo",
+    daily: "Diario", occasionsUse: "Ocasiones especiales", both: "Ambos",
+    yes: "Sí", no: "No", neutral: "Me da igual",
     refining: "Refinando...",
-    sendRefinement: "Enviar aclaración",
+    sendRefinement: "✨ Afinar mis recomendaciones",
   },
   "pt-BR": {
     heroEyebrow: "Joalheiro pessoal com IA",
@@ -239,6 +238,14 @@ const chatCopy = {
     tabsLabel: "Modos do recomendador",
     directTab: "Descreva o que procura",
     guidedTab: "Deixe o joalheiro IA guiar você",
+    modeSelectorTitle: "Como você quer encontrar sua joia?",
+    modeSelectorSubtitle: "Escolha uma opção para começar",
+    directModeTitle: "Conte o que você procura",
+    directModeDescription: "Escreva livremente como se falasse com um joalheiro.",
+    directModeCta: "Descrever o que procuro",
+    guidedModeTitle: "Prefiro que você me guie",
+    guidedModeDescription: "Responda perguntas simples sobre pessoa, ocasião, estilo e orçamento.",
+    guidedModeCta: "Começar passo a passo",
     directTitle: "Descreva o que procura",
     directHelp:
       "Escreva como falaria com um joalheiro: pessoa, ocasião, estilo, materiais e orçamento, se já tiver isso claro.",
@@ -307,7 +314,7 @@ const chatCopy = {
     trustFirst:
       "O joalheiro IA propõe tipos de joia personalizados. Nesta fase, não mostra produtos concretos, lojas, marcas, estoque nem preços exatos.",
     trustSecond:
-      "As faixas são orientativas e convém verificá-las antes de comprar conforme material, acabamento e fornecedor.",
+      "Podemos mostrar links para opções de compra. A disponibilidade, o preço final e os detalhes do produto devem ser sempre verificados na loja.",
     statusLoading: "O joalheiro IA está analisando suas preferências...",
     retry: "Tentar novamente",
     empty:
@@ -321,15 +328,18 @@ const chatCopy = {
     recommendedMaterial: "Material recomendado",
     indicativePrice: "Preço orientativo",
     jewelerTip: "Dica do joalheiro",
-    viewOnAmazon: "Ver na Amazon",
-    refinementTitle: "Quer adicionar algum esclarecimento?",
-    refinementHelp:
-      "Você pode adicionar qualquer detalhe que ainda não tenha informado. Para mudar material, estilo, orçamento ou outras preferências, use “Ajustar preferências”.",
-    message: "Esclarecimento opcional",
-    refinementPlaceholder:
-      "Ex.: Prefiro algo incomum, com um significado especial ou que possa usar todos os dias.",
+    viewOnAmazon: "Ver opções na Amazon →",
+    refineButton: "✨ Refinar recomendações",
+    refinementTitle: "Refine suas recomendações",
+    refinementHelp: "Estas preferências são opcionais e não substituem seus critérios originais.",
+    improvementGoal: "O que você gostaria de melhorar?", prominence: "Nível de destaque", usage: "Uso principal",
+    meaningful: "Você busca algo com significado?", personalizable: "Deve poder ser personalizada?",
+    additionalAvoid: "Algo que você prefere evitar", additionalAvoidPlaceholder: "Ex.: designs muito chamativos ou pedras grandes", optionalRefinement: "Opcional",
+    noRefinementSelected: "Selecione ao menos uma opção para refinar as recomendações.",
+    moreOriginal: "Mais original", moreDiscreet: "Mais discreto", moreElegant: "Mais elegante", moreSpecial: "Mais especial", moreAffordable: "Mais econômico",
+    discreet: "Discreto", balanced: "Equilibrado", statement: "Marcante", daily: "Diário", occasionsUse: "Ocasiões especiais", both: "Ambos", yes: "Sim", no: "Não", neutral: "Tanto faz",
     refining: "Refinando...",
-    sendRefinement: "Enviar esclarecimento",
+    sendRefinement: "✨ Refinar minhas recomendações",
   },
   en: {
     heroEyebrow: "Personal AI jeweler",
@@ -339,6 +349,14 @@ const chatCopy = {
     tabsLabel: "Advisor modes",
     directTab: "Describe what you need",
     guidedTab: "Let the AI jeweler guide you",
+    modeSelectorTitle: "How would you like to find your jewelry?",
+    modeSelectorSubtitle: "Choose an option to get started",
+    directModeTitle: "Tell me what you need",
+    directModeDescription: "Write freely, as if you were speaking to a jeweler.",
+    directModeCta: "Describe what I need",
+    guidedModeTitle: "I would like guidance",
+    guidedModeDescription: "Answer a few simple questions about the person, occasion, style and budget.",
+    guidedModeCta: "Start step by step",
     directTitle: "Describe what you need",
     directHelp:
       "Write as you would to a jeweler: person, occasion, style, materials and budget if you already know them.",
@@ -407,7 +425,7 @@ const chatCopy = {
     trustFirst:
       "The AI jeweler suggests personalized jewelry types. At this stage it does not show specific products, stores, brands, stock or exact prices.",
     trustSecond:
-      "Price ranges are indicative and should be checked before buying according to material, finish and supplier.",
+      "We may show links to purchase options. Availability, final price and product details should always be verified with the store.",
     statusLoading: "The AI jeweler is analyzing your preferences...",
     retry: "Try again",
     empty:
@@ -421,73 +439,22 @@ const chatCopy = {
     recommendedMaterial: "Recommended material",
     indicativePrice: "Indicative price",
     jewelerTip: "Jeweler tip",
-    viewOnAmazon: "View on Amazon",
-    refinementTitle: "Would you like to add a clarification?",
-    refinementHelp:
-      "You can add any detail you have not mentioned before. To change material, style, budget or other preferences, use “Adjust preferences”.",
-    message: "Optional clarification",
-    refinementPlaceholder:
-      "E.g. I prefer something unusual, with special meaning, or suitable for everyday wear.",
+    viewOnAmazon: "View options on Amazon →",
+    refineButton: "✨ Refine recommendations",
+    refinementTitle: "Refine your recommendations",
+    refinementHelp: "These preferences are optional and do not replace your original criteria.",
+    improvementGoal: "What would you like to improve?", prominence: "Level of presence", usage: "Primary use",
+    meaningful: "Would you like it to be meaningful?", personalizable: "Should it be personalizable?",
+    additionalAvoid: "Anything you would rather avoid", additionalAvoidPlaceholder: "E.g. very ornate designs or large stones", optionalRefinement: "Optional",
+    noRefinementSelected: "Select at least one option to refine the recommendations.",
+    moreOriginal: "More original", moreDiscreet: "More understated", moreElegant: "More elegant", moreSpecial: "More special", moreAffordable: "More affordable",
+    discreet: "Understated", balanced: "Balanced", statement: "Statement", daily: "Everyday", occasionsUse: "Special occasions", both: "Both", yes: "Yes", no: "No", neutral: "No preference",
     refining: "Refining...",
-    sendRefinement: "Send clarification",
+    sendRefinement: "✨ Refine my recommendations",
   },
 } satisfies Record<Locale, Record<string, string>>;
 
 type ChatCopy = (typeof chatCopy)[Locale];
-
-function getQuickExamples(locale: Locale) {
-  if (locale === "pt-BR") {
-    return [
-      {
-        label: "Presente de aniversário",
-        text: "Procuro uma joia para meu par pelo nosso aniversário de relacionamento. Ela gosta de designs elegantes, discretos e com algum detalhe especial. Meu orçamento aproximado é de 100 a 200 €.",
-      },
-      {
-        label: "Joia masculina",
-        text: "Quero uma joia masculina, sóbria e fácil de usar no dia a dia. Prefiro materiais resistentes e um estilo elegante sem ser chamativo.",
-      },
-      {
-        label: "Brincos elegantes",
-        text: "Procuro brincos elegantes para uma ocasião especial. Gostaria de algo luminoso, discreto e que combine bem com vestidos simples.",
-      },
-      {
-        label: "Pulseira minimalista",
-        text: "Quero uma pulseira minimalista para uso diário. Procuro algo fino, confortável e com aparência premium sem ficar formal demais.",
-      },
-      {
-        label: "Presente até 100 €",
-        text: "Preciso de uma ideia de joia para presentear por menos de 100 €. Quero que pareça cuidadosa, elegante e fácil de acertar, mesmo sem conhecer todos os gostos da pessoa.",
-      },
-    ];
-  }
-
-  if (locale === "en") {
-    return [
-      {
-        label: "Anniversary gift",
-        text: "I am looking for a piece of jewelry for my partner for our anniversary. She likes elegant, understated designs with a special detail. My approximate budget is €100 to €200.",
-      },
-      {
-        label: "Men's jewelry",
-        text: "I want a men's jewelry piece that is sober and easy to wear every day. I prefer durable materials and an elegant style that is not flashy.",
-      },
-      {
-        label: "Elegant earrings",
-        text: "I am looking for elegant earrings for a special occasion. I would like something luminous, understated and easy to pair with simple dresses.",
-      },
-      {
-        label: "Minimal bracelet",
-        text: "I want a minimal bracelet for everyday wear. I am looking for something slim, comfortable and premium-looking without feeling too formal.",
-      },
-      {
-        label: "Gift under €100",
-        text: "I need a jewelry gift idea under €100. I want it to feel thoughtful, elegant and easy to get right even though I do not know all their tastes.",
-      },
-    ];
-  }
-
-  return quickExamples;
-}
 
 function getRecipients(locale: Locale): Option[] {
   if (locale === "pt-BR") {
@@ -540,6 +507,20 @@ function getOccasions(locale: Locale): Option[] {
   return occasions.map((option, index) => ({ ...option, label: labels[index] }));
 }
 
+function getPrefilledOccasion(value: string, locale: Locale) {
+  const indexes: Record<string, number> = {
+    aniversario: 0,
+    cumpleanos: 1,
+    compromiso: 2,
+    boda: 3,
+    "san-valentin": 4,
+    navidad: 5,
+    "regalo-sorpresa": 6,
+  };
+  const index = indexes[value];
+  return index === undefined ? undefined : getOccasions(locale)[index]?.label;
+}
+
 function getStyles(locale: Locale): Option[] {
   const labels =
     locale === "pt-BR"
@@ -578,8 +559,10 @@ function getBudgetOptions(locale: Locale, customBudget: string): BudgetOption[] 
 }
 
 export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const copy = chatCopy[locale];
-  const localizedQuickExamples = getQuickExamples(locale);
   const localizedRecipients = getRecipients(locale);
   const localizedJewelryTypes = getJewelryTypes(locale);
   const localizedOccasions = getOccasions(locale);
@@ -602,7 +585,9 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   const [guidedStep, setGuidedStep] = useState(0);
   const [advisorResponse, setAdvisorResponse] = useState<AdvisorResponse | null>(null);
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
-  const [refinementInput, setRefinementInput] = useState("");
+  const [refinementPreferences, setRefinementPreferences] = useState<RefinementPreferences>(emptyRefinementPreferences);
+  const [isRefinementOpen, setIsRefinementOpen] = useState(false);
+  const [refinementError, setRefinementError] = useState("");
   const [error, setError] = useState("");
   const [status, setStatus] = useState<RequestState>("idle");
   const [resultsGeneration, setResultsGeneration] = useState(0);
@@ -610,9 +595,13 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   const preservedScrollYRef = useRef<number | null>(null);
   const preferencesEditorRef = useRef<HTMLDivElement | null>(null);
   const recommenderRef = useRef<HTMLElement | null>(null);
+  const modeContentRef = useRef<HTMLDivElement | null>(null);
   const resultsRef = useRef<HTMLElement | null>(null);
+  const refinementRef = useRef<HTMLElement | null>(null);
   const [shouldScrollToGuided, setShouldScrollToGuided] = useState(false);
+  const [shouldScrollToModeContent, setShouldScrollToModeContent] = useState(false);
   const cooldownTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const appliedContextRef = useRef("");
 
   const isLoading = status === "loading" || status === "refining";
   const isSubmissionBlocked = isLoading || isCooldownActive;
@@ -622,6 +611,48 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       clearTimeout(cooldownTimeoutRef.current);
     }
   }, []);
+
+  useEffect(() => {
+    const advisorType = searchParams.get("advisorType");
+    const advisorOccasion = searchParams.get("advisorOccasion");
+    const advisorTopic = searchParams.get("advisorTopic")?.trim();
+    const jewelryType = guidedJewelryTypes.includes(advisorType as GuidedJewelryType)
+      ? (advisorType as GuidedJewelryType)
+      : undefined;
+    const occasion = advisorOccasion ? getPrefilledOccasion(advisorOccasion, locale) : undefined;
+    const signature = [jewelryType, occasion, advisorTopic].filter(Boolean).join("|");
+
+    if (!signature || appliedContextRef.current === signature) {
+      return;
+    }
+
+    appliedContextRef.current = signature;
+    const nextPreferences: GuidedPreferences = {
+      ...initialPreferences,
+      jewelryType,
+      occasion,
+      additionalDetails: advisorTopic || undefined,
+    };
+    setMode("guided");
+    setPreferences(nextPreferences);
+    setDraftPreferences(nextPreferences);
+    setGuidedStep(0);
+    setSelectedBudget("");
+    setCustomBudgetMin("");
+    setCustomBudgetMax("");
+    setDraftSelectedBudget("");
+    setDraftCustomBudgetMin("");
+    setDraftCustomBudgetMax("");
+    setAdvisorResponse(null);
+    setConversation([]);
+    setRefinementPreferences(emptyRefinementPreferences);
+    setIsRefinementOpen(false);
+    setRefinementError("");
+    setError("");
+    setStatus("idle");
+    setShouldScrollToGuided(true);
+    router.replace(`${pathname}#joyero-ia`, { scroll: false });
+  }, [locale, pathname, router, searchParams]);
 
   function startCooldown() {
     if (cooldownTimeoutRef.current) {
@@ -636,17 +667,13 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   }
   function switchMode(nextMode: AdvisorMode) {
     if (nextMode === mode) {
-      if (nextMode === "guided") {
-        setShouldScrollToGuided(true);
-      }
+      setShouldScrollToModeContent(true);
       return;
     }
 
     preservedScrollYRef.current = nextMode === "guided" ? null : window.scrollY;
     setMode(nextMode);
-    if (nextMode === "guided") {
-      setShouldScrollToGuided(true);
-    }
+    setShouldScrollToModeContent(true);
     setError("");
   }
 
@@ -682,6 +709,19 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
 
     return () => cancelAnimationFrame(frameId);
   }, [mode, shouldScrollToGuided]);
+
+  useEffect(() => {
+    if (!shouldScrollToModeContent) {
+      return;
+    }
+
+    const frameId = requestAnimationFrame(() => {
+      scrollToSectionBelowHeader(modeContentRef.current);
+      setShouldScrollToModeContent(false);
+    });
+
+    return () => cancelAnimationFrame(frameId);
+  }, [mode, shouldScrollToModeContent]);
 
   useEffect(() => {
     if (resultsGeneration === 0) {
@@ -729,7 +769,9 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       setGuidedStep(0);
       setAdvisorResponse(null);
       setConversation([]);
-      setRefinementInput("");
+      setRefinementPreferences(emptyRefinementPreferences);
+      setIsRefinementOpen(false);
+      setRefinementError("");
       setError("");
       setStatus("idle");
     }
@@ -737,13 +779,6 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
     window.addEventListener(resetAdvisorEvent, resetAdvisor);
     return () => window.removeEventListener(resetAdvisorEvent, resetAdvisor);
   }, [status]);
-
-  function fillExample(text: string) {
-    setDirectDescription((current) => {
-      const separator = current.trim() ? "\n\n" : "";
-      return `${current.trim()}${separator}${text}`.slice(0, maxDescriptionLength);
-    });
-  }
 
   function updateSinglePreference(key: keyof GuidedPreferences, value: string) {
     setPreferences((current) => ({
@@ -796,7 +831,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
     }));
   }
 
-  async function submitAdvisor(refinement?: string) {
+  async function submitAdvisor(refinement?: RefinementPreferences) {
     if (isSubmissionBlocked) {
       return;
     }
@@ -814,6 +849,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
     }
 
     setError("");
+    setRefinementError("");
     setStatus(refinement ? "refining" : "loading");
 
     try {
@@ -837,11 +873,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       }
 
       const nextConversation = refinement
-        ? [
-            ...conversation,
-            { role: "user" as const, content: refinement },
-            { role: "assistant" as const, content: data.followUpMessage },
-          ]
+        ? [...conversation, { role: "assistant" as const, content: data.followUpMessage }]
         : [
             {
               role: "user" as const,
@@ -863,29 +895,21 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       if (data.recommendations.length) {
         setResultsGeneration((generation) => generation + 1);
       }
-      setRefinementInput("");
       startCooldown();
     } catch (requestError) {
-      setError(
-        requestError instanceof Error
-          ? requestError.message
-          : copy.connectionError
-      );
-      setStatus("error");
+      const message = requestError instanceof Error ? requestError.message : copy.connectionError;
+      if (refinement) {
+        setRefinementError(message);
+        setStatus("results");
+      } else {
+        setError(message);
+        setStatus("error");
+      }
     }
   }
 
-  function buildRequest(refinement?: string): AdvisorRequest | null {
-    const trimmedRefinement = refinement?.trim();
-    const requestConversation = trimmedRefinement
-      ? [
-          ...conversation,
-          ...(advisorResponse
-            ? [{ role: "assistant" as const, content: JSON.stringify(advisorResponse) }]
-            : []),
-          { role: "user" as const, content: trimmedRefinement },
-        ]
-      : conversation;
+  function buildRequest(refinement?: RefinementPreferences): AdvisorRequest | null {
+    const requestConversation = refinement ? undefined : conversation;
 
     if (mode === "direct") {
       const description = directDescription.trim();
@@ -899,6 +923,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
         directDescription: description,
         locale,
         conversation: requestConversation,
+        refinementPreferences: refinement,
       };
     }
 
@@ -920,7 +945,31 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       locale,
       guidedPreferences: preferences,
       conversation: requestConversation,
+      refinementPreferences: refinement,
     };
+  }
+
+  function openRefinement() {
+    setIsRefinementOpen(true);
+    setRefinementError("");
+    trackGAEvent("refinement_open", { locale });
+    requestAnimationFrame(() => refinementRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }
+
+  function submitRefinement() {
+    if (!hasRefinementPreferences(refinementPreferences)) {
+      setRefinementError(copy.noRefinementSelected);
+      return;
+    }
+    trackGAEvent("refinement_submit", {
+      locale,
+      improvementGoal: refinementPreferences.improvementGoal,
+      prominence: refinementPreferences.prominence,
+      usage: refinementPreferences.usage,
+      meaningful: refinementPreferences.meaningful,
+      personalizable: refinementPreferences.personalizable,
+    });
+    void submitAdvisor(refinementPreferences);
   }
 
   function modifyGuidedPreferences() {
@@ -1007,9 +1056,9 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
         </p>
       </div>
 
-      <AdvisorModeTabs mode={mode} copy={copy} onChange={switchMode} />
+      <AdvisorModeSelector mode={mode} copy={copy} onChange={switchMode} />
 
-      {!isGuidedResultState ? <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.38fr)] lg:items-start">
+      {!isGuidedResultState ? <div ref={modeContentRef} className="mt-6 grid scroll-mt-28 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.38fr)] lg:items-start">
         <div className="min-w-0 rounded-3xl border border-[#eadfca] bg-[#fffdf8] p-4 sm:p-5 lg:p-6">
           {mode === "direct" ? (
             <DirectAdvisorForm
@@ -1017,9 +1066,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
               isLoading={isLoading}
               isRequestBlocked={isCooldownActive}
               copy={copy}
-              examples={localizedQuickExamples}
               onChange={setDirectDescription}
-              onExample={fillExample}
               onSubmit={(event) => {
                 event.preventDefault();
                 void submitAdvisor();
@@ -1114,27 +1161,42 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
         selectedBudget={mode === "guided" ? selectedBudget : undefined}
         resultsRef={resultsRef}
         onModifyPreferences={isGuidedResultState && !isPreferencesEditorOpen ? modifyGuidedPreferences : undefined}
+        onOpenRefinement={openRefinement}
       />
 
       {advisorResponse ? (
-        <RefinementChat
-          conversation={conversation}
-          value={refinementInput}
+        <RefinementPanel
+          panelRef={refinementRef}
+          isOpen={isRefinementOpen}
+          preferences={refinementPreferences}
           isLoading={isLoading}
           isRequestBlocked={isCooldownActive}
           copy={copy}
-          onChange={setRefinementInput}
-          onSubmit={(event) => {
-            event.preventDefault();
-            void submitAdvisor(refinementInput);
-          }}
+          error={refinementError}
+          onChange={setRefinementPreferences}
+          onSubmit={submitRefinement}
         />
       ) : null}
     </section>
   );
 }
 
-function AdvisorModeTabs({
+function scrollToSectionBelowHeader(element: HTMLElement | null) {
+  if (!element) {
+    return;
+  }
+
+  const headerHeight = document.querySelector<HTMLElement>("header.sticky")
+    ?.getBoundingClientRect().height ?? 0;
+  const targetPosition = window.scrollY + element.getBoundingClientRect().top - headerHeight - 24;
+
+  window.scrollTo({
+    top: Math.max(0, targetPosition),
+    behavior: "smooth",
+  });
+}
+
+function AdvisorModeSelector({
   mode,
   copy,
   onChange,
@@ -1143,39 +1205,66 @@ function AdvisorModeTabs({
   copy: ChatCopy;
   onChange: (mode: AdvisorMode) => void;
 }) {
-  const tabs: { mode: AdvisorMode; label: string }[] = [
-    { mode: "direct", label: copy.directTab },
-    { mode: "guided", label: copy.guidedTab },
+  const options: Array<{
+    mode: AdvisorMode;
+    title: string;
+    description: string;
+    cta: string;
+    icon: React.ReactNode;
+  }> = [
+    {
+      mode: "direct",
+      title: copy.directModeTitle,
+      description: copy.directModeDescription,
+      cta: copy.directModeCta,
+      icon: <MessageCircle className="h-5 w-5" strokeWidth={1.8} />,
+    },
+    {
+      mode: "guided",
+      title: copy.guidedModeTitle,
+      description: copy.guidedModeDescription,
+      cta: copy.guidedModeCta,
+      icon: <ListChecks className="h-5 w-5" strokeWidth={1.8} />,
+    },
   ];
 
   return (
-    <div
-      role="tablist"
-      aria-label={copy.tabsLabel}
-      className="mx-auto mt-7 grid max-w-2xl gap-2 rounded-2xl border border-[#ead8b3] bg-[#fff9ed] p-2 sm:grid-cols-2"
-    >
-      {tabs.map((tab) => {
-        const active = mode === tab.mode;
+    <section className="mx-auto mt-7 w-full max-w-4xl" aria-labelledby="advisor-mode-selector-title">
+      <div className="text-center">
+        <h3 id="advisor-mode-selector-title" className="text-balance text-xl font-semibold tracking-[-0.03em] text-[#17120b] sm:text-2xl">
+          {copy.modeSelectorTitle}
+        </h3>
+        <p className="mt-1 text-sm text-[#6f6255]">{copy.modeSelectorSubtitle}</p>
+      </div>
+      <div role="group" aria-label={copy.tabsLabel} className="mt-5 grid gap-3 sm:grid-cols-2 sm:gap-4">
+      {options.map((option) => {
+        const active = mode === option.mode;
 
         return (
           <button
-            key={tab.mode}
+            key={option.mode}
             type="button"
-            role="tab"
-            aria-selected={active}
-            tabIndex={active ? 0 : -1}
-            onClick={() => onChange(tab.mode)}
-            className={`min-h-12 rounded-xl px-4 py-3 text-sm font-semibold outline-none transition focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 ${
+            aria-pressed={active}
+            onClick={() => onChange(option.mode)}
+            className={`group flex min-h-52 w-full flex-col items-start rounded-2xl border border-[#ead8b3] bg-white p-5 text-left outline-none transition duration-200 hover:border-[#c89a43] hover:bg-[#fffdf8] active:bg-[#fff9ed] focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 sm:p-6 ${
               active
-                ? "bg-[#17120b] text-white shadow-sm"
-                : "bg-white text-[#5f4a24] hover:bg-[#fffdf8]"
+                ? "border-[#c89a43] bg-[#fff9ed] shadow-sm"
+                : ""
             }`}
           >
-            {tab.label}
+            <span aria-hidden="true" className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#e8cc91] bg-white text-[#8f610d]">
+              {option.icon}
+            </span>
+            <span className="mt-4 text-lg font-semibold tracking-[-0.02em] text-[#17120b]">{option.title}</span>
+            <span className="mt-2 max-w-md text-sm leading-6 text-[#63584c]">{option.description}</span>
+            <span className="mt-auto inline-flex min-h-11 items-center rounded-xl border border-[#c89a43] bg-white px-4 py-2 pt-2 text-sm font-semibold text-[#7a540f] transition group-hover:bg-[#fff5df] group-active:bg-[#fff1d2]">
+              {option.cta} <span aria-hidden="true" className="ml-2">→</span>
+            </span>
           </button>
         );
       })}
-    </div>
+      </div>
+    </section>
   );
 }
 
@@ -1184,18 +1273,14 @@ function DirectAdvisorForm({
   isLoading,
   isRequestBlocked,
   copy,
-  examples,
   onChange,
-  onExample,
   onSubmit,
 }: {
   value: string;
   isLoading: boolean;
   isRequestBlocked: boolean;
   copy: ChatCopy;
-  examples: Array<{ label: string; text: string }>;
   onChange: (value: string) => void;
-  onExample: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -1242,23 +1327,10 @@ function DirectAdvisorForm({
         <p aria-live="polite">{value.length}/{maxDescriptionLength}</p>
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-2">
-        {examples.map((example) => (
-          <button
-            key={example.label}
-            type="button"
-            onClick={() => onExample(example.text)}
-            className="min-h-11 rounded-full border border-[#ead8b3] bg-white px-4 py-2 text-left text-xs font-semibold text-[#5f4a24] transition hover:border-[#b97a05] hover:bg-[#fff4dd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]"
-          >
-            {example.label}
-          </button>
-        ))}
-      </div>
-
       <button
         type="submit"
         disabled={isLoading || isRequestBlocked || !value.trim()}
-        className="mt-6 min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+        className="mt-5 min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#805400]/10 transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
       >
         {isLoading ? copy.loadingButton : copy.askButton}
       </button>
@@ -2175,6 +2247,7 @@ function RecommendationResults({
   selectedBudget,
   resultsRef,
   onModifyPreferences,
+  onOpenRefinement,
 }: {
   response: AdvisorResponse | null;
   status: RequestState;
@@ -2184,6 +2257,7 @@ function RecommendationResults({
   selectedBudget?: string;
   resultsRef: React.RefObject<HTMLElement | null>;
   onModifyPreferences?: () => void;
+  onOpenRefinement: () => void;
 }) {
   if (status === "empty") {
     return (
@@ -2235,7 +2309,10 @@ function RecommendationResults({
         ))}
       </div>
 
-      {onModifyPreferences ? <button type="button" onClick={onModifyPreferences} className="mt-6 min-h-11 rounded-xl border border-[#c89a43] bg-white px-4 py-2 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">{copy.modifyPreferences}</button> : null}
+      <div className="mt-6 flex flex-wrap gap-3">
+        <button type="button" onClick={onOpenRefinement} className="min-h-11 rounded-xl border border-[#c89a43] bg-[#fff9ed] px-4 py-2 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff1d2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">{copy.refineButton}</button>
+        {onModifyPreferences ? <button type="button" onClick={onModifyPreferences} className="min-h-11 rounded-xl border border-[#c89a43] bg-white px-4 py-2 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">{copy.modifyPreferences}</button> : null}
+      </div>
     </section>
   );
 }
@@ -2296,9 +2373,9 @@ function RecommendationCard({
               // Analytics must not interfere with the affiliate link.
             }
           }}
-          className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-[#c89a43] bg-white px-4 py-3 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-auto"
+          className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-[#e68a00] bg-[#FF9900] px-4 py-3 text-sm font-semibold text-[#17120b] transition-colors duration-200 hover:bg-[#e68a00] active:bg-[#cc7a00] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 sm:w-auto"
         >
-          {copy.viewOnAmazon} <span aria-hidden="true" className="ml-2">→</span>
+          {copy.viewOnAmazon}
         </a>
       </div> : null}
     </article>
@@ -2341,71 +2418,89 @@ function InfoBlock({ title, text }: { title: string; text: string }) {
   );
 }
 
-function RefinementChat({
-  conversation,
-  value,
+function RefinementPanel({
+  panelRef,
+  isOpen,
+  preferences,
   isLoading,
   isRequestBlocked,
   copy,
+  error,
   onChange,
   onSubmit,
 }: {
-  conversation: ConversationMessage[];
-  value: string;
+  panelRef: React.RefObject<HTMLElement | null>;
+  isOpen: boolean;
+  preferences: RefinementPreferences;
   isLoading: boolean;
   isRequestBlocked: boolean;
   copy: ChatCopy;
-  onChange: (value: string) => void;
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  error: string;
+  onChange: (value: RefinementPreferences) => void;
+  onSubmit: () => void;
 }) {
-  function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
-    if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
-      event.preventDefault();
-      event.currentTarget.form?.requestSubmit();
-    }
+  if (!isOpen) {
+    return null;
   }
 
+  const choices = [
+    { key: "improvementGoal" as const, label: copy.improvementGoal, options: [["original", copy.moreOriginal], ["discreet", copy.moreDiscreet], ["elegant", copy.moreElegant], ["special", copy.moreSpecial], ["cheaper", copy.moreAffordable]] },
+    { key: "prominence" as const, label: copy.prominence, options: [["discreet", copy.discreet], ["balanced", copy.balanced], ["statement", copy.statement]] },
+    { key: "usage" as const, label: copy.usage, options: [["daily", copy.daily], ["occasions", copy.occasionsUse], ["both", copy.both]] },
+    { key: "meaningful" as const, label: copy.meaningful, options: [["yes", copy.yes], ["no", copy.no], ["neutral", copy.neutral]] },
+    { key: "personalizable" as const, label: copy.personalizable, options: [["yes", copy.yes], ["no", copy.no], ["neutral", copy.neutral]] },
+  ];
+
   return (
-    <section className="mt-8 rounded-3xl border border-[#ead8b3] bg-[#fffdf8] p-4 sm:p-5">
+    <section ref={panelRef} className="mt-8 scroll-mt-24 rounded-3xl border border-[#ead8b3] bg-[#fffdf8] p-4 sm:p-5">
       <h3 className="text-2xl font-semibold tracking-[-0.04em] text-[#17120b]">
         {copy.refinementTitle}
       </h3>
       <p className="mt-2 max-w-3xl text-sm leading-6 text-[#625746]">
         {copy.refinementHelp}
       </p>
-
-      <div className="mt-4 max-h-56 space-y-3 overflow-y-auto rounded-2xl border border-[#eadfca] bg-white p-3">
-        {conversation.filter((message) => message.role === "user").map((message, index) => (
-          <div
-            key={`${message.role}-${index}`}
-            className="ml-auto max-w-[92%] whitespace-pre-wrap break-words rounded-2xl border border-[#ead8b3] bg-[#fff9ed] px-4 py-3 text-sm leading-6 text-[#2b241f]"
-          >
-            {message.content}
-          </div>
+      <div className="mt-5 space-y-5">
+        {choices.map(({ key, label, options }) => (
+          <fieldset key={key}>
+            <legend className="text-sm font-semibold text-[#2b241f]">{label} <span className="font-normal text-[#75695d]">{copy.optionalRefinement}</span></legend>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {options.map(([value, optionLabel]) => {
+                const selected = preferences[key] === value;
+                return <button key={value} type="button" aria-pressed={selected} onClick={() => onChange({ ...preferences, [key]: selected ? undefined : value })} className={`min-h-11 rounded-full border px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] ${selected ? "border-[#b97a05] bg-[#fff1d2] text-[#68420c]" : "border-[#ead8b3] bg-white text-[#5f4a24] hover:bg-[#fff9ed]"}`}>{optionLabel}</button>;
+              })}
+            </div>
+          </fieldset>
         ))}
-      </div>
-
-      <form onSubmit={onSubmit} className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
-        <label htmlFor="refinement-message" className="flex-1 text-sm font-semibold text-[#2b241f]">
-          {copy.message}
+        <label htmlFor="refinement-avoid" className="block text-sm font-semibold text-[#2b241f]">
+          {copy.additionalAvoid} <span className="font-normal text-[#75695d]">{copy.optionalRefinement}</span>
           <textarea
-            id="refinement-message"
-            value={value}
-            onKeyDown={handleKeyDown}
-            onChange={(event) => onChange(event.target.value)}
-            placeholder={copy.refinementPlaceholder}
+            id="refinement-avoid"
+            value={preferences.additionalAvoid ?? ""}
+            maxLength={maxRefinementAvoidLength}
+            onChange={(event) => onChange({ ...preferences, additionalAvoid: event.target.value })}
+            placeholder={copy.additionalAvoidPlaceholder}
             className="mt-2 min-h-[4.75rem] w-full resize-y rounded-2xl border border-[#ead8b3] bg-white px-4 py-3 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25"
           />
         </label>
+      </div>
+      {error ? <p className="mt-4 text-sm text-[#9a3f2a]" role="alert">{error}</p> : null}
+      <div className="mt-5 flex justify-end">
         <button
-          type="submit"
-          disabled={isLoading || isRequestBlocked || !value.trim()}
+          type="button"
+          onClick={onSubmit}
+          disabled={isLoading || isRequestBlocked}
           className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
           {isLoading ? copy.refining : copy.sendRefinement}
         </button>
-      </form>
+      </div>
     </section>
+  );
+}
+
+function hasRefinementPreferences(preferences: RefinementPreferences) {
+  return Boolean(
+    preferences.improvementGoal || preferences.prominence || preferences.usage || preferences.meaningful || preferences.personalizable || preferences.additionalAvoid?.trim(),
   );
 }
 

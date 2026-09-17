@@ -616,20 +616,54 @@ export const guides: ArticleData[] = [
     description:
       "Descubre cómo comprobar si una joya es de oro, qué significan marcas como 585 y 750 y qué pruebas sirven como orientación y cuáles no son concluyentes.",
     intro:
-      "Ningún método casero aislado ofrece certeza absoluta. Esta guía explica cómo revisar marcas, contrastes, documentación y cuándo conviene acudir a un profesional.",
+      "Para saber si es oro, empieza por buscar contrastes, revisar el estado de la pieza y contrastar su documentación. Ningún método casero aislado ofrece certeza absoluta: una comprobación profesional es la vía fiable cuando el valor de la joya importa.",
     sections: [
       {
-        title: "Marcas y contrastes",
+        title: "Cómo saber si una joya es de oro",
         paragraphs: [
-          "Busca números como 585, 750 o 999 e indicaciones de quilates, pero recuerda que un grabado puede falsificarse o no describir toda la pieza.",
+          "Revisa primero marcas, contrastes, factura o certificado si existen, y el estado general del metal. Son indicios útiles, pero no una garantía aislada: el marcado puede faltar, estar desgastado o no describir toda la pieza.",
         ],
       },
+      { title: "Sellos y quilates", paragraphs: ["Las marcas 750, 585 y 375 se asocian habitualmente a aleaciones con 75 %, 58,5 % y 37,5 % de oro, equivalentes de forma habitual a 18K, 14K y 9K. El sello debe interpretarse junto al origen y la construcción de la joya; no confirma por sí solo que toda la pieza sea de oro macizo.", { parts: ["Para comparar quilates y aleaciones, consulta ", { href: "/guias/oro-14k-18k-24k", label: "oro 14k, 18k y 24k" }, "."] }] },
+      { title: "Cómo saber si un anillo es de oro", paragraphs: ["En un anillo, busca el contraste en el interior del aro, sin raspar ni forzar la pieza. Revisa también desgaste en bordes, zonas de contacto y monturas: una diferencia de color puede ser un indicio de baño o de otro metal, pero no sustituye una verificación."] },
+      { title: "Cómo saber si una cadena es de oro", paragraphs: ["En una cadena, las marcas suelen aparecer cerca del cierre, en una plaquita o en un eslabón próximo. No tires de los eslabones para buscarla: observa el cierre, las uniones y las zonas de mayor roce con buena luz."] },
+      { title: "Prueba del imán", paragraphs: ["Que una joya sea atraída por un imán puede indicar la presencia de componentes ferromagnéticos, pero no demuestra por sí solo que sea falsa ni identifica todos los metales de una aleación. Que no sea magnética tampoco garantiza que sea oro."] },
+      { title: "Color y desgaste", paragraphs: ["El color y el desgaste pueden orientar, sobre todo si aparece un metal distinto bajo una capa dorada. Sin embargo, el oro existe en diferentes aleaciones y acabados, y una pieza bien bañada puede parecer oro macizo a simple vista."] },
+      { title: "Métodos caseros que conviene evitar", paragraphs: ["Evita ácidos, lejía, abrasivos, rayar la joya o pruebas que puedan dañar el metal, el baño, el engaste o las piedras. Un método que altera la pieza no es una comprobación prudente en casa."] },
+      { title: "Cuándo acudir a un joyero", paragraphs: ["Si necesitas confirmar el metal antes de comprar, vender, asegurar o valorar una pieza, acude a un profesional. Puede revisar contrastes y utilizar métodos adecuados sin convertir una prueba orientativa en una certeza infundada."] },
     ],
     related: [
       { href: "/guias/oro-14k-18k-24k", label: "Oro 14k, 18k y 24k" },
       { href: "/guias/oro-blanco", label: "Oro blanco" },
+      { href: "/guias/como-saber-si-es-plata", label: "Cómo saber si una joya es de plata" },
       { href: "/guias/plata-925", label: "Plata 925 o plata de ley" },
       { href: "/guias/platino", label: "Platino en joyería" },
+    ],
+  },
+  {
+    slug: "como-saber-si-es-plata",
+    categorySlug: "metales",
+    eyebrow: "Guías",
+    title: "Cómo saber si una joya es de plata: marcas y pruebas para comprobarlo",
+    description: "Aprende cómo saber si una joya es de plata, dónde buscar el sello 925 y qué pruebas dan indicios sin sustituir una comprobación profesional.",
+    intro: "Para saber si una joya es de plata, empieza por buscar marcas, observar la pieza y revisar cualquier documentación disponible. Las pruebas caseras pueden orientar, pero no confirman un metal por sí solas ni justifican dañar una joya.",
+    sections: [
+      { title: "Cómo saber si una joya es de plata", paragraphs: ["Los indicios más útiles son el contraste, la información del vendedor y el examen cuidadoso de cierres, interiores y zonas de desgaste. Si el material debe confirmarse con certeza, la respuesta fiable requiere una comprobación profesional."] },
+      { title: "Buscar el sello 925", paragraphs: ["El marcado 925 suele indicar una aleación de plata de ley. También pueden aparecer referencias como sterling, según origen y fabricante. La ausencia de sello no demuestra que una joya no sea plata, y un sello aislado tampoco garantiza el material de toda la pieza.", { parts: ["Para entender el marcado con más detalle, consulta ", { href: "/guias/plata-925", label: "plata 925: qué significa y cómo reconocerla" }, "."] }] },
+      { title: "Cómo saber si un anillo es de plata", paragraphs: ["Revisa el interior del aro con buena luz, sin rasparlo. Busca contrastes y observa si hay diferencias de color en zonas de roce; pueden ser pistas de un baño o de otro metal, pero no una conclusión definitiva."] },
+      { title: "Cómo saber si una cadena es de plata", paragraphs: ["En cadenas y collares, la marca puede estar en una plaquita, junto al cierre o en un eslabón cercano. Examina el cierre sin tirar de él y evita manipular uniones delicadas."] },
+      { title: "Cómo saber si una pulsera es de plata", paragraphs: ["En pulseras, busca el contraste cerca del cierre o en una pieza interior. Si tiene charms, piedras o partes de otro material, un sello puede referirse solo a una parte de la joya."] },
+      { title: "Prueba del imán", paragraphs: ["Un imán solo aporta un indicio limitado. Que una pieza no sea atraída no garantiza que sea plata, y que reaccione puede deberse a componentes concretos, cierres o elementos internos."] },
+      { title: "Color, brillo y oxidación", paragraphs: ["La plata puede adquirir un oscurecimiento superficial con el uso y el ambiente. El color, el brillo o el deslustre ayudan a observar una pieza, pero no sustituyen un análisis: otros metales y baños pueden dar apariencias parecidas."] },
+      { title: "Qué significa que la plata se oscurezca", paragraphs: [{ parts: ["El oscurecimiento no significa necesariamente que la joya sea falsa. Si la pieza es apta para limpieza doméstica, empieza por métodos suaves; consulta ", { href: "/guias/como-limpiar-plata", label: "cómo limpiar joyas de plata sin dañarlas" }, "."] }] },
+      { title: "Métodos que pueden dañar una joya", paragraphs: ["No uses ácidos, lejía, abrasivos, productos de limpieza doméstica ni pruebas que rayen o alteren la pieza. Son especialmente inadecuados si hay piedras, perlas, adhesivos, baños o acabados delicados."] },
+      { title: "Cuándo acudir a un joyero", paragraphs: ["Acude a un profesional cuando necesites confirmar autenticidad, la joya tenga valor económico o sentimental, o existan dudas sobre su composición. Puede realizar comprobaciones más adecuadas sin convertir una prueba casera en una certeza."] },
+      { title: "Plata auténtica y metal plateado", paragraphs: ["La plata de ley contiene plata en la aleación; una pieza bañada o plateada puede tener una capa superficial de plata sobre otro metal. El aspecto, el cuidado y el desgaste pueden ser distintos, por lo que conviene revisar la descripción completa antes de comprar."] },
+    ],
+    related: [
+      { href: "/guias/plata-925", label: "Plata 925: qué significa y cómo reconocerla" },
+      { href: "/guias/como-limpiar-plata", label: "Cómo limpiar joyas de plata" },
+      { href: "/guias/como-saber-si-una-joya-es-de-oro", label: "Cómo saber si una joya es de oro" },
     ],
   },
   {
@@ -642,30 +676,43 @@ export const guides: ArticleData[] = [
     intro:
       "La plata de ley 925 contiene un 92,5 % de plata. El porcentaje restante corresponde a otros metales que ayudan a mejorar su comportamiento para joyería.",
     sections: [
+      { title: "Qué significa plata 925", paragraphs: ["El número 925 indica que la aleación contiene 925 partes de plata por cada mil. En joyería se conoce habitualmente como plata de ley 925, aunque la composición y los acabados concretos pueden variar según la pieza."] },
+      { title: "Qué significa 925 en una joya", paragraphs: ["Un sello 925 suele referirse al metal de la pieza o de una de sus partes, pero debe interpretarse con el diseño y la información completa. No es una garantía absoluta por sí solo ni explica si existen baños, piedras o componentes de otros materiales."] },
+      { title: "Qué significa 925 en un anillo", paragraphs: ["En un anillo, el marcado suele aparecer en el interior del aro. El significado del sello no cambia por ser anillo, cadena o pulsera: indica la aleación a la que se refiere, no el tipo de joya."] },
+      { title: "Plata 925 y plata de ley: ¿es lo mismo?", paragraphs: ["En el uso habitual de joyería, plata 925 y plata de ley suelen referirse a la misma proporción de 92,5 % de plata. Conviene revisar siempre la descripción exacta si una pieza combina metales o acabados distintos."] },
       {
-        title: "Por qué se alea",
+        title: "Por qué no es plata 100 % pura",
         paragraphs: [
           "La plata pura puede ser demasiado blanda para muchas piezas de uso diario. La aleación permite fabricar joyas más prácticas.",
           "La composición concreta y los tratamientos superficiales pueden variar según fabricante y pieza.",
         ],
       },
+      { title: "Cómo saber si realmente es plata 925", paragraphs: [{ parts: ["Busca el sello, examina el estado de la pieza y revisa cualquier documentación disponible. Estos elementos son indicios; para una explicación completa de las comprobaciones y sus límites, consulta ", { href: "/guias/como-saber-si-es-plata", label: "cómo saber si una joya es de plata" }, "."] }] },
       {
-        title: "Cuidados",
+        title: "¿La plata 925 se pone negra?",
         paragraphs: [
           "La plata puede oscurecerse con el tiempo por contacto con aire, humedad, cosméticos o ciertas sustancias. Esto no implica necesariamente que sea falsa.",
-          "Guardarla seca, separada y limpiarla con productos adecuados ayuda a conservar mejor el aspecto.",
+          { parts: ["Guardarla seca, separada y limpiarla con métodos adecuados ayuda a conservar mejor el aspecto. Consulta ", { href: "/guias/como-limpiar-plata", label: "cómo limpiar joyas de plata en casa" }, "."] },
         ],
       },
       {
-        title: "Antes de comprar",
+        title: "Cómo cuidar una joya de plata 925",
         paragraphs: [
-          "Comprueba si la pieza es plata maciza, baño de plata u otro acabado. El mantenimiento y la durabilidad no son iguales.",
+          "Evita humedad prolongada, perfumes y productos químicos directamente sobre la joya. Antes de limpiarla, comprueba si incorpora piedras, perlas, adhesivos, baños o acabados que requieran un cuidado distinto.",
+        ],
+      },
+      {
+        title: "Plata de ley, baño de plata y otros acabados",
+        paragraphs: [
+          "Comprueba si la pieza es plata de ley, baño de plata u otro acabado. El mantenimiento, el desgaste y la durabilidad no son iguales, por lo que la descripción del producto importa tanto como el aspecto exterior.",
         ],
       },
     ],
     related: [
       { href: "/guias/oro-14k-18k-24k", label: "Oro 14k, 18k y 24k" },
       { href: "/guias/oro-blanco", label: "Oro blanco" },
+      { href: "/guias/como-saber-si-es-plata", label: "Cómo saber si una joya es de plata" },
+      { href: "/guias/como-limpiar-plata", label: "Cómo limpiar joyas de plata" },
       { href: "/guias/como-cuidar-joyas", label: "Cómo cuidar joyas sin dañarlas" },
     ],
   },
@@ -789,11 +836,11 @@ export const guides: ArticleData[] = [
     slug: "collares-segun-escote",
     categorySlug: "collares",
     eyebrow: "Guías",
-    title: "Collares según escote: qué collar elegir para cada tipo de escote",
+    title: "Qué collar elegir según el escote: guía para acertar con cada vestido",
     description:
       "Descubre qué collar elegir según el escote: en V, redondo, cuadrado, palabra de honor, barco, corazón, halter o cuello alto.",
     intro:
-      "Elegir un collar no depende únicamente de que nos guste su diseño. La forma del escote, la longitud de la cadena y el tamaño del colgante pueden cambiar notablemente cómo se percibe el conjunto.",
+      "Para elegir un collar según el escote, mira la forma y la profundidad del vestido antes que una regla fija. La longitud de la cadena, el tamaño del colgante y los pendientes cambian cómo se percibe el conjunto.",
     sections: [
       {
         title: "Antes de elegir un collar según escote",
@@ -936,6 +983,13 @@ export const guides: ArticleData[] = [
         ],
       },
       {
+        title: "Cuándo es mejor no llevar collar",
+        paragraphs: [
+          "No llevar collar también puede ser una elección intencionada. Un escote halter, asimétrico o muy trabajado, un cuello alto con textura, la pedrería cerca del cuello o unos pendientes protagonistas pueden hacer que añadir otra pieza reste claridad al look.",
+          "Prueba el conjunto completo con el peinado y la ocasión real. Si la zona del cuello ya tiene presencia, unos pendientes, una pulsera o un anillo pueden aportar el acabado que buscas sin competir con el vestido.",
+        ],
+      },
+      {
         title: "Cómo elegir la longitud del collar",
         paragraphs: [
           "Además del escote, hay que tener en cuenta la longitud de la cadena. Estas medidas son orientaciones de estilo y dependen también de la persona, la prenda y el diseño concreto de la joya.",
@@ -1055,11 +1109,12 @@ export const guides: ArticleData[] = [
     ],
     related: [
       { href: "/guias/como-elegir-collar", label: "Cómo elegir un collar o colgante" },
+      { href: "/guias/collares-invitada-boda", label: "Collares para invitada de boda" },
+      { href: "/guias/pendientes-boda-invitada", label: "Pendientes para invitada de boda" },
       { href: "/guias/como-elegir-una-joya-para-regalar", label: "Cómo elegir una joya para regalar" },
-      { href: "/guias/plata-925", label: "Plata 925 o plata de ley: qué significa y cómo reconocerla" },
     ],
     advisorCta: {
-      title: "¿No sabes qué collar elegir?",
+      title: "Encuentra el collar ideal para tu look",
       description:
         "Dinos qué escote vas a llevar, la ocasión, tu estilo y tu presupuesto, y nuestro joyero IA puede ayudarte a elegir un tipo de collar adecuado.",
     },
@@ -3201,7 +3256,7 @@ export const guides: ArticleData[] = [
     slug: "como-limpiar-plata",
     categorySlug: "cuidados",
     eyebrow: "Guías",
-    title: "Cómo limpiar plata en casa sin dañar tus joyas",
+    title: "Cómo limpiar joyas de plata en casa sin dañarlas",
     description:
       "Aprende cómo limpiar joyas de plata de forma segura, qué métodos pueden ayudar a recuperar su brillo y qué productos conviene evitar para no dañarlas.",
     intro:
@@ -3220,7 +3275,7 @@ export const guides: ArticleData[] = [
         ],
       },
       {
-        title: "Cómo limpiar plata de forma segura",
+        title: "Cómo limpiar joyas de plata en casa",
         paragraphs: [
           "Empieza siempre por el método menos agresivo: agua templada, una pequeña cantidad de jabón neutro o suave, limpieza delicada con un paño blando, aclarado y secado completo.",
           "No uses agua excesivamente caliente, cepillos duros ni productos abrasivos como primera opción. Si la joya tiene piedras, esmaltes, pegamentos o recubrimientos, conviene extremar la prudencia.",
@@ -3350,6 +3405,7 @@ export const guides: ArticleData[] = [
     ],
     related: [
       { href: "/guias/plata-925", label: "Plata 925" },
+      { href: "/guias/como-saber-si-es-plata", label: "Cómo saber si una joya es de plata" },
       { href: "/guias/como-cuidar-joyas", label: "Cómo cuidar joyas sin dañarlas" },
       { href: "/guias/como-limpiar-oro", label: "Cómo limpiar oro" },
       { href: "/guias/como-saber-si-una-joya-es-de-oro", label: "Cómo saber si una joya es de oro" },
@@ -3512,9 +3568,9 @@ export const guides: ArticleData[] = [
     slug: "pendientes-boda-invitada",
     categorySlug: "pendientes",
     eyebrow: "Guías",
-    title: "Pendientes para boda de invitada: cómo elegirlos según vestido, escote y peinado",
+    title: "Pendientes para invitada de boda: cómo elegirlos según vestido y estilo",
     description:
-      "Descubre cómo elegir pendientes para una boda como invitada según el vestido, el escote, el peinado, el color y el estilo del look.",
+      "Guía para elegir pendientes invitada boda según vestido, escote, peinado, color, horario y estilo del look.",
     intro:
       "Los pendientes pueden rematar un look de invitada o competir demasiado con él. La elección debería equilibrar vestido, escote, peinado, horario de la boda y comodidad durante muchas horas.",
     sections: [
@@ -3560,6 +3616,19 @@ export const guides: ArticleData[] = [
         title: "Pendientes según el vestido",
         paragraphs: [
           "Considera color, estampado, textura, decoración, pedrería, escote y formalidad. Si el vestido ya tiene mucho protagonismo, unos pendientes discretos pueden equilibrar. Si es minimalista, unos pendientes más especiales pueden convertirse en el punto focal.",
+          {
+            parts: [
+              "El color también influye, pero no exige una fórmula fija. Si llevas rojo, puedes ampliar criterios en la guía de ",
+              { href: "/guias/pendientes-vestido-rojo-boda", label: "pendientes para vestido rojo de boda" },
+              ".",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Pendientes con tocado o pamela",
+        paragraphs: [
+          "Cuando el tocado, la pamela o el peinado ya tienen volumen, reduce los demás focos de atención. Prueba el conjunto completo para comprobar proporciones, comodidad y movimiento antes de la boda.",
         ],
       },
       {
@@ -3636,13 +3705,15 @@ export const guides: ArticleData[] = [
       },
     ],
     related: [
+      { href: "/guias/pendientes-vestido-rojo-boda", label: "Pendientes para vestido rojo de boda" },
+      { href: "/guias/pendientes-madrina-mantilla", label: "Pendientes para madrina con mantilla" },
       { href: "/guias/como-elegir-pendientes", label: "Cómo elegir pendientes" },
       { href: "/guias/tipos-de-pendientes", label: "Tipos de pendientes" },
       { href: "/guias/tipos-cierre-pendientes", label: "Tipos de cierre de pendientes" },
       { href: "/guias/collares-segun-escote", label: "Collares según escote" },
     ],
     advisorCta: {
-      title: "¿No sabes qué pendientes combinar con tu look?",
+      title: "Encuentra los pendientes ideales para tu look de boda",
       description:
         "Cuéntale a nuestro joyero IA cómo es el vestido, el escote, el peinado y tu presupuesto.",
     },
@@ -3651,11 +3722,11 @@ export const guides: ArticleData[] = [
     slug: "joyas-para-regalar-mujer",
     categorySlug: "regalos",
     eyebrow: "Guías",
-    title: "Joyas para regalar a una mujer: ideas según estilo, ocasión y presupuesto",
+    title: "Joyas para regalar a una mujer: ideas para acertar",
     description:
-      "Encuentra ideas de joyas para regalar a una mujer según su estilo, la ocasión, el presupuesto y vuestra relación.",
+      "Ideas de joyas para regalar a una mujer según vuestra relación, su estilo, la ocasión y tu presupuesto.",
     intro:
-      "Esta guía complementa la metodología general para regalar joyas con ideas concretas según estilo, relación y ocasión. La intención no es encajar a nadie en una edad o cliché, sino convertir pistas reales en una elección más fácil.",
+      "Para acertar al regalar una joya a una mujer, parte de pistas concretas: qué lleva, qué ocasión celebráis y qué mensaje quieres transmitir. Aquí encontrarás una forma práctica de decidir sin apoyarte en clichés.",
     sections: [
       {
         title: "Cómo elegir una joya para regalar",
@@ -3675,8 +3746,9 @@ export const guides: ArticleData[] = [
         subsections: [
           { title: "Estilo minimalista", paragraphs: ["Pendientes pequeños, cadena fina, colgante sencillo o pulsera delicada suelen encajar si prefiere joyas discretas."] },
           { title: "Estilo clásico", paragraphs: ["Perlas, pendientes discretos, cadenas tradicionales y piezas atemporales pueden ser buenas opciones."] },
+          { title: "Estilo elegante o romántico", paragraphs: ["Una pieza atemporal, un detalle con significado o un diseño delicado puede encajar mejor que una joya llamativa si busca un acabado cuidado."] },
           { title: "Estilo moderno", paragraphs: ["Ear cuffs, joyas geométricas, combinaciones de cadenas o diseños contemporáneos pueden funcionar si ya usa piezas actuales."] },
-          { title: "Joyas llamativas", paragraphs: ["Si disfruta las piezas visibles, considera pendientes protagonistas, collares con presencia o piedras de color, siempre dentro de su estilo real."] },
+          { title: "Estilo atrevido", paragraphs: ["Si disfruta las piezas visibles, considera pendientes protagonistas, collares con presencia o piedras de color, siempre dentro de su estilo real."] },
         ],
       },
       {
@@ -3686,6 +3758,7 @@ export const guides: ArticleData[] = [
           { title: "Cumpleaños", paragraphs: ["Una pieza ponible con un detalle personal suele tener buen equilibrio entre intención y uso diario."] },
           { title: "Aniversario", paragraphs: ["Puede tener más sentido simbólico: iniciales, piedras con recuerdo o una pieza que conecte con vuestra historia."] },
           { title: "Navidad", paragraphs: ["Funcionan joyas versátiles, fáciles de combinar y con margen de cambio si no se conoce todo."] },
+          { title: "San Valentín", paragraphs: ["Un detalle romántico funciona mejor cuando conserva su estilo real y no transmite un compromiso que no buscas expresar."] },
           { title: "Día de la Madre", paragraphs: ["Una joya grabada, una pulsera delicada o un collar simbólico pueden resultar cercanos sin caer en exceso."] },
           { title: "Graduación", paragraphs: ["Una pieza sobria y duradera puede acompañar una nueva etapa sin resultar demasiado formal."] },
           { title: "Regalo sin ocasión especial", paragraphs: ["Mejor elegir algo cómodo, natural y fácil de incorporar a su rutina."] },
@@ -3696,6 +3769,7 @@ export const guides: ArticleData[] = [
         paragraphs: [],
         subsections: [
           { title: "Pareja", paragraphs: ["Puedes permitirte más carga simbólica, pero evita anillos si el mensaje puede confundirse o no conoces la talla."] },
+          { title: "Esposa", paragraphs: ["Una pieza vinculada a una fecha, recuerdo o uso cotidiano puede ser más personal que elegir solo por tendencia."] },
           { title: "Madre", paragraphs: ["Suelen funcionar piezas con significado familiar, diseños atemporales o joyas cómodas para diario."] },
           { title: "Hermana", paragraphs: ["Puedes apoyarte más en estilo personal, tendencias que ya use o piezas combinables."] },
           { title: "Hija", paragraphs: ["Prioriza comodidad, seguridad, material y una estética acorde a su etapa y gusto."] },
@@ -3705,7 +3779,7 @@ export const guides: ArticleData[] = [
       {
         title: "Ideas según presupuesto",
         paragraphs: [
-          "Con presupuesto contenido, prioriza diseño, material claro y buen acabado antes que tamaño. Con presupuesto medio, puedes buscar mejores metales, perlas o piedras pequeñas. Con presupuesto alto, cobra más sentido revisar documentación, fabricación y posibilidad de mantenimiento.",
+          "Menos de 50 €: prioriza diseño, material claro y buen acabado antes que tamaño. Entre 50 y 100 €: puedes comparar mejores metales, perlas o piedras pequeñas. Entre 100 y 250 €: cobra más sentido revisar fabricación, piedras y cuidados. Por encima de 250 €: revisa documentación, garantía, mantenimiento y posibilidad de devolución.",
         ],
       },
       {
@@ -3784,24 +3858,358 @@ export const guides: ArticleData[] = [
       },
     ],
     related: [
+      { href: "/guias/joyas-para-regalar-novia", label: "Joyas para regalar a tu novia" },
       { href: "/guias/como-elegir-una-joya-para-regalar", label: "Cómo elegir una joya para regalar" },
       { href: "/guias/como-saber-talla-anillo", label: "Cómo saber la talla de un anillo" },
       { href: "/guias/tipos-de-collares", label: "Tipos de collares" },
       { href: "/guias/tipos-de-pendientes", label: "Tipos de pendientes" },
     ],
     advisorCta: {
-      title: "¿No sabes qué joya regalar?",
+      title: "Encuentra la joya perfecta con inteligencia artificial",
       description:
         "Dinos para quién es, la ocasión, su estilo y tu presupuesto y nuestro joyero IA te ayudará a valorar distintas opciones.",
     },
   },
   {
+    slug: "joyas-para-regalar-novia",
+    categorySlug: "regalos",
+    eyebrow: "Guías",
+    title: "Joyas para regalar a mi novia: ideas para acertar",
+    description:
+      "Descubre qué joyas para regalar a mi novia encajan según su personalidad, el momento de la relación, la ocasión y tu presupuesto.",
+    intro:
+      "Elegir joyas para regalar a mi novia no consiste en buscar la pieza más llamativa: importa que encaje con su forma de vestir, el momento de vuestra relación y la ocasión. Estas pistas te ayudan a elegir con intención.",
+    sections: [
+      {
+        title: "Qué joya regalar a mi novia",
+        paragraphs: [
+          "Un collar es una opción versátil si no conoces su talla. Los pendientes funcionan cuando sabes qué estilos lleva y una pulsera ajustable es práctica para el día a día. Un anillo puede ser un regalo precioso, pero exige talla y cuidado por el significado que puede transmitir. Un charm tiene sentido si ya usa una pulsera compatible, y un conjunto solo si suele coordinar sus joyas.",
+        ],
+      },
+      {
+        title: "Joyas para regalar a mi novia según su personalidad",
+        paragraphs: [],
+        subsections: [
+          { title: "Romántica o elegante", paragraphs: ["Un detalle grabado, perlas, una cadena fina o un diseño clásico pueden encajar si ya elige piezas con un aire cuidado y personal."] },
+          { title: "Minimalista o clásica", paragraphs: ["Busca pendientes pequeños, un colgante sencillo o una pulsera delicada en el tono de metal que usa con más frecuencia."] },
+          { title: "Moderna o atrevida", paragraphs: ["Los diseños geométricos, pendientes protagonistas o combinaciones de cadenas funcionan si forman parte de su estilo habitual."] },
+          { title: "Aventurera", paragraphs: ["Prioriza comodidad, cierres seguros y piezas resistentes a su rutina; una joya que no use por miedo a dañarla no será un buen regalo."] },
+        ],
+      },
+      {
+        title: "Qué regalar según el momento de la relación",
+        paragraphs: [],
+        subsections: [
+          { title: "Primeros meses", paragraphs: ["Una joya fácil de llevar y con un significado ligero suele ser más natural que una pieza muy solemne o personalizada."] },
+          { title: "Relación consolidada o de varios años", paragraphs: ["Puedes incorporar una referencia compartida, una fecha o una pieza con más intención, siempre que encaje con sus gustos reales."] },
+          { title: "Aniversario u ocasión especial", paragraphs: ["Elige una pieza que recuerde el momento sin forzar un mensaje. Si consideras un anillo, evita diseños que parezcan de compromiso si no es esa la intención."] },
+        ],
+      },
+      {
+        title: "Joyas para regalar a mi novia según la ocasión",
+        paragraphs: [
+          "Para su cumpleaños busca una pieza que pueda estrenar pronto. En un aniversario, un símbolo compartido puede aportar valor. En Navidad conviene una joya versátil y con margen de cambio; en San Valentín, un detalle romántico sin alejarse de su estilo. Un regalo sorpresa o una celebración especial funciona mejor cuando el diseño se parece a lo que ya usa.",
+        ],
+      },
+      {
+        title: "Joyas según presupuesto",
+        paragraphs: [
+          "Por debajo de 50 €, prioriza un diseño sencillo, información clara sobre el material y buen acabado. Entre 50 y 100 €, compara metales, perlas o diseños con más detalle. Entre 100 y 250 €, revisa fabricación, piedras y cuidados. Por encima de 250 €, valora documentación, garantía, mantenimiento y devolución; no hace falta que el precio sustituya al criterio.",
+        ],
+      },
+      {
+        title: "Qué joya regalar a mi novia si no sé qué le gusta",
+        paragraphs: [
+          {
+            parts: [
+              "Fíjate en si usa oro o plata, piezas discretas o llamativas, y qué repite más: pendientes, collares, pulseras o charms. Mira también cómo viste y evita adivinar una talla de anillo. Si aún dudas, cuéntale estas pistas a ",
+              { href: "/#joyero-ia", label: "nuestro recomendador IA de joyas" },
+              " para comparar opciones acordes a ella.",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Errores que conviene evitar",
+        paragraphs: [
+          "No compres un anillo sin talla ni sin pensar en el posible mensaje de compromiso. Evita elegir por una moda que ella no usa, ignorar alergias conocidas o encargar una personalización sin revisar plazos y devolución.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/guias/joyas-para-regalar-mujer", label: "Ideas de joyas para regalar a una mujer" },
+      { href: "/guias/como-elegir-una-joya-para-regalar", label: "Cómo elegir una joya para regalar" },
+      { href: "/guias/como-saber-talla-anillo", label: "Cómo saber la talla de un anillo" },
+      { href: "/guias/tipos-de-pendientes", label: "Tipos de pendientes" },
+    ],
+    advisorCta: {
+      title: "Encuentra una joya para tu novia",
+      description:
+        "Cuéntale a nuestro joyero IA cómo es su estilo, la ocasión y tu presupuesto para recibir una orientación más afinada.",
+    },
+  },
+  {
+    slug: "pulseras-de-la-amistad",
+    categorySlug: "regalos",
+    eyebrow: "Guías",
+    title: "Pulseras de la amistad: significado, tipos e ideas para regalar",
+    description: "Guía para elegir pulseras de la amistad, pulseras para amigas y detalles con significado según estilo, ocasión y talla.",
+    intro: "Una pulsera de la amistad puede ser un detalle cotidiano, un recuerdo compartido o un regalo para una nueva etapa. La clave es que tenga sentido para vuestra relación y que la otra persona quiera llevarla.",
+    sections: [
+      { title: "Qué significa una pulsera de la amistad", paragraphs: ["Puede representar cercanía, una experiencia compartida o simplemente el deseo de celebrar una amistad. No hay un significado único: el valor lo aportan las personas, el momento y el detalle elegido."] },
+      { title: "Tipos de pulseras de la amistad", paragraphs: [], subsections: [
+        { title: "Minimalistas y a juego", paragraphs: ["Una cadena fina o dos piezas relacionadas funcionan si buscáis un detalle discreto. No tienen que ser idénticas: pueden compartir un material, una forma o un símbolo."] },
+        { title: "Con charms, iniciales o símbolos", paragraphs: ["Son buenas opciones cuando hay una referencia real que compartir. Comprueba que el charm sea compatible con la pulsera y que la personalización tenga plazos y condiciones claras."] },
+        { title: "Personalizadas o de hilo", paragraphs: ["Una fecha, una inicial o un color puede aportar intención. Las pulseras de hilo son adecuadas si forman parte de su estilo; no hace falta elegirlas solo por asociación."] },
+      ] },
+      { title: "Pulseras para mejores amigas", paragraphs: ["Si buscas una pulsera amigas, empieza por pensar qué le resultaría natural llevar: una pieza discreta para todos los días, dos pulseras complementarias o un detalle que recuerde un viaje, una graduación o una etapa compartida. Las pulseras para dos amigas suelen funcionar mejor cuando respetan el estilo de cada una." ] },
+      { title: "Pulseras para regalar a una amiga", paragraphs: ["Para regalar a una amiga, una pulsera minimalista, un charm, unas iniciales, un símbolo compartido o dos diseños a juego pueden tener sentido. Comprueba primero su metal habitual, la longitud y si prefiere una pieza discreta o una personalización visible."] },
+      { title: "Qué pulsera regalar según su personalidad", paragraphs: ["Para alguien minimalista, una cadena fina o un símbolo pequeño. Para una amiga elegante, un acabado sobrio y combinable. Para una persona divertida o moderna, puede encajar un charm o color si ya los usa. Si es sentimental, una inicial o fecha puede tener sentido; si es atrevida, busca una pieza con presencia sin alejarte de su estilo habitual."] },
+      { title: "Pulseras de amistad según la ocasión", paragraphs: ["En cumpleaños o Navidad, prioriza una pulsera fácil de usar. Una graduación, despedida, nueva etapa o amistad a distancia puede admitir un símbolo compartido. Para un regalo espontáneo, suele funcionar mejor una pieza ligera y sin demasiada carga simbólica."] },
+      { title: "Cómo elegir una pulsera de amistad", paragraphs: [
+        { parts: ["Mira el metal que utiliza, si prefiere joyas discretas o llamativas y si lleva pulseras con frecuencia. Comprueba la talla y el cierre; los modelos ajustables reducen el riesgo. Si necesitas comparar opciones, usa ", { href: "/#joyero-ia", label: "el recomendador IA de joyas.ai" }, "."] },
+      ] },
+    ],
+    related: [
+      { href: "/guias/pulseras-para-regalar", label: "Pulseras para regalar" },
+      { href: "/guias/joyas-para-regalar-mujer", label: "Joyas para regalar a una mujer" },
+      { href: "/joyas/pulseras", label: "Pulseras" },
+    ],
+    advisorCta: { title: "Encuentra una pulsera perfecta para vuestra amistad", description: "Cuéntale a nuestro joyero IA cómo es tu amiga, la ocasión y el estilo que quieres transmitir." },
+  },
+  {
+    slug: "pulseras-para-mama",
+    categorySlug: "regalos",
+    eyebrow: "Guías",
+    title: "Pulseras para mamá: ideas para acertar con el regalo",
+    description: "Ideas de pulsera mamá para elegir un regalo según su estilo, la ocasión, el material, la talla y el significado que buscas.",
+    intro: "Una pulsera para mamá funciona mejor cuando encaja con su rutina y no solo con la fecha del regalo. Estas ideas sirven para decidir el diseño, el material y el nivel de personalización con criterio.",
+    sections: [
+      { title: "Qué pulsera regalar a mamá", paragraphs: ["Una pulsera sencilla es fácil de llevar a diario; una pieza elegante puede encajar en ocasiones especiales. Los charms, iniciales, grabados o piedras aportan significado cuando se relacionan con algo real para ella. No hace falta personalizar para que el regalo sea personal."] },
+      { title: "Pulseras según su estilo", paragraphs: [], subsections: [
+        { title: "Clásica o minimalista", paragraphs: ["Busca un diseño atemporal, ligero y fácil de combinar con reloj u otras joyas."] },
+        { title: "Moderna o elegante", paragraphs: ["Elige una forma más actual o un acabado cuidado si ya utiliza piezas protagonistas, sin asumir que una joya grande será siempre mejor."] },
+        { title: "Sentimental o colorida", paragraphs: ["Una inicial, una fecha, un charm o una piedra puede tener sentido si refleja sus gustos y no un cliché sobre la maternidad."] },
+      ] },
+      { title: "Pulseras con significado para mamá", paragraphs: ["Las referencias familiares, una fecha importante o un símbolo compartido pueden aportar intención. Antes de grabar, confirma la ortografía, los plazos y las condiciones de cambio; las personalizaciones suelen tener menos margen de devolución."] },
+      { title: "Pulseras según la ocasión", paragraphs: ["Para cumpleaños, Día de la Madre o Navidad, busca una pieza que pueda disfrutar enseguida. Un aniversario, una jubilación, un agradecimiento o el nacimiento de un nieto pueden justificar un detalle más personal, siempre acorde a su gusto."] },
+      { title: "Qué material elegir y cómo acertar con la talla", paragraphs: ["El oro, la plata, el acero y otros materiales habituales se diferencian por aspecto, cuidados y presupuesto; observa qué metal lleva ya. Comprueba también el cierre, el diámetro o la longitud. Si no conoces la medida, una pulsera ajustable o con alargador reduce el riesgo."] },
+      { title: "Cómo acertar si no sabes qué pulsera le gustaría", paragraphs: [
+        { parts: ["Fíjate en si usa pulseras con frecuencia, qué tono de metal repite y si prefiere líneas sencillas o detalles visibles. Puedes ordenar esas pistas con ", { href: "/#joyero-ia", label: "el recomendador IA de joyas.ai" }, "."] },
+      ] },
+    ],
+    related: [
+      { href: "/guias/joya-regalo-madre-primeriza", label: "Joya para regalar a una madre primeriza" },
+      { href: "/guias/pulseras-para-regalar", label: "Pulseras para regalar" },
+      { href: "/guias/joyas-para-regalar-mujer", label: "Joyas para regalar a una mujer" },
+    ],
+    advisorCta: { title: "Encuentra una pulsera para mamá con IA", description: "Indica su estilo, la ocasión y las pistas que conoces para recibir una orientación personalizada." },
+  },
+  {
+    slug: "joya-regalo-madre-primeriza",
+    categorySlug: "regalos",
+    eyebrow: "Guías",
+    title: "Qué joya regalar a una madre primeriza: ideas con significado",
+    description: "Guía para elegir un regalo madre primeriza joya con opciones prácticas, personales y adecuadas para pareja, familia o amistades.",
+    intro: "Un regalo de joyería para una madre primeriza puede celebrar el nacimiento sin imponer una idea de cómo debería vivir la maternidad. Busca una pieza cómoda, coherente con sus gustos y pensada para su día a día.",
+    sections: [
+      { title: "Qué joya regalar a una madre primeriza", paragraphs: ["Un collar o medalla puede admitir un detalle personal sin requerir talla. Una pulsera ajustable es práctica si suele llevarlas. Los pendientes funcionan si conoces bien sus preferencias; un charm encaja si ya tiene una pieza compatible. Evita anillos si no conoces la talla."] },
+      { title: "Joyas relacionadas con el nacimiento", paragraphs: ["Una inicial, una fecha, una piedra de nacimiento, un nombre o un símbolo son posibilidades, no obligaciones. Elige solo una referencia que tenga sentido para ella y revisa los plazos antes de encargar una pieza personalizada."] },
+      { title: "Regalos de pareja, familiares o amigos", paragraphs: ["La pareja puede elegir una pieza más íntima o vinculada a una experiencia compartida. Familiares y amistades suelen acertar mejor con una joya cómoda y menos personal, especialmente si no conocen bien sus preferencias o presupuesto."] },
+      { title: "Qué evitar", paragraphs: ["Evita piezas incómodas, demasiado delicadas para el uso cotidiano, diseños que no se parecen a su estilo y anillos sin talla. No asumas que quiere un nombre, una fecha o un símbolo de maternidad: la intención debe respetar sus gustos."] },
+      { title: "Presupuesto y elección personal", paragraphs: [
+        { parts: ["Con un presupuesto contenido, prioriza comodidad, material indicado y un diseño sencillo. Con más margen, valora personalización, fabricación y cuidados sin convertir el precio en el único criterio. Si necesitas decidir entre opciones, prueba ", { href: "/#joyero-ia", label: "el recomendador IA de joyas.ai" }, "."] },
+      ] },
+    ],
+    related: [
+      { href: "/guias/pulseras-para-mama", label: "Pulseras para mamá" },
+      { href: "/guias/joyas-para-regalar-mujer", label: "Joyas para regalar a una mujer" },
+      { href: "/guias/como-saber-talla-anillo", label: "Cómo saber la talla de un anillo" },
+    ],
+    advisorCta: { title: "Encuentra una joya especial para una madre primeriza", description: "Explica quién hace el regalo, qué estilo tiene ella y qué quieres celebrar." },
+  },
+  {
+    slug: "joyas-para-parejas",
+    categorySlug: "regalos",
+    eyebrow: "Guías",
+    title: "Joyas para parejas: ideas originales y su significado",
+    description: "Ideas de joyas para parejas, desde piezas a juego o complementarias hasta joyas personalizadas según ocasión y estilo.",
+    intro: "Las joyas para parejas no tienen por qué ser idénticas ni llevar un símbolo evidente. Una pieza compartida funciona cuando representa algo reconocible para ambos y cada persona tiene ganas de usarla.",
+    sections: [
+      { title: "Qué son las joyas para parejas", paragraphs: ["Pueden ser dos pulseras, collares, anillos, charms o piezas personalizadas que comparten una referencia. Lo importante no es que sean iguales, sino que mantengan una conexión sin forzar el estilo de ninguna de las dos personas."] },
+      { title: "Ideas de joyas para parejas", paragraphs: ["Las pulseras son prácticas si buscáis algo cotidiano. Los collares pueden compartir un símbolo o diseño complementario. Los anillos requieren talla y atención a su posible significado. Los charms, grabados o piezas personalizadas encajan cuando existe una referencia que los dos reconocéis."] },
+      { title: "Joyas iguales o complementarias", paragraphs: ["Dos piezas complementarias suelen ser más fáciles de llevar que dos diseños idénticos. Podéis compartir metal, piedra, fecha o forma y adaptar el tamaño y la presencia al gusto de cada persona."] },
+      { title: "Joyas para parejas según la ocasión", paragraphs: ["Un aniversario, cumpleaños, Navidad o San Valentín puede inspirar un detalle compartido. Para un compromiso, un anillo puede tener sentido si ambos buscáis ese mensaje. Un regalo espontáneo suele funcionar mejor con una pieza sencilla y fácil de usar."] },
+      { title: "Joyas para parejas con significado", paragraphs: ["Iniciales, fechas, símbolos, coordenadas de un lugar importante, piedras o grabados pueden aportar intención. Evita referencias demasiado literales si no encajan con vuestro estilo y confirma siempre cualquier personalización antes de encargarla."] },
+      { title: "Cómo elegir una joya que represente a los dos", paragraphs: [
+        { parts: ["No presupongas talla de anillo ni un significado de compromiso que no queréis transmitir. Parte de lo que ambos llevan ya y de la ocasión. Para contrastar ideas, usa ", { href: "/#joyero-ia", label: "el recomendador IA de joyas.ai" }, "."] },
+      ] },
+    ],
+    related: [
+      { href: "/guias/joyas-para-regalar-novia", label: "Joyas para regalar a mi novia" },
+      { href: "/ocasiones/aniversario", label: "Joyas para aniversario" },
+      { href: "/guias/pulseras-para-regalar", label: "Pulseras para regalar" },
+    ],
+    advisorCta: { title: "Encuentra una joya para vuestra historia", description: "Cuéntale a nuestro joyero IA la ocasión, lo que compartís y el estilo de ambos." },
+  },
+  {
+    slug: "pulseras-para-regalar",
+    categorySlug: "regalos",
+    eyebrow: "Guías",
+    title: "Pulseras para regalar: cómo elegir según persona y ocasión",
+    description: "Consejos para elegir pulseras para regalar según la persona, el estilo, el material, la talla, el presupuesto y la ocasión.",
+    intro: "Una pulsera es un regalo flexible, pero acertar depende de observar qué joyas lleva la otra persona, cómo ajusta sus accesorios y qué quieres celebrar. Esta guía reúne los criterios generales antes de pasar a casos más concretos.",
+    sections: [
+      { title: "Cómo elegir una pulsera para regalar", paragraphs: ["Observa si lleva pulseras, reloj u otras joyas, qué metal repite y cuánto protagonismo da a sus accesorios. Prioriza un cierre cómodo, un ajuste adecuado y una pieza que pueda incorporar a su rutina."] },
+      { title: "Pulseras según la persona", paragraphs: [
+        { parts: ["Para una pareja puedes considerar un detalle compartido; para una madre, una pieza con significado familiar si encaja con ella; para una amiga o hermana, una pulsera fácil de combinar suele ser una apuesta segura. Encuentra ideas específicas en nuestras guías de ", { href: "/guias/pulseras-para-mama", label: "pulseras para mamá" }, " y ", { href: "/guias/pulseras-de-la-amistad", label: "pulseras de la amistad" }, "."] },
+      ] },
+      { title: "Pulseras según el estilo", paragraphs: ["Las líneas finas y limpias suelen encajar con un estilo minimalista; una pieza sobria y bien acabada, con uno elegante o clásico. Los diseños geométricos pueden funcionar en un estilo moderno y los detalles visibles en uno atrevido, siempre que ya los use."] },
+      { title: "Significado, material y talla", paragraphs: ["Un grabado, inicial o símbolo solo suma si es relevante. Observa si prefiere oro, plata, acero u otros materiales habituales, y revisa sus cuidados. Para la talla, una pulsera ajustable o con alargador ofrece más margen; comprueba además que el cierre sea fácil de manejar."] },
+      { title: "Pulseras según presupuesto", paragraphs: ["Con menos de 50 €, prioriza un diseño sencillo y material claramente indicado. Entre 50 y 100 €, compara acabados y versatilidad. Entre 100 y 250 €, revisa fabricación, piedras y cuidados. Por encima de esa cifra, añade documentación, garantía y devolución a los criterios de compra."] },
+      { title: "Qué hacer si no conoces bien sus gustos", paragraphs: [
+        { parts: ["Evita elegir una pieza muy llamativa solo por la ocasión. Mira su estilo real y usa ", { href: "/#joyero-ia", label: "el recomendador IA de joyas.ai" }, " para convertir esas pistas en opciones coherentes."] },
+      ] },
+    ],
+    related: [
+      { href: "/guias/pulseras-para-mama", label: "Pulseras para mamá" },
+      { href: "/guias/pulseras-de-la-amistad", label: "Pulseras de la amistad" },
+      { href: "/guias/joyas-para-parejas", label: "Joyas para parejas" },
+    ],
+    advisorCta: { title: "Encuentra la pulsera perfecta para regalar", description: "Indica para quién es, qué suele llevar y la ocasión para recibir una recomendación más útil." },
+  },
+  {
+    slug: "pendientes-madrina-mantilla",
+    categorySlug: "pendientes",
+    eyebrow: "Guías",
+    title: "Pendientes para madrina con mantilla: cómo elegirlos",
+    description: "Guía para elegir pendientes para madrina con mantilla según vestido, peineta, peinado, color, comodidad y equilibrio visual.",
+    intro: "Con mantilla, peineta y vestido ya hay varios elementos con presencia. Los pendientes adecuados acompañan el conjunto sin competir con ellos y deben seguir siendo cómodos durante muchas horas.",
+    sections: [
+      { title: "Qué pendientes llevar con mantilla", paragraphs: ["Valora a la vez longitud, volumen, movimiento y peso visual. Una peineta elaborada o una mantilla con mucho dibujo puede agradecer pendientes más limpios; un conjunto sobrio puede admitir una pieza con más presencia. No hay una combinación obligatoria."] },
+      { title: "Pendientes largos o cortos", paragraphs: ["Los largos pueden aportar verticalidad cuando el peinado deja el cuello despejado, pero conviene comprobar que no se enganchen. Los cortos o medios pueden equilibrar una peineta protagonista y suelen dar más comodidad. Prueba siempre el conjunto completo antes del evento."] },
+      { title: "Oro, plata o piedras de color", paragraphs: ["El metal puede dialogar con el color del vestido, la peineta y los demás accesorios. Las piedras de color funcionan si no introducen otro foco sin relación con el look. En caso de duda, mira qué tono de metal te favorece y qué usas normalmente."] },
+      { title: "Cómo combinar pendientes, mantilla y peineta", paragraphs: ["Elige un elemento principal y deja que los demás lo acompañen. Si la peineta o el bordado tienen mucha presencia, evita sumar pendientes muy grandes y un collar llamativo a la vez."] },
+      { title: "Pendientes según el peinado", paragraphs: ["Los recogidos hacen más visible el pendiente y permiten valorar mejor su largo real. Con un peinado bajo o con volumen, revisa que el cierre sea cómodo y que la pieza no se enrede ni roce la mantilla."] },
+      { title: "Qué evitar", paragraphs: ["Pendientes demasiado grandes junto a una peineta protagonista, piezas pesadas, demasiados elementos llamativos o comprar sin probar el vestido, la mantilla y el peinado juntos."] },
+      { title: "Cómo encontrar unos pendientes que encajen con tu vestido", paragraphs: [{ parts: ["Describe el vestido, el color, la mantilla y el peinado en ", { href: "/#joyero-ia", label: "el recomendador IA de joyas.ai" }, " para comparar opciones sin partir de una regla rígida."] }] },
+    ],
+    related: [
+      { href: "/guias/pendientes-madrina-boda", label: "Pendientes para madrina de boda" },
+      { href: "/guias/pendientes-boda-invitada", label: "Pendientes para boda de invitada" },
+      { href: "/guias/pendientes-vestido-rojo-boda", label: "Pendientes para vestido rojo de boda" },
+      { href: "/guias/tipos-cierre-pendientes", label: "Tipos de cierre de pendientes" },
+    ],
+    advisorCta: { title: "Encuentra los pendientes para tu look de madrina", description: "Cuéntale a nuestro joyero IA cómo es el vestido, la mantilla, la peineta y el peinado." },
+  },
+  {
+    slug: "pendientes-madrina-boda",
+    categorySlug: "pendientes",
+    eyebrow: "Guías",
+    title: "Pendientes para madrina de boda: cómo elegirlos según vestido y estilo",
+    description: "Guía de pendientes para madrina de boda según vestido, peinado, tocado, horario, comodidad y equilibrio de accesorios.",
+    intro: "Elegir pendientes para madrina de boda empieza por el conjunto: vestido, escote, peinado, tocado y el tiempo que vas a llevarlos. La mejor opción acompaña esos elementos sin convertir cada accesorio en el centro de atención.",
+    sections: [
+      { title: "Cómo elegir pendientes para madrina", paragraphs: ["Valora tamaño, longitud, peso visual y comodidad junto al vestido y el peinado. Un diseño con volumen, estampado o pedrería suele agradecer un pendiente más limpio; un vestido sencillo puede dejar espacio a una pieza con mayor presencia.", "No existe un único tipo de pendiente correcto para una madrina. El estilo personal y la seguridad al llevarlo importan tanto como el protocolo o la tendencia del momento."] },
+      { title: "Pendientes largos o cortos para madrina", paragraphs: ["Los pendientes largos pueden aportar verticalidad y movimiento con recogidos o escotes despejados. Si el vestido, el tocado o el collar ya concentran la atención, los pendientes cortos o medianos ayudan a ordenar el conjunto.", "Comprueba el peso y el cierre antes de decidir. Un diseño muy visible no compensa si tira del lóbulo o incomoda durante la ceremonia y la celebración."] },
+      { title: "Pendientes según el vestido de madrina", paragraphs: ["Mira el escote, el color, el volumen, los estampados y los detalles cercanos al rostro. Un vestido minimalista puede admitir contraste o brillo; uno con bordados, textura o pedrería suele funcionar mejor con una joya que no compita con esas zonas.", { parts: ["Si el escote condiciona el equilibrio de las joyas, consulta también la guía de ", { href: "/guias/collares-segun-escote", label: "collares según escote" }, "."] }] },
+      { title: "Pendientes según el peinado", paragraphs: ["Un recogido deja visible el largo completo del pendiente; con pelo suelto puede convenir un diseño algo más reconocible; el semirrecogido suele admitir piezas intermedias. Con pelo corto, incluso un pendiente pequeño o geométrico puede tener mucho protagonismo."] },
+      { title: "Pendientes dorados o plateados", paragraphs: ["El metal puede dialogar con los demás accesorios, el color del vestido y tus preferencias. El dorado puede dar una lectura más cálida y el plateado una más limpia o fría, pero ninguno es una regla universal: mira el conjunto completo antes de elegir."] },
+      { title: "Pendientes para madrina de día o de noche", paragraphs: ["El horario puede orientar la intensidad del brillo, el color o la longitud, sin sustituir la comodidad y la coherencia con el vestido. La luz, el lugar y el tipo de celebración ayudan a poner cada pieza en contexto."] },
+      { title: "Pendientes para madrina con mantilla", paragraphs: [{ parts: ["Si vas a llevar mantilla y peineta, la decisión requiere mirar esos elementos junto al pendiente. La guía de ", { href: "/guias/pendientes-madrina-mantilla", label: "pendientes para madrina con mantilla" }, " trata esa combinación específica sin repetirla aquí."] }] },
+      { title: "Cómo combinar pendientes con tocado o pamela", paragraphs: ["Elige un foco principal. Cuando una pamela, un tocado o el peinado ya tienen volumen, reducir tamaño, brillo o movimiento en los pendientes suele facilitar un resultado más equilibrado. Prueba siempre el conjunto completo."] },
+      { title: "Errores frecuentes al elegir pendientes de madrina", paragraphs: ["Sumar demasiados accesorios protagonistas, ignorar el peso, decidir sin probar con el peinado, olvidar el tocado o elegir una pieza solo por tendencia puede restar comodidad y coherencia al look."] },
+      { title: "Cómo encontrar los pendientes que encajan con tu look", paragraphs: [{ parts: ["Describe el vestido, el escote, el peinado, el tocado y la ocasión en ", { href: "/#joyero-ia", label: "el recomendador IA de Joyas.ai" }, " para comparar opciones con criterios claros."] }] },
+    ],
+    related: [
+      { href: "/guias/pendientes-madrina-mantilla", label: "Pendientes para madrina con mantilla" },
+      { href: "/guias/pendientes-boda-invitada", label: "Pendientes para invitada de boda" },
+      { href: "/guias/pendientes-vestido-rojo-boda", label: "Pendientes para vestido rojo de boda" },
+      { href: "/guias/collares-invitada-boda", label: "Collares para invitada de boda" },
+    ],
+    advisorCta: { title: "Encuentra los pendientes para tu look de madrina", description: "Indica el vestido, el escote, el peinado, el tocado y la hora de la boda para recibir una orientación más ajustada." },
+  },
+  {
+    slug: "pendientes-vestido-azul-marino",
+    categorySlug: "pendientes",
+    eyebrow: "Guías",
+    title: "Qué pendientes llevar con un vestido azul marino",
+    description: "Descubre qué pendientes para vestido azul marino pueden encajar según metal, perlas, escote, peinado, accesorios y ocasión.",
+    intro: "Con un vestido azul marino, los pendientes pueden aportar calidez, contraste o una lectura más discreta. Antes de decidir, mira el escote, el peinado, el bolso, los zapatos y cuánto protagonismo quieres que tengan las joyas.",
+    sections: [
+      { title: "Qué pendientes combinan con un vestido azul marino", paragraphs: ["Dorado, plateado, perlas, piedras claras, color contenido y diseños minimalistas pueden funcionar con azul marino. La elección depende del tono del vestido, el acabado de los accesorios y del efecto que buscas, no de una combinación única."] },
+      { title: "Pendientes dorados con vestido azul marino", paragraphs: ["El dorado puede crear contraste y calidez, especialmente cuando quieres que los pendientes tengan presencia. Comprueba que dialogue con bolso, zapatos u otras joyas sin obligar a que todos los elementos sean idénticos."] },
+      { title: "Pendientes plateados con vestido azul marino", paragraphs: ["El plateado puede dar un resultado más frío, limpio o minimalista. Es una opción útil cuando el vestido tiene detalles sobrios o cuando prefieres que los pendientes acompañen sin convertirse en el foco principal."] },
+      { title: "Pendientes de perlas con vestido azul marino", paragraphs: [{ parts: ["Las perlas pueden encajar en looks clásicos, elegantes o contemporáneos según el tamaño y el diseño. Si quieres valorar tipos y cuidados, consulta la guía de ", { href: "/guias/tipos-de-perlas", label: "tipos de perlas" }, "."] }] },
+      { title: "Pendientes largos o pequeños", paragraphs: ["Con recogido y escote despejado, un pendiente largo puede aportar movimiento. Si el vestido tiene detalles cerca del rostro, mucho volumen o un collar visible, los pendientes pequeños o medios pueden dar más descanso visual."] },
+      { title: "Pendientes según el peinado", paragraphs: ["El recogido muestra el pendiente completo; el pelo suelto puede ocultar diseños pequeños; el semirrecogido admite proporciones intermedias; y el pelo corto hace más visibles incluso las piezas discretas. Prueba el peinado habitual junto al vestido."] },
+      { title: "Cómo combinar pendientes y collar", paragraphs: [{ parts: ["Si los pendientes son protagonistas, elige un collar discreto o prescinde de él. Si el collar concentra la atención, reduce tamaño, brillo o movimiento en los pendientes. La zona del cuello también ayuda a decidir: consulta ", { href: "/guias/collares-segun-escote", label: "qué collar elegir según el escote" }, "."] }] },
+      { title: "Vestido azul marino para boda", paragraphs: [{ parts: ["En una boda, añade el horario, el vestido y el nivel de formalidad a la decisión. Puedes ampliar criterios generales en ", { href: "/guias/pendientes-boda-invitada", label: "pendientes para invitada de boda" }, "."] }] },
+      { title: "Errores frecuentes", paragraphs: ["Añadir demasiados colores sin relación, sumar varios accesorios protagonistas, ignorar bolso y zapatos, elegir pendientes incómodos o no probar el look completo son errores habituales."] },
+      { title: "Cómo encontrar pendientes que encajen con tu vestido", paragraphs: [{ parts: ["Cuenta el tono azul marino, el escote, el peinado y los accesorios a ", { href: "/#joyero-ia", label: "el recomendador IA de Joyas.ai" }, " para ordenar tus opciones."] }] },
+    ],
+    related: [
+      { href: "/guias/pendientes-boda-invitada", label: "Pendientes para invitada de boda" },
+      { href: "/guias/pendientes-vestido-rojo-boda", label: "Pendientes para vestido rojo de boda" },
+      { href: "/guias/collares-segun-escote", label: "Qué collar elegir según el escote" },
+      { href: "/guias/tipos-de-perlas", label: "Tipos de perlas" },
+    ],
+    advisorCta: { title: "Encuentra los pendientes para tu vestido azul marino", description: "Indica el escote, el peinado, el tipo de evento y los accesorios para recibir una orientación útil." },
+  },
+  {
+    slug: "pendientes-vestido-rojo-boda",
+    categorySlug: "pendientes",
+    eyebrow: "Guías",
+    title: "Qué pendientes llevar con un vestido rojo de boda",
+    description: "Descubre qué pendientes para vestido rojo de boda pueden encajar según metal, accesorios, escote, peinado y momento del evento.",
+    intro: "Un vestido rojo ya tiene presencia, así que los pendientes deben aportar equilibrio y no competir por defecto. El metal, el peinado y el resto de accesorios pesan más que una combinación universal.",
+    sections: [
+      { title: "Qué pendientes combinan con un vestido rojo", paragraphs: ["Los dorados, plateados, negros, las piedras claras, los tonos próximos y los diseños minimalistas pueden funcionar según el conjunto. Parte del subtono del vestido, el acabado de bolso y zapatos, y el tipo de joya que llevas habitualmente."] },
+      { title: "Pendientes dorados o plateados con vestido rojo", paragraphs: ["El dorado puede aportar calidez y el plateado una lectura más fría o limpia, pero ambos dependen de los accesorios y del tono concreto del rojo. No hace falta coordinarlo todo de manera literal; busca coherencia entre los elementos principales."] },
+      { title: "Pendientes largos o pequeños", paragraphs: ["Con un escote despejado y un peinado recogido, un pendiente largo puede sostener el look. Si el vestido tiene volumen, textura o detalles cerca del rostro, unos pendientes pequeños pueden dar más descanso visual."] },
+      { title: "Cómo combinar pendientes con collar", paragraphs: ["Si los pendientes son protagonistas, prescindir de collar o elegir uno muy discreto suele ordenar el conjunto. Si el collar concentra la atención, reduce tamaño, brillo o movimiento en los pendientes."] },
+      { title: "Vestido rojo para boda de día o de noche", paragraphs: ["En una boda de día y en una de noche pueden funcionar distintas intensidades, pero la comodidad y el equilibrio con el vestido siguen siendo los criterios centrales. Prueba los accesorios con luz parecida a la del evento si es posible."] },
+      { title: "Errores frecuentes", paragraphs: ["Añadir demasiados elementos protagonistas, elegir el metal sin mirar los demás accesorios, usar pendientes pesados o decidir sin probar con el peinado y el escote reales."] },
+      { title: "Encuentra unos pendientes que combinen con tu vestido", paragraphs: [{ parts: ["Si ya tienes el vestido, explícale el rojo, el escote, el peinado y los accesorios a ", { href: "/#joyero-ia", label: "nuestro recomendador IA" }, " para comparar opciones que encajen con tu look."] }] },
+    ],
+    related: [
+      { href: "/guias/pendientes-boda-invitada", label: "Pendientes para invitada de boda" },
+      { href: "/guias/collares-invitada-boda", label: "Collares para invitada de boda" },
+      { href: "/guias/collares-segun-escote", label: "Collares según escote" },
+    ],
+    advisorCta: { title: "Encuentra pendientes para tu vestido rojo", description: "Indica el escote, el peinado y los accesorios para recibir una orientación más ajustada." },
+  },
+  {
+    slug: "collares-invitada-boda",
+    categorySlug: "collares",
+    eyebrow: "Guías",
+    title: "Collares para invitada de boda: cómo elegir según el vestido",
+    description: "Guía de collares para boda invitada según escote, longitud, pendientes, metal, horario y equilibrio del look.",
+    intro: "No todos los looks de invitada necesitan collar. Antes de añadir uno, mira el escote, los pendientes y el protagonismo del vestido: a veces dejar espacio es la decisión que mejor funciona.",
+    sections: [
+      { title: "¿Necesitas llevar collar a una boda?", paragraphs: ["No necesariamente. Un escote trabajado, un vestido con volumen cerca del cuello o unos pendientes protagonistas pueden hacer que un collar resulte innecesario. Elige uno cuando ayude a completar el conjunto, no solo por añadir una joya más."] },
+      { title: "Collar según el escote", paragraphs: ["Un escote en V suele dialogar con líneas verticales; palabra de honor deja margen para un collar corto o protagonista; un escote redondo puede admitir una longitud media. Con cuello alto, asimétrico, espalda protagonista o mucho detalle, conviene valorar si el collar suma o distrae."] },
+      { title: "Collar corto o largo", paragraphs: ["La longitud debe acompañar la zona del cuello sin cortar visualmente el vestido. Un collar corto puede concentrar luz cerca del rostro; uno largo funciona mejor cuando la silueta y el escote dejan espacio para ello."] },
+      { title: "Cómo combinar collar y pendientes", paragraphs: [{ parts: ["Evita que ambos compitan por protagonismo. Si eliges un collar visible, reduce los pendientes; si los pendientes sostienen el look, un collar discreto o ninguno puede ser suficiente. Para decidir los pendientes, consulta también ", { href: "/guias/pendientes-boda-invitada", label: "pendientes para boda de invitada" }, "."] }] },
+      { title: "Oro o plata según el look", paragraphs: ["Elige el metal según el vestido, los accesorios y lo que suelas llevar. No hay una equivalencia fija entre color de vestido y metal: el acabado, el subtono y el conjunto completo importan más."] },
+      { title: "Collares para boda de día o de noche", paragraphs: ["El horario puede orientar el nivel de brillo o presencia, pero no reemplaza la comodidad ni el equilibrio. Prueba el collar con el vestido y el movimiento real antes de decidir."] },
+      { title: "Errores frecuentes al elegir collar", paragraphs: ["Elegir una longitud que compite con el escote, sumar collar y pendientes protagonistas, ignorar el peso o el cierre, y no probarlo con el vestido antes del evento."] },
+      { title: "Cómo encontrar el collar adecuado para tu vestido", paragraphs: [{ parts: ["Cuéntale a ", { href: "/#joyero-ia", label: "nuestro recomendador IA" }, " el escote, el color del vestido, los pendientes y la ocasión para recibir una orientación personalizada."] }] },
+    ],
+    related: [
+      { href: "/guias/pendientes-boda-invitada", label: "Pendientes para invitada de boda" },
+      { href: "/guias/collares-segun-escote", label: "Collares según escote" },
+      { href: "/guias/tipos-de-collares", label: "Tipos de collares" },
+    ],
+    advisorCta: { title: "Encuentra el collar para tu look", description: "Describe el vestido, el escote, los pendientes y el horario de la boda para comparar opciones." },
+  },
+  {
     slug: "como-elegir-pendientes-novia",
     categorySlug: "pendientes",
     eyebrow: "Guías",
-    title: "Cómo elegir pendientes de novia según vestido, peinado y estilo",
+    title: "Pendientes de novia: cómo elegirlos según vestido, peinado y estilo",
     description:
-      "Descubre cómo elegir pendientes de novia según el vestido, el peinado, el escote, el estilo de la boda y las demás joyas.",
+      "Guía de pendientes de novia para elegir según vestido, peinado, escote, estilo de boda y comodidad.",
     intro:
       "Los pendientes de novia deben verse bonitos, pero también resultar cómodos y coherentes con el vestido, el peinado, el velo o tocado y el resto de joyas. La mejor elección no siempre es la más llamativa.",
     sections: [
@@ -3836,7 +4244,14 @@ export const guides: ArticleData[] = [
           { title: "Recogido", paragraphs: ["Deja los pendientes muy visibles y permite diseños largos, perlas o piezas con más presencia."] },
           { title: "Pelo suelto", paragraphs: ["Puede ocultar pendientes pequeños, así que conviene probar el conjunto con movimiento real."] },
           { title: "Semirrecogido", paragraphs: ["Admite diseños intermedios, con caída moderada o detalles luminosos."] },
+          { title: "Coleta", paragraphs: ["Deja el rostro y el cuello despejados; prueba el largo real del pendiente para que acompañe el conjunto sin competir con el vestido."] },
           { title: "Pelo corto", paragraphs: ["Hace que pendientes pequeños, vintage o geométricos tengan más protagonismo del esperado."] },
+        ],
+      },
+      {
+        title: "Pendientes de novia según el estilo de boda",
+        paragraphs: [
+          "En una boda clásica suelen encajar diseños atemporales; en una moderna o minimalista, líneas limpias y proporciones cuidadas. Una boda romántica o boho puede admitir textura, perlas o movimiento; en una boda civil o de noche, manda el equilibrio con el vestido, el lugar y la comodidad. Son puntos de partida, no reglas.",
         ],
       },
       {
@@ -3870,7 +4285,7 @@ export const guides: ArticleData[] = [
         ],
       },
       {
-        title: "Pendientes de plata, oro blanco, amarillo o rosa",
+        title: "Pendientes de novia dorados o plateados",
         paragraphs: [
           {
             parts: [
@@ -3883,6 +4298,12 @@ export const guides: ArticleData[] = [
               ".",
             ],
           },
+        ],
+      },
+      {
+        title: "Pendientes de novia con forma de lágrima",
+        paragraphs: [
+          "Su silueta puede aportar caída y movimiento, sobre todo con recogidos o escotes despejados. Revisa longitud y peso para que el diseño no compita con velo, tocado o vestido.",
         ],
       },
       {
@@ -3941,11 +4362,437 @@ export const guides: ArticleData[] = [
       { href: "/guias/tipos-de-pendientes", label: "Tipos de pendientes" },
       { href: "/guias/tipos-cierre-pendientes", label: "Tipos de cierre de pendientes" },
       { href: "/guias/tipos-de-perlas", label: "Tipos de perlas" },
+      { href: "/guias/pulseras-de-novia", label: "Pulseras de novia" },
     ],
     advisorCta: {
-      title: "¿Buscas unos pendientes para tu boda?",
+      title: "Encuentra tus pendientes de novia ideales",
       description:
         "Cuéntale a nuestro joyero IA el estilo del vestido, el peinado, el escote y tu presupuesto.",
+    },
+  },
+  {
+    slug: "en-que-mano-va-anillo-compromiso",
+    categorySlug: "anillos",
+    eyebrow: "Guías",
+    title: "¿En qué mano va el anillo de compromiso? Mano, dedo y tradición en España",
+    description: "Descubre en qué mano y dedo se lleva el anillo de compromiso, qué costumbres existen en España y cómo combinarlo con la alianza.",
+    intro: "No hay una única respuesta que sirva para todas las parejas. El anillo de compromiso suele llevarse en el dedo anular, pero la mano puede depender de la costumbre familiar, el país, la región y la decisión personal.",
+    sections: [
+      { title: "En qué mano se pone el anillo de compromiso", paragraphs: ["En España pueden verse anillos de compromiso tanto en la mano derecha como en la izquierda. Antes de seguir una tradición concreta, conviene hablarlo en pareja y tener en cuenta cómo se quiere llevar después de la boda.", "La mano elegida no cambia el significado del anillo. La comodidad, el trabajo diario y la convivencia con otras joyas también son razones prácticas para decidir."] },
+      { title: "En qué dedo va el anillo de compromiso", paragraphs: ["Lo habitual es usar el dedo anular, aunque no es obligatorio. Es el dedo asociado por tradición a anillos de pareja en muchos contextos, pero algunas personas eligen otro dedo, otra mano o reservan el anillo para ocasiones especiales."] },
+      { title: "Mano derecha o izquierda", paragraphs: ["Las costumbres cambian según país, región y familia. Por eso, la pregunta no tiene una respuesta universal: una pareja puede seguir la tradición que conoce, adaptarla o crear su propia forma de llevar el anillo."] },
+      { title: "En qué mano se lleva en España", paragraphs: ["En España conviven usos distintos y no existe una norma social obligatoria. Si hay una tradición familiar o regional que os importa, puede servir como punto de partida; si no la hay, elegir la mano que resulte más cómoda y coherente con la alianza futura es una decisión totalmente válida."] },
+      { title: "Qué pasa con el anillo de compromiso después de la boda", paragraphs: ["Algunas personas continúan llevándolo junto a la alianza, otras lo cambian de mano, lo colocan en otro dedo o lo reservan para momentos concretos. No hay una obligación de mantener el mismo orden o la misma mano que se eligió antes de casarse.", { parts: ["Si quieres entender el uso de la alianza tras la boda, consulta ", { href: "/guias/en-que-mano-anillo-casado", label: "en qué mano se pone el anillo de casado" }, "."] }] },
+      { title: "Diferencia entre anillo de compromiso y alianza", paragraphs: ["El anillo de compromiso suele marcar la intención de casarse o formalizar una relación; la alianza se vincula a la ceremonia de matrimonio. Pueden tener estilos, materiales y usos diferentes, y cada pareja decide si los lleva juntos o por separado."] },
+      { title: "Qué hacer si las tradiciones de la pareja son distintas", paragraphs: ["Hablad de qué significado queréis dar a cada anillo y de cómo os resulta cómodo llevarlo. Seguir una costumbre de una de las familias, combinar ambas o no seguir ninguna son opciones igual de legítimas."] },
+      { title: "Preguntas frecuentes", paragraphs: [], subsections: [
+        { title: "¿Va antes o después de la alianza?", paragraphs: ["No hay un orden obligatorio. Algunas personas llevan ambos juntos y otras los alternan según comodidad, diseño y tradición personal."] },
+        { title: "¿Se puede llevar en la mano derecha?", paragraphs: ["Sí. La mano derecha es una elección habitual para algunas parejas y no modifica el valor simbólico del anillo."] },
+        { title: "¿Es obligatorio usar el anular?", paragraphs: ["No. El anular es la opción tradicional más común, pero el anillo puede llevarse donde resulte cómodo y significativo para quien lo usa."] },
+      ] },
+    ],
+    related: [
+      { href: "/guias/anillo-de-promesa", label: "Anillo de promesa: significado y cómo se lleva" },
+      { href: "/guias/en-que-mano-anillo-casado", label: "En qué mano se pone el anillo de casado" },
+      { href: "/guias/como-saber-talla-anillo", label: "Cómo saber la talla de un anillo" },
+    ],
+    advisorCta: { title: "Descubre qué tipo de anillo encaja mejor contigo", description: "Cuéntale a nuestro joyero IA el estilo, el uso diario y el significado que buscáis para comparar opciones." },
+  },
+  {
+    slug: "anillo-de-promesa",
+    categorySlug: "anillos",
+    eyebrow: "Guías",
+    title: "Anillo de promesa: significado, cuándo regalarlo y en qué dedo se lleva",
+    description: "Guía sobre el significado del anillo de promesa, cuándo regalarlo, en qué dedo llevarlo y sus diferencias frente al anillo de compromiso.",
+    intro: "Un anillo de promesa puede expresar un vínculo, una intención de futuro o una promesa personal. Su significado no es universal: funciona mejor cuando ambas personas entienden qué representa para su relación.",
+    sections: [
+      { title: "Qué es un anillo de promesa", paragraphs: ["Es un anillo que una persona o una pareja utiliza para dar valor simbólico a un compromiso emocional, una etapa de la relación o una intención compartida. No exige que represente una boda futura ni tiene una forma o material obligatorio."] },
+      { title: "Qué significa un anillo de promesa", paragraphs: ["Puede representar afecto, exclusividad, un proyecto común, una intención de futuro o una promesa personal. El significado nace de la conversación entre quienes lo dan y reciben, no de una regla externa."] },
+      { title: "Cuándo se regala un anillo de promesa", paragraphs: ["Puede encajar en una relación estable, un aniversario, una etapa importante o un momento previo a un compromiso formal. Lo importante es que el gesto no cree expectativas distintas: conviene explicar qué queréis que simbolice."] },
+      { title: "En qué dedo va el anillo de promesa", paragraphs: ["No existe un dedo universal para el anillo de promesa. Muchas personas eligen el anular por su carga simbólica, mientras que otras prefieren otra mano o dedo para diferenciarlo de un anillo de compromiso o de una alianza."] },
+      { title: "En qué mano se lleva", paragraphs: ["La mano puede elegirse por costumbre, comodidad o decisión personal. Si el diseño se va a llevar a diario, también conviene pensar en talla, grosor, actividades habituales y combinación con otros anillos."] },
+      { title: "Diferencia entre anillo de promesa y anillo de compromiso", paragraphs: [{ parts: ["El anillo de promesa puede tener significados diversos y no presupone necesariamente una boda. El de compromiso suele comunicar la intención de casarse. Si buscáis información sobre su uso tradicional, consulta ", { href: "/guias/en-que-mano-va-anillo-compromiso", label: "en qué mano va el anillo de compromiso" }, "."] }] },
+      { title: "Cómo elegir un anillo de promesa", paragraphs: ["Prioriza un diseño que la persona pueda y quiera usar: estilo, material, comodidad, presupuesto y simbolismo cuentan más que el tamaño o la apariencia de compromiso. Si no conoces la talla, un diseño ajustable o una joya sin talla puede reducir el riesgo."] },
+      { title: "Anillos de promesa para pareja", paragraphs: ["Los anillos de promesa para pareja no tienen que ser idénticos. Podéis compartir un metal, un grabado, una fecha o una forma, y adaptar el diseño al gusto y la comodidad de cada persona.", "Pueden regalarse en un aniversario, una etapa importante o como gesto de compromiso emocional. Antes de elegir, acordad el significado: un diseño de pareja debe expresar una intención compartida sin generar expectativas distintas sobre un compromiso formal."] },
+      { title: "Qué evitar al regalar uno", paragraphs: ["Evita dar por supuesto el significado, elegir un diseño que pueda confundirse con un compromiso si no es la intención, asumir la talla o convertir el regalo en una presión. Una conversación clara suele hacer el gesto más valioso."] },
+    ],
+    related: [
+      { href: "/guias/en-que-mano-va-anillo-compromiso", label: "En qué mano va el anillo de compromiso" },
+      { href: "/guias/joyas-para-parejas", label: "Joyas para parejas" },
+      { href: "/guias/como-saber-talla-anillo", label: "Cómo saber la talla de un anillo" },
+    ],
+    advisorCta: { title: "Encuentra un anillo que represente vuestra relación", description: "Indica el estilo, el significado que buscáis y el uso diario para recibir ideas que encajen con ambos." },
+  },
+  {
+    slug: "en-que-mano-anillo-casado",
+    categorySlug: "anillos",
+    eyebrow: "Guías",
+    title: "¿En qué mano se pone el anillo de casado? Guía sobre la alianza",
+    description: "Descubre en qué mano y dedo se lleva la alianza de boda, las variaciones de tradición y cómo combinarla con el anillo de compromiso.",
+    intro: "La alianza o anillo de casado suele llevarse en el dedo anular, pero la mano puede variar por costumbre, país, región, familia y elección personal. No hay una única forma obligatoria de llevarla.",
+    sections: [
+      { title: "En qué mano se lleva el anillo de casado", paragraphs: ["La alianza puede llevarse en la mano derecha o izquierda según la tradición que siga cada pareja. También es normal elegir la mano que resulte más cómoda o que permita combinar mejor el anillo con otras joyas."] },
+      { title: "En qué dedo se lleva la alianza", paragraphs: ["El dedo anular es la ubicación tradicional más habitual para la alianza. No obstante, una talla, una profesión, una lesión o la preferencia personal pueden llevar a escoger otro dedo o a usarla solo en determinadas ocasiones."] },
+      { title: "Mano derecha o izquierda", paragraphs: ["Las dos manos se utilizan en diferentes costumbres. La tradición puede orientar, pero no obliga: el significado del matrimonio no depende de la mano elegida."] },
+      { title: "Cómo se lleva en España", paragraphs: ["En España no todas las parejas siguen el mismo uso. Hay tradiciones familiares y regionales distintas, por lo que conviene evitar tratar una opción como norma para todo el país. Elegir una mano por costumbre o comodidad es igual de válido."] },
+      { title: "Cómo combinar alianza y anillo de compromiso", paragraphs: [{ parts: ["Algunas personas los llevan juntos en el mismo anular; otras separan las piezas entre manos o alternan según el momento. El diseño, el grosor y la comodidad pueden influir. Para conocer las posibilidades del otro anillo, consulta ", { href: "/guias/en-que-mano-va-anillo-compromiso", label: "en qué mano va el anillo de compromiso" }, "."] }] },
+      { title: "Qué anillo va primero", paragraphs: ["No hay un orden obligatorio. La tradición, la costumbre familiar, el diseño de las piezas y la comodidad son criterios razonables para decidir si llevarlos juntos y en qué posición."] },
+      { title: "Anillo de casado en hombre y mujer", paragraphs: ["No hay una diferencia necesaria en la mano o el dedo según el género. Cada integrante de la pareja puede seguir una tradición compartida o elegir la opción que le resulte más cómoda y significativa."] },
+      { title: "Qué pasa si prefieres llevarlo en otra mano", paragraphs: ["Puedes hacerlo. Una alianza es un símbolo personal y de pareja; cambiarla de mano, llevarla en otro dedo o reservarla para ciertos momentos no invalida su significado."] },
+    ],
+    related: [
+      { href: "/guias/en-que-mano-va-anillo-compromiso", label: "En qué mano va el anillo de compromiso" },
+      { href: "/guias/anillo-de-promesa", label: "Anillo de promesa: significado y cómo se lleva" },
+      { href: "/guias/tipos-de-anillos", label: "Tipos de anillos" },
+    ],
+    advisorCta: { title: "Encuentra una alianza que encaje con vuestro día a día", description: "Cuéntale a nuestro joyero IA el estilo, el material, la comodidad y el uso que buscáis para comparar opciones." },
+  },
+  {
+    slug: "pulseras-con-coordenadas",
+    categorySlug: "pulseras",
+    eyebrow: "Guías",
+    title: "Pulseras con coordenadas: significado e ideas para regalar",
+    description: "Guía para elegir pulseras con coordenadas, decidir qué lugar grabar, revisar el formato y acertar con un regalo personalizado.",
+    intro: "Una pulsera con coordenadas funciona cuando el lugar grabado tiene un significado reconocible para quien la recibe. Antes de encargarla, conviene confirmar el punto exacto, el formato de latitud y longitud y el espacio disponible para el grabado.",
+    sections: [
+      { title: "Qué es una pulsera con coordenadas", paragraphs: ["Es una pulsera personalizada que graba las coordenadas de un lugar concreto. El valor del regalo está en la referencia compartida: el grabado no necesita explicarse a todo el mundo para tener sentido para quien lo lleva."] },
+      { title: "Qué coordenadas se pueden grabar", paragraphs: ["Puede ser el lugar donde os conocisteis, una primera cita, una boda, un nacimiento, un viaje importante, una ciudad especial o un hogar familiar. No hay una coordenada mejor: elige una que siga siendo relevante con el tiempo."] },
+      { title: "Pulseras con coordenadas para pareja", paragraphs: [{ parts: ["Pueden encajar en un aniversario, San Valentín, cumpleaños, regalo espontáneo o relación a distancia. Si buscáis un detalle compartido, compara también ideas de ", { href: "/guias/joyas-para-parejas", label: "joyas para parejas" }, "."] }] },
+      { title: "Pulseras con coordenadas para amigas o madre", paragraphs: ["Una ciudad compartida, un viaje, una casa familiar o un lugar vinculado a los hijos puede dar sentido al grabado. Para una madre, elige el lugar solo si sabes que esa referencia es significativa para ella, no por cumplir una fórmula."] },
+      { title: "Cómo obtener las coordenadas correctas", paragraphs: ["Comprueba el punto exacto antes de encargar el grabado y confirma el orden de latitud y longitud. Revisa signos, decimales, dirección y formato elegido; una vez personalizada, corregir una coordenada puede no ser sencillo."] },
+      { title: "Qué texto acompañar a las coordenadas", paragraphs: ["Una fecha, unas iniciales, un nombre o una palabra breve pueden complementar el lugar. Prioriza legibilidad: un grabado demasiado largo puede perder claridad o no caber en la pieza elegida."] },
+      { title: "Qué material elegir", paragraphs: ["Plata, acero, oro y distintos baños tienen aspecto, mantenimiento y precio diferentes. Revisa el material real, los cuidados y el acabado del modelo concreto en lugar de asumir una durabilidad universal."] },
+      { title: "Qué revisar antes de comprar una pulsera personalizada", paragraphs: ["Confirma cierre, longitud, material, formato del grabado, ortografía, coordenadas, plazo de personalización y condiciones de cambio o devolución. Una personalización correcta suele importar más que añadir demasiados elementos al diseño."] },
+      { title: "Cómo elegir una pulsera con coordenadas para regalar", paragraphs: [{ parts: ["Describe a quién va dirigida, el lugar que queréis recordar, su estilo y el material que suele llevar en ", { href: "/#joyero-ia", label: "el recomendador IA de Joyas.ai" }, " para ordenar opciones antes de comprar."] }] },
+    ],
+    related: [
+      { href: "/guias/joyas-para-parejas", label: "Joyas para parejas" },
+      { href: "/ocasiones/aniversario", label: "Joyas para aniversario" },
+      { href: "/guias/pulseras-para-regalar", label: "Pulseras para regalar" },
+    ],
+    advisorCta: { title: "Encuentra una pulsera personalizada para regalar", description: "Indica para quién es, el significado del lugar y el estilo que buscas para comparar ideas." },
+  },
+  {
+    slug: "pulseras-nombres-hijos",
+    categorySlug: "pulseras",
+    eyebrow: "Guías",
+    title: "Pulseras con nombres de hijos: ideas para regalar a mamá",
+    description: "Guía para elegir pulseras con nombres de hijos para mamá, revisar el grabado, materiales, longitud y detalles antes de encargar una joya personalizada.",
+    intro: "Una pulsera con nombres de hijos tiene sentido cuando la personalización encaja con el estilo y el uso diario de quien la recibe. Antes de encargarla, confirma nombres, acentos, orden y espacio disponible para evitar errores difíciles de corregir.",
+    sections: [
+      { title: "Qué son las pulseras con nombres de hijos", paragraphs: ["Son pulseras personalizadas con uno o varios nombres, iniciales, fechas o pequeños símbolos. Pueden ser un regalo para una madre, abuela o una persona que quiera llevar una referencia familiar sin que la joya resulte demasiado llamativa."] },
+      { title: "Pulsera con uno o varios nombres", paragraphs: ["Con un nombre puede funcionar un diseño muy limpio; con varios, conviene revisar cuántos caracteres y elementos admite cada formato. Si hay tres o más hijos, la legibilidad y el orden del grabado suelen ser más importantes que añadir adornos adicionales."] },
+      { title: "Nombres, iniciales o fechas", paragraphs: ["El nombre completo es directo; las iniciales ocupan menos espacio; una fecha puede ser más discreta. Combinar nombre y fecha funciona si el tamaño del grabado lo permite sin perder claridad."] },
+      { title: "Pulseras con nombres de hijos para mamá", paragraphs: [{ parts: ["Pueden encajar en cumpleaños, Día de la Madre, Navidad o tras un nacimiento, siempre que se adapten al estilo habitual de mamá. Esta guía se centra en la personalización con nombres; para una elección general, consulta ", { href: "/guias/pulseras-para-mama", label: "pulseras para mamá" }, "."] }] },
+      { title: "Pulseras para madres primerizas", paragraphs: [{ parts: ["Si el regalo se relaciona con un nacimiento reciente, considera también los criterios de ", { href: "/guias/joya-regalo-madre-primeriza", label: "una joya para regalar a una madre primeriza" }, "."] }] },
+      { title: "Pulseras con nombres de nietos para abuela", paragraphs: ["Puede ser una variante útil cuando la destinataria tiene una relación especial con los nietos. Mantén el diseño sencillo y comprueba que los nombres, el orden y el nivel de personalización sean los que ella apreciaría."] },
+      { title: "Qué material y longitud elegir", paragraphs: ["Plata, acero, oro y baños requieren cuidados diferentes. Revisa el material real y mide la muñeca o elige un cierre ajustable cuando sea posible; la comodidad depende de la longitud, el peso y el tipo de cierre."] },
+      { title: "Qué revisar antes de encargar una joya personalizada", paragraphs: ["Comprueba ortografía, acentos, orden de los nombres, límite de caracteres, símbolos, formato, política de cambios y plazo de personalización. Revisa el texto final antes de confirmar el pedido."] },
+      { title: "Qué presupuesto tiene sentido", paragraphs: ["No hay una cifra que garantice un mejor regalo. Compara material, construcción, tipo de grabado, cierre y condiciones de personalización para decidir qué opción tiene sentido para el uso y el presupuesto disponibles."] },
+      { title: "Cómo elegir una pulsera que realmente vaya a usar", paragraphs: [{ parts: ["Parte de su metal favorito, tamaño, estilo y frecuencia de uso. Puedes explicarle estas pistas a ", { href: "/#joyero-ia", label: "el recomendador IA de Joyas.ai" }, " para comparar una pulsera personalizada que encaje con ella."] }] },
+    ],
+    related: [
+      { href: "/guias/pulseras-para-mama", label: "Pulseras para mamá" },
+      { href: "/guias/joya-regalo-madre-primeriza", label: "Joya para regalar a una madre primeriza" },
+      { href: "/guias/pulseras-para-regalar", label: "Pulseras para regalar" },
+    ],
+    advisorCta: { title: "Encuentra una pulsera personalizada para mamá", description: "Indica los nombres, su estilo, el material que suele llevar y la ocasión para comparar ideas." },
+  },
+  {
+    slug: "pulseras-de-novia",
+    categorySlug: "pulseras",
+    eyebrow: "Guías",
+    title: "Pulseras de novia: cómo elegirlas según vestido y otras joyas",
+    description: "Guía para elegir una pulsera de novia según vestido, mangas, pendientes, collar, material, comodidad y equilibrio del look de boda.",
+    intro: "Una pulsera de novia no siempre es necesaria. Puede completar un look con muñecas despejadas o vestido minimalista, pero también puede competir con mangas trabajadas, guantes, encaje o demasiadas joyas protagonistas.",
+    sections: [
+      { title: "¿Debe llevar pulsera una novia?", paragraphs: ["No necesariamente. Una pulsera suma cuando deja espacio al vestido y al resto de joyas; puede ser mejor prescindir de ella si hay guantes, mangas con bordados, mucho detalle en las muñecas o varios accesorios que ya atraen la atención."] },
+      { title: "Cómo elegir una pulsera de novia", paragraphs: ["Mira vestido, mangas, escote, pendientes, collar, peinado, estilo de boda y comodidad. Revisa longitud, ajuste, peso y cierre: una pieza bonita debe permitir moverse con naturalidad durante todo el día."] },
+      { title: "Pulseras de novia según el vestido", paragraphs: ["Un vestido sin mangas puede dejar una pulsera más visible; con manga corta, conviene mirar dónde termina; con manga larga o encaje, la pulsera puede quedar oculta o competir con el tejido. Un vestido minimalista suele admitir más presencia que uno con pedrería o bordados."] },
+      { title: "Pulsera de novia con manga larga", paragraphs: ["Puede funcionar si el puño deja espacio y la pieza no se engancha ni queda oculta de forma incómoda. Con encaje, bordados o guantes, prueba el conjunto completo: a veces dejar la muñeca libre crea un resultado más limpio."] },
+      { title: "Pulseras sencillas o protagonistas", paragraphs: ["Las pulseras finas y minimalistas suelen acompañar sin dominar el look. Los diseños con piedras o más volumen pueden encajar si los pendientes y el collar se mantienen contenidos. Elige un único foco principal, no una obligación de llevar varias piezas visibles."] },
+      { title: "Cómo combinar pulsera y pendientes", paragraphs: [{ parts: ["Si los pendientes son protagonistas, una pulsera discreta suele equilibrar. Si los pendientes son pequeños, la pulsera puede tener algo más de presencia. Para decidir el conjunto, consulta ", { href: "/guias/como-elegir-pendientes-novia", label: "cómo elegir los pendientes de novia" }, "."] }] },
+      { title: "Cómo combinar pulsera y collar", paragraphs: ["No es necesario llevar pulsera, collar y pendientes a la vez. Si el collar tiene protagonismo, reduce la pulsera; si la zona del cuello queda libre, los pendientes o la pulsera pueden aportar el acabado sin competir con el vestido."] },
+      { title: "Oro, plata, perlas o piedras", paragraphs: ["Elige el material según otras joyas, detalles del vestido y preferencias personales, sin aplicar reglas rígidas. Las perlas pueden encajar en looks clásicos, románticos o minimalistas; las piedras claras o de color dependen del conjunto y del nivel de brillo que buscas."] },
+      { title: "Pulseras personalizadas para novia", paragraphs: ["Unas iniciales, una fecha, un símbolo o un grabado breve pueden tener sentido si la novia quiere llevar esa referencia. Confirma ortografía, formato, tamaño y condiciones de personalización antes de encargarla."] },
+      { title: "Errores frecuentes al elegir pulsera de novia", paragraphs: ["Comprar sin probar con el vestido, sumar demasiados accesorios protagonistas, ignorar mangas y guantes, elegir un cierre poco práctico o una pulsera incómoda son errores habituales. El estilo real y la comodidad pesan más que seguir una tendencia."] },
+      { title: "Cómo elegir una pulsera que encaje con tu look", paragraphs: [{ parts: ["Cuenta el vestido, las mangas, el escote, el peinado y las otras joyas a ", { href: "/#joyero-ia", label: "el recomendador IA de Joyas.ai" }, " para comparar opciones que respeten el equilibrio del look."] }] },
+    ],
+    related: [
+      { href: "/guias/como-elegir-pendientes-novia", label: "Cómo elegir los pendientes de novia" },
+      { href: "/guias/collares-segun-escote", label: "Qué collar elegir según el escote" },
+      { href: "/guias/pendientes-boda-invitada", label: "Pendientes para invitada de boda" },
+    ],
+    advisorCta: { title: "Encuentra la joya que mejor encaja con tu look de novia", description: "Indica el vestido, las mangas, el escote y el estilo de boda para recibir una orientación más ajustada." },
+  },
+  {
+    slug: "pendientes-hipoalergenicos",
+    categorySlug: "pendientes",
+    eyebrow: "Guías",
+    title: "Pendientes hipoalergénicos: cuáles elegir para orejas sensibles",
+    description: "Guía para elegir pendientes hipoalergénicos: materiales, postes, cierres y datos que conviene comprobar antes de comprar para orejas sensibles.",
+    intro: "Los pendientes hipoalergénicos suelen buscarse cuando la tolerancia del material es un criterio de compra. La etiqueta por sí sola no basta: revisa la composición del poste y el cierre, los posibles recubrimientos y la información concreta del fabricante.",
+    sections: [
+      {
+        title: "¿Qué significa que unos pendientes sean hipoalergénicos?",
+        paragraphs: [
+          "En joyería, hipoalergénico suele indicar que una pieza se ha planteado para reducir la probabilidad de sensibilidad frente a ciertos materiales. No significa que elimine por completo el riesgo de irritación o que vaya a resultar adecuada para todas las personas.",
+          "La composición real, las aleaciones, los baños y las piezas que tocan la piel importan más que una etiqueta comercial. Si ya conoces una sensibilidad concreta, prioriza una ficha de producto detallada sobre una descripción genérica como “antialérgico”.",
+        ],
+      },
+      {
+        title: "Qué materiales buscar en unos pendientes para orejas sensibles",
+        paragraphs: [
+          "Titanio, niobio, platino, determinadas aleaciones de oro, acero inoxidable de composición identificada y plata de ley se consideran opciones habituales al comparar pendientes para piel sensible. Su conveniencia depende de la aleación y del acabado concretos.",
+          "Para decidir entre dos pares, comprueba primero el material de postes y cierres. Después revisa si la pieza es maciza, tiene baño, qué metal hay debajo del recubrimiento y si el fabricante especifica la ausencia o presencia de níquel.",
+        ],
+        table: {
+          columns: ["Material", "Ventajas prácticas", "Qué comprobar", "Uso habitual"],
+          rows: [
+            ["Titanio", "Ligero, resistente y de buena tolerancia habitual", "Composición, poste, cierre y si es completo o recubierto", "Uso diario y piercing"],
+            ["Acero quirúrgico", "Resistente y asequible", "Aleación y posible níquel", "Pendientes de diario"],
+            ["Oro", "Acabado duradero en pieza maciza", "Quilataje, aleación y color", "Botones, aros y piezas de regalo"],
+            ["Platino", "Metal denso y resistente", "Pureza, peso y presupuesto", "Joyería de larga duración"],
+            ["Plata 925", "Aspecto clásico y accesible", "Aleación, baño y cuidados", "Uso ocasional o diario según la pieza"],
+          ],
+        },
+      },
+      {
+        title: "Pendientes de titanio para mujer: qué comprobar antes de elegirlos",
+        paragraphs: [
+          "Los pendientes de titanio para mujer suelen interesar a quien busca una pieza ligera y resistente para uso diario, especialmente cuando la tolerancia del material es importante. La búsqueda “pendientes titanio mujer” reúne modelos muy distintos: compara siempre la ficha concreta, no solo el aspecto o la etiqueta.",
+          "El titanio suele elegirse para pendientes para orejas sensibles por su bajo peso y resistencia. En artículos de piercing y joyería puede aparecer como titanio comercialmente puro o con referencias a grados y normas; si esa precisión importa para ti, pide la especificación al vendedor.",
+        ],
+        subsections: [
+          {
+            title: "Qué mirar antes de comprar pendientes de titanio",
+            paragraphs: [
+              "No basta con que la parte visible parezca de titanio. Una pieza puede estar recubierta, combinar distintos metales o tener un poste y cierre de otra composición. Los pendientes de titanio hipoalergénicos se valoran mejor cuando el fabricante identifica las partes que entran en contacto con la oreja.",
+            ],
+            bullets: [
+              "Material exacto de la pieza, el poste y la tuerca o cierre.",
+              "Titanio completo o recubrimiento sobre otro metal.",
+              "Presencia de otros metales y especificación del fabricante.",
+              "Peso, tamaño y tipo de cierre para el uso previsto.",
+              "Cuidados y política de devolución antes de comprar.",
+            ],
+          },
+          {
+            title: "¿Titanio o acero quirúrgico para orejas sensibles?",
+            paragraphs: [
+              "El titanio y el acero quirúrgico son opciones habituales, pero no son equivalentes por definición. “Acero quirúrgico” puede abarcar distintas aleaciones y algunas incluyen níquel; el titanio suele considerarse cuando se quiere priorizar la tolerancia del material, siempre revisando la composición concreta.",
+              "Ninguna de las dos opciones garantiza que no haya reacción. Si comparas dos pares, revisa poste, cierre, acabados y cualquier información sobre otros metales antes de decidir.",
+            ],
+          },
+          {
+            title: "¿Titanio o plata 925?",
+            paragraphs: [
+              "El titanio suele destacar por su bajo peso y resistencia; la plata 925 ofrece un acabado clásico, pero contiene otros metales además de plata y requiere revisar su aleación y posibles baños. Para pendientes de uso diario, compara también mantenimiento, peso y el material real de las partes que tocan la piel.",
+              {
+                parts: [
+                  "La guía sobre ",
+                  { href: "/guias/plata-925", label: "plata 925" },
+                  " explica su composición sin sustituir la información del fabricante del pendiente concreto.",
+                ],
+              },
+            ],
+          },
+          {
+            title: "Pendientes de titanio para uso diario",
+            paragraphs: [
+              "Para diario, busca un peso contenido, tamaño compatible con tu rutina y un cierre cómodo. Los botones y aros ligeros pueden ser prácticos, pero conviene valorar gafas, auriculares, descanso y facilidad de limpieza junto con el material.",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Pendientes de acero quirúrgico: ¿son buena opción?",
+        paragraphs: [
+          "“Acero quirúrgico” es un término amplio, no una composición única. Puede ser una opción práctica por resistencia y mantenimiento, pero algunas aleaciones incluyen níquel y las personas con sensibilidad no reaccionan todas igual.",
+          "Busca la aleación o una declaración clara del fabricante en vez de decidir solo por el nombre comercial. Si no se identifica el material de poste y cierre, hay menos información para comparar la pieza con criterio.",
+        ],
+      },
+      {
+        title: "Pendientes sin níquel",
+        paragraphs: [
+          "El níquel es relevante porque está presente en muchas joyas y accesorios y puede relacionarse con dermatitis de contacto en personas sensibilizadas. Una mención como “nickel free” o “sin níquel” puede ser útil, pero conviene comprobar a qué componentes se aplica y qué información ofrece la marca.",
+          "No confundas “sin níquel” con una garantía universal. La tolerancia individual, otros metales de la aleación y los recubrimientos siguen siendo factores a considerar.",
+        ],
+      },
+      {
+        title: "Pendientes de oro para orejas sensibles",
+        paragraphs: [
+          "El oro no es una única composición: 14k y 18k incluyen proporciones distintas de oro y otros metales. El color también depende de la aleación; el oro blanco puede llevar un baño de rodio y no debe evaluarse igual que el oro amarillo o rosa.",
+          {
+            parts: [
+              "Antes de comprar, revisa quilataje, aleación y si hay recubrimiento. Puedes ampliar la comparación en las guías sobre ",
+              { href: "/guias/oro-14k-18k-24k", label: "oro 14k, 18k y 24k" },
+              " y ",
+              { href: "/guias/oro-blanco", label: "oro blanco" },
+              ".",
+            ],
+          },
+        ],
+      },
+      {
+        title: "¿La plata 925 es hipoalergénica?",
+        paragraphs: [
+          "La plata 925 contiene un 92,5 % de plata y otros metales en el porcentaje restante. Por eso no es correcto asumir que toda pieza de plata de ley tendrá el mismo comportamiento para una persona sensible.",
+          {
+            parts: [
+              "Revisa la aleación, el baño y el estado del acabado, especialmente en poste y cierre. Consulta nuestra guía sobre ",
+              { href: "/guias/plata-925", label: "plata 925" },
+              " para entender su composición y marcados.",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Cuidado con pendientes bañados o chapados",
+        paragraphs: [
+          "Un baño o chapado puede cambiar el aspecto de la pieza, pero puede desgastarse con el uso. Cuando el recubrimiento se deteriora, el metal base puede quedar expuesto; para una persona sensible, ese dato puede ser relevante.",
+          "No todos los baños son problemáticos. Comprueba el metal base, el tipo de recubrimiento, las instrucciones de cuidado y si el fabricante informa de la composición del poste.",
+        ],
+      },
+      {
+        title: "Qué comprobar antes de comprar pendientes hipoalergénicos",
+        paragraphs: [
+          "Una ficha útil permite comparar la pieza más allá de la palabra “hipoalergénico”. Prioriza información concreta y condiciones de devolución claras, especialmente si compras para uso diario.",
+        ],
+        bullets: [
+          "Material exacto de la pieza, del poste y de la tuerca o cierre.",
+          "Composición de la aleación y presencia de níquel cuando se indique.",
+          "Tipo de recubrimiento, metal base y estado esperado del acabado.",
+          "Cierre, peso, tamaño y comodidad para el uso previsto.",
+          "Información del fabricante, cuidados y política de devolución.",
+        ],
+      },
+      {
+        title: "El poste y el cierre también importan",
+        paragraphs: [
+          "La parte decorativa puede tener una composición distinta de la que toca la oreja. Revisa el poste, la tuerca, el cierre de presión, la rosca o el gancho: son las piezas que mantienen contacto directo y pueden cambiar la experiencia de uso.",
+          {
+            parts: [
+              "Para comparar comodidad y seguridad entre formatos, consulta la guía de ",
+              { href: "/guias/tipos-cierre-pendientes", label: "tipos de cierre de pendientes" },
+              ".",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Pendientes hipoalergénicos para uso diario",
+        paragraphs: [
+          "Para llevar a diario suelen resultar prácticos los pendientes ligeros, de tamaño contenido y con un cierre cómodo. Además del material, valora que sean fáciles de limpiar, que el cierre no apriete y que resistan bien la rutina real de quien los llevará.",
+          "Los botones y los aros finos son formatos habituales, pero la elección depende del estilo, del descanso, de gafas o auriculares y de la preferencia personal. La mejor opción no es necesariamente la más llamativa ni la más cara.",
+        ],
+      },
+      {
+        title: "Cómo cuidar pendientes para orejas sensibles",
+        paragraphs: [
+          "Límpialos con suavidad siguiendo las indicaciones del fabricante, sécalos antes de guardarlos y evita productos abrasivos o químicos agresivos. Revisa de forma periódica el desgaste de baños, cierres y postes.",
+          {
+            parts: [
+              "Para el cuidado general de metales y acabados, consulta ",
+              { href: "/guias/como-cuidar-joyas", label: "cómo cuidar joyas" },
+              ".",
+            ],
+          },
+        ],
+      },
+      {
+        title: "Qué evitar si tienes orejas sensibles",
+        paragraphs: [
+          "Evita decidir solo por el color del metal o por una descripción sin composición. La bisutería con material desconocido, los recubrimientos muy deteriorados, las piezas con corrosión o suciedad y los productos agresivos dificultan una compra informada.",
+          "Si aparecen molestias persistentes, inflamación u otros síntomas al usar pendientes, esta guía no sustituye una valoración profesional. Suspende el uso de la pieza y consulta a un profesional sanitario para orientación individual.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/guias/como-elegir-pendientes", label: "Cómo elegir pendientes" },
+      { href: "/guias/tipos-de-pendientes", label: "Tipos de pendientes" },
+      { href: "/guias/plata-925", label: "Plata 925" },
+      { href: "/guias/oro-blanco", label: "Oro blanco" },
+    ],
+    advisorCta: {
+      title: "Encuentra unos pendientes que encajen contigo",
+      description: "Indica el material que buscas, tu estilo, el uso diario y tu presupuesto para comparar opciones con más criterio.",
+    },
+  },
+  {
+    slug: "pendientes-graduacion",
+    categorySlug: "pendientes",
+    eyebrow: "Guías",
+    title: "Pendientes para graduación: cómo elegirlos según tu vestido y estilo",
+    description: "Guía para elegir pendientes para graduación según vestido, escote, peinado, estilo, horario y comodidad.",
+    intro: "Para elegir pendientes para una graduación, empieza por el vestido, el escote y el peinado. Después ajusta el tamaño, el brillo y el metal al estilo del conjunto y al tiempo que vas a llevarlos. No hay un único modelo correcto: la mejor elección acompaña el look sin restarle protagonismo.",
+    sections: [
+      {
+        title: "Qué pendientes elegir para una graduación",
+        paragraphs: ["Como regla práctica, deja que una parte del look lleve el foco. Si el vestido tiene volumen, lentejuelas o un estampado marcado, unos pendientes más contenidos suelen equilibrar. Con un vestido liso o minimalista puedes darles algo más de presencia.", "Prueba los pendientes con el vestido y el peinado previstos, no de forma aislada. Así resulta más fácil valorar proporción, movimiento y comodidad antes del evento."],
+        bullets: ["Vestido sencillo: puedes optar por un pendiente largo, una piedra o un diseño con más presencia.", "Vestido elaborado o estampado: suele funcionar mejor un diseño pequeño, limpio o de brillo controlado.", "Escote protagonista: evita sumar demasiadas piezas en la zona del cuello.", "Evento largo: prioriza un peso y un cierre que puedas llevar con comodidad."],
+      },
+      {
+        title: "Pendientes para graduación según el vestido",
+        paragraphs: ["Un vestido recto y liso admite desde unos aros pulidos hasta pendientes largos si el resto del conjunto es sobrio. Con volantes, bordados, brillo o estampado, una pieza más simple evita que el resultado se vea recargado.", "También importa la silueta: un vestido largo y fluido suele admitir pendientes con caída, mientras que en un conjunto corto, un traje o un dos piezas pueden funcionar bien botones, aros medianos o diseños geométricos. Elige por equilibrio, no por una regla rígida."],
+      },
+      {
+        title: "Qué pendientes llevar según el escote",
+        paragraphs: [{ parts: ["El escote marca cuánto espacio queda alrededor del rostro y el cuello. Con palabra de honor, barco o cuadrado puedes valorar pendientes más visibles; con cuello alto o detalles cerca de la cara, suele ayudar reducir el volumen. Si también vas a llevar collar, consulta ", { href: "/guias/collares-segun-escote", label: "qué collar elegir según el escote" }, " para decidir el conjunto sin duplicar protagonismos."] }],
+      },
+      {
+        title: "Pendientes para graduación según el peinado",
+        paragraphs: ["El peinado cambia la visibilidad de los pendientes y la sensación de proporción. Tenlo en cuenta antes de elegir un tamaño o un acabado."],
+        subsections: [
+          { title: "Pelo recogido", paragraphs: ["Un recogido deja el rostro y el cuello más despejados, por lo que admite pendientes largos, con movimiento o con una piedra visible. Si el vestido ya tiene detalles fuertes, un diseño fino puede ser suficiente."] },
+          { title: "Pelo suelto", paragraphs: ["Con el pelo suelto, los pendientes pequeños, los aros medianos o los diseños con un poco de brillo suelen seguir viéndose sin engancharse tanto. Prueba el movimiento real del cabello antes de decidirte."] },
+          { title: "Semirrecogido", paragraphs: ["El semirrecogido permite enseñar parte de los pendientes sin dejar el conjunto completamente despejado. Los diseños de tamaño medio suelen aportar presencia manteniendo un acabado equilibrado."] },
+        ],
+      },
+      { title: "¿Cuándo elegir pendientes largos para una graduación?", paragraphs: ["Los pendientes largos encajan cuando quieres llevar el foco hacia el rostro y el cuello, especialmente con vestidos lisos, recogidos o escotes despejados. Revisa su peso y que no rocen hombros, cuello o el tejido al moverte."] },
+      { title: "¿Cuándo elegir pendientes pequeños o discretos?", paragraphs: ["Los botones, aros pequeños y piezas discretas son una buena opción si el vestido, el peinado o el maquillaje ya tienen mucha presencia. También resultan prácticos para quien no suele llevar pendientes grandes o busca olvidarse de ellos durante la celebración."] },
+      { title: "¿Pendientes dorados o plateados para una graduación?", paragraphs: ["No existe una combinación obligatoria. Los dorados pueden acompañar detalles cálidos o un look más clásico; los plateados, el acero y los acabados blancos suelen encajar con tonos fríos o un estilo más limpio. Mira los zapatos, el bolso y las demás joyas para mantener una intención coherente, sin necesidad de igualarlo todo al milímetro."] },
+      {
+        title: "Cómo combinar los pendientes con el color del vestido",
+        paragraphs: [{ parts: ["Con colores intensos, elige si quieres que el pendiente contraste o acompañe. Un acabado neutro puede dar descanso a un vestido llamativo; una piedra de color puede sumar carácter si el conjunto es sencillo. Puedes ver ideas específicas para un ", { href: "/guias/pendientes-vestido-rojo-boda", label: "vestido rojo" }, " o un ", { href: "/guias/pendientes-vestido-azul-marino", label: "vestido azul marino" }, "."] }],
+      },
+      { title: "Pendientes con collar o sin collar", paragraphs: ["No es necesario llevar collar y pendientes a la vez. Si eliges pendientes largos o brillantes, dejar el cuello libre suele crear un resultado más claro. Si el pendiente es pequeño, un collar delicado puede completar el look siempre que el escote y el vestido dejen espacio."] },
+      {
+        title: "Ideas de pendientes según tu estilo",
+        paragraphs: ["El estilo personal ayuda a acotar la elección y a no comprar un modelo que solo usarías una vez."],
+        subsections: [
+          { title: "Elegante o clásico", paragraphs: ["Perlas, piedras claras, botones pulidos y diseños de líneas limpias suelen ser opciones versátiles."] },
+          { title: "Minimalista", paragraphs: ["Aros finos, formas geométricas pequeñas y acabados lisos aportan presencia sin recargar el conjunto."] },
+          { title: "Romántico o moderno", paragraphs: ["Las formas orgánicas, flores sutiles o piezas asimétricas pueden funcionar si encajan con el vestido y no compiten con sus detalles."] },
+        ],
+      },
+      { title: "¿Cambian los pendientes si la graduación es de día o de noche?", paragraphs: ["En una graduación de día suelen resultar fáciles de llevar los acabados pulidos, las piedras de brillo moderado y los tamaños contenidos. Por la noche puedes aumentar algo el brillo o la caída, siempre que el vestido y el lugar acompañen. La formalidad del evento importa más que el reloj por sí solo."] },
+      { title: "No olvides la comodidad", paragraphs: ["Vas a sentarte, moverte, abrazar, hacer fotos y quizá llevar los pendientes muchas horas. Comprueba el peso, el cierre, el roce con el pelo y la sensibilidad de tus orejas. Un diseño cómodo suele ser una decisión más acertada que uno llamativo que quieras quitarte a mitad de la celebración."] },
+      { title: "Errores al elegir pendientes para una graduación", paragraphs: ["Elegirlos sin probarlos con el vestido, sumar collar, pendientes y otros accesorios protagonistas, ignorar el peinado o priorizar un tamaño incómodo son errores frecuentes. Antes de decidir, mira el conjunto en un espejo a cierta distancia: te ayudará a ver si hay un foco claro y si te reconoces en el resultado."] },
+      {
+        title: "Tabla rápida: pendientes según el look de graduación",
+        paragraphs: ["Úsala como punto de partida y ajusta la decisión al vestido, al peinado y a tu comodidad."],
+        table: {
+          columns: ["Situación", "Tipo de pendiente que suele funcionar"],
+          rows: [
+            ["Vestido liso y recogido", "Pendiente largo o con una piedra visible, si resulta cómodo"],
+            ["Vestido estampado o con mucho detalle", "Botón, aro fino o diseño pequeño de brillo controlado"],
+            ["Escote despejado sin collar", "Aro mediano, pendiente con caída o pieza algo más protagonista"],
+            ["Pelo suelto", "Aro mediano o pendiente visible que no se enganche con facilidad"],
+            ["Look minimalista", "Formas geométricas, acabados lisos o perlas pequeñas"],
+          ],
+        },
+      },
+    ],
+    related: [
+      { href: "/guias/collares-segun-escote", label: "Qué collar elegir según el escote" },
+      { href: "/guias/pendientes-vestido-rojo-boda", label: "Pendientes para vestido rojo" },
+      { href: "/guias/pendientes-vestido-azul-marino", label: "Pendientes para vestido azul marino" },
+      { href: "/guias/tipos-de-pendientes", label: "Tipos de pendientes" },
+    ],
+    advisorCta: {
+      title: "Encuentra los pendientes ideales para tu graduación",
+      description: "Describe tu vestido, escote, peinado, estilo y nivel de formalidad para comparar opciones que encajen con el evento.",
     },
   },
 ];
@@ -3958,10 +4805,16 @@ export const guideCategories: GuideCategory[] = [
     intro:
       "Información práctica sobre tallas, tipos de anillos, materiales y criterios para elegir correctamente.",
     href: "/guias/anillos",
-    seoTitle: "Guías sobre anillos: tallas, tipos y consejos | joyas.ai",
+    seoTitle: "Guías sobre anillos: tallas, tipos y consejos | Joyas.ai",
     seoDescription:
       "Guías sobre anillos: talla, materiales, estilos y consejos para elegir una pieza adecuada sin tecnicismos innecesarios.",
-    guideSlugs: ["como-saber-talla-anillo", "tipos-de-anillos"],
+    guideSlugs: [
+      "como-saber-talla-anillo",
+      "tipos-de-anillos",
+      "en-que-mano-va-anillo-compromiso",
+      "anillo-de-promesa",
+      "en-que-mano-anillo-casado",
+    ],
     futureGuides: [
       "Cómo elegir un anillo",
       "Tipos de anillos",
@@ -3978,10 +4831,10 @@ export const guideCategories: GuideCategory[] = [
     intro:
       "Guías para entender longitudes, escotes, estilos y materiales antes de elegir un collar o colgante.",
     href: "/guias/collares",
-    seoTitle: "Guías sobre collares y colgantes | joyas.ai",
+    seoTitle: "Guías sobre collares y colgantes | Joyas.ai",
     seoDescription:
       "Consejos para elegir collares y colgantes según longitud, escote, estilo, material y ocasión.",
-    guideSlugs: ["como-elegir-collar", "collares-segun-escote", "tipos-de-cadenas", "tipos-de-collares"],
+    guideSlugs: ["como-elegir-collar", "collares-segun-escote", "tipos-de-cadenas", "tipos-de-collares", "collares-invitada-boda"],
     futureGuides: [
       "Longitudes de collar",
       "Tipos de cadenas",
@@ -3995,14 +4848,20 @@ export const guideCategories: GuideCategory[] = [
     intro:
       "Información útil sobre tipos de pendientes, cierres, tamaños, peso, materiales y ocasiones de uso.",
     href: "/guias/pendientes",
-    seoTitle: "Guías sobre pendientes: tipos, cierres y consejos | joyas.ai",
+    seoTitle: "Guías sobre pendientes: tipos, cierres y consejos | Joyas.ai",
     seoDescription:
       "Guías para elegir pendientes según tamaño, cierre, estilo, material, rostro y ocasión.",
     guideSlugs: [
       "como-elegir-pendientes",
+      "pendientes-graduacion",
+      "pendientes-hipoalergenicos",
       "tipos-cierre-pendientes",
       "tipos-de-pendientes",
       "pendientes-boda-invitada",
+      "pendientes-madrina-boda",
+      "pendientes-madrina-mantilla",
+      "pendientes-vestido-rojo-boda",
+      "pendientes-vestido-azul-marino",
       "como-elegir-pendientes-novia",
     ],
     futureGuides: [
@@ -4020,10 +4879,10 @@ export const guideCategories: GuideCategory[] = [
     intro:
       "Descubre los principales tipos de pulseras, materiales, piedras y criterios para elegir una pieza cómoda y adecuada para cada estilo.",
     href: "/guias/pulseras",
-    seoTitle: "Guías sobre pulseras: tipos, materiales y consejos | joyas.ai",
+    seoTitle: "Guías sobre pulseras: tipos, materiales y consejos | Joyas.ai",
     seoDescription:
       "Guías sobre tipos de pulseras, tallas, materiales, piedras y consejos para elegir una pieza cómoda y adecuada para cada ocasión.",
-    guideSlugs: ["pulsera-tennis"],
+    guideSlugs: ["pulsera-tennis", "pulseras-con-coordenadas", "pulseras-nombres-hijos", "pulseras-de-novia"],
     futureGuides: [
       "Tipos de pulseras",
       "Cómo saber la talla de una pulsera",
@@ -4041,12 +4900,13 @@ export const guideCategories: GuideCategory[] = [
     intro:
       "Guías para comparar oro, plata, platino, purezas, marcados y acabados con criterio antes de comprar.",
     href: "/guias/metales",
-    seoTitle: "Guías sobre oro, plata y metales | joyas.ai",
+    seoTitle: "Guías sobre oro, plata y metales | Joyas.ai",
     seoDescription:
       "Guías sobre oro 14k, 18k y 24k, plata 925, platino, pureza, marcas y materiales de joyería.",
     guideSlugs: [
       "oro-14k-18k-24k",
       "como-saber-si-una-joya-es-de-oro",
+      "como-saber-si-es-plata",
       "plata-925",
       "platino",
       "oro-rosa",
@@ -4071,7 +4931,7 @@ export const guideCategories: GuideCategory[] = [
     intro:
       "Descubre guías sobre diamantes, moissanita, gemas de color y otras piedras utilizadas en joyería, con información sobre características, diferencias, dureza y cuidados.",
     href: "/guias/piedras",
-    seoTitle: "Guías sobre piedras preciosas y gemas | joyas.ai",
+    seoTitle: "Guías sobre piedras preciosas y gemas | Joyas.ai",
     seoDescription:
       "Guías sobre diamantes, moissanita, gemas de color y otras piedras utilizadas en joyería: características, diferencias y cuidados.",
     guideSlugs: ["piedras-preciosas", "moissanita-vs-diamante", "diamantes-rosados"],
@@ -4085,7 +4945,7 @@ export const guideCategories: GuideCategory[] = [
     intro:
       "Aprende a reconocer los principales tipos de perlas, entender qué factores influyen en su calidad y descubrir cómo distinguir una perla auténtica de una imitación.",
     href: "/guias/perlas",
-    seoTitle: "Guías sobre perlas: tipos, autenticidad y valor | joyas.ai",
+    seoTitle: "Guías sobre perlas: tipos, autenticidad y valor | Joyas.ai",
     seoDescription:
       "Guías para conocer los tipos de perlas, distinguir perlas auténticas de imitaciones y entender qué factores influyen en su calidad y valor.",
     guideSlugs: ["como-saber-si-una-perla-es-autentica", "tipos-de-perlas"],
@@ -4105,7 +4965,7 @@ export const guideCategories: GuideCategory[] = [
     intro:
       "Consejos para limpiar, guardar y mantener joyas sin dañar metales, piedras, baños o acabados delicados.",
     href: "/guias/cuidados",
-    seoTitle: "Guías para cuidar joyas: limpieza y conservación | joyas.ai",
+    seoTitle: "Guías para cuidar joyas: limpieza y conservación | Joyas.ai",
     seoDescription:
       "Guías de cuidado de joyas: limpieza, almacenamiento, conservación y mantenimiento de metales y piedras.",
     guideSlugs: ["como-cuidar-joyas", "como-limpiar-plata", "como-limpiar-oro"],
@@ -4125,10 +4985,10 @@ export const guideCategories: GuideCategory[] = [
     intro:
       "Ideas y criterios para elegir una joya de regalo según la relación, la ocasión, el presupuesto y el estilo personal.",
     href: "/guias/regalos",
-    seoTitle: "Guías para regalar joyas: ideas y consejos | joyas.ai",
+    seoTitle: "Guías para regalar joyas: ideas y consejos | Joyas.ai",
     seoDescription:
       "Consejos para regalar joyas según persona, ocasión, presupuesto, estilo y significado.",
-    guideSlugs: ["como-elegir-una-joya-para-regalar", "joyas-para-regalar-mujer"],
+    guideSlugs: ["como-elegir-una-joya-para-regalar", "joyas-para-regalar-mujer", "joyas-para-regalar-novia", "pulseras-de-la-amistad", "pulseras-para-mama", "joya-regalo-madre-primeriza", "joyas-para-parejas", "pulseras-para-regalar"],
     futureGuides: [
       "Joyas para aniversario",
       "Joyas para cumpleaños",

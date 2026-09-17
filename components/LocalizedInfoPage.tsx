@@ -18,7 +18,7 @@ export default function LocalizedInfoPage({
   href,
   languageLinks,
 }: LocalizedInfoPageProps) {
-  const homeHref = locale === "es" ? "/" : locale === "pt-BR" ? "/pt-br" : "/en";
+  const homeHref = locale === "es" ? "/es" : locale === "pt-BR" ? "/pt-br" : "/en";
   const homeLabel = locale === "pt-BR" ? "Início" : locale === "en" ? "Home" : "Inicio";
 
   return (

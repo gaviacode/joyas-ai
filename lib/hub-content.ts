@@ -112,15 +112,15 @@ export function getHubContent(kind: HubKind, locale: Locale): HubContent {
 export function getHubSeo(kind: HubKind, locale: Locale) {
   if (locale === "es") {
     return kind === "joyas"
-      ? { title: "Tipos de joyas: anillos, collares, pulseras y más | joyas.ai", description: "Explora tipos de joyas, desde anillos y collares hasta pulseras, pendientes y joyas para boda." }
-      : { title: "Joyas por ocasión: aniversario, boda, cumpleaños y más | joyas.ai", description: "Encuentra ideas y consejos para elegir joyas en aniversarios, compromisos, bodas, cumpleaños y otras ocasiones." };
+      ? { title: "Tipos de joyas: anillos, collares, pulseras y más | Joyas.ai", description: "Explora tipos de joyas, desde anillos y collares hasta pulseras, pendientes y joyas para boda." }
+      : { title: "Joyas por ocasión: aniversario, boda, cumpleaños y más | Joyas.ai", description: "Encuentra ideas y consejos para elegir joyas en aniversarios, compromisos, bodas, cumpleaños y otras ocasiones." };
   }
   if (locale === "pt-BR") {
     return kind === "joyas"
-      ? { title: "Tipos de joias: anéis, colares, pulseiras e mais | joyas.ai", description: "Explore tipos de joias, de anéis e colares a pulseiras, brincos e joias para casamento." }
-      : { title: "Joias por ocasião: aniversário, casamento e mais | joyas.ai", description: "Encontre ideias e dicas para escolher joias para aniversários, noivados, casamentos e outras ocasiões." };
+      ? { title: "Tipos de joias: anéis, colares, pulseiras e mais | Joyas.ai", description: "Explore tipos de joias, de anéis e colares a pulseiras, brincos e joias para casamento." }
+      : { title: "Joias por ocasião: aniversário, casamento e mais | Joyas.ai", description: "Encontre ideias e dicas para escolher joias para aniversários, noivados, casamentos e outras ocasiões." };
   }
   return kind === "joyas"
-    ? { title: "Jewelry types: rings, necklaces, bracelets and more | joyas.ai", description: "Explore jewelry types, from rings and necklaces to bracelets, earrings and wedding jewelry." }
-    : { title: "Jewelry by occasion: anniversary, wedding, birthday and more | joyas.ai", description: "Find ideas and advice for choosing jewelry for anniversaries, engagements, weddings and more occasions." };
+    ? { title: "Jewelry types: rings, necklaces, bracelets and more | Joyas.ai", description: "Explore jewelry types, from rings and necklaces to bracelets, earrings and wedding jewelry." }
+    : { title: "Jewelry by occasion: anniversary, wedding, birthday and more | Joyas.ai", description: "Find ideas and advice for choosing jewelry for anniversaries, engagements, weddings and more occasions." };
 }

@@ -27,7 +27,7 @@ export default function SiteHeader({
   const homeHref = localizeHref("/", locale);
   const labels = {
     mainNav: locale === "pt-BR" ? "Navegação principal" : locale === "en" ? "Main navigation" : "Navegación principal",
-    home: locale === "pt-BR" ? "Ir para o início de joyas.ai" : locale === "en" ? "Go to joyas.ai home" : "Ir al inicio de joyas.ai",
+    home: locale === "pt-BR" ? "Ir para o início de Joyas.ai" : locale === "en" ? "Go to Joyas.ai home" : "Ir al inicio de Joyas.ai",
   };
 
   return (

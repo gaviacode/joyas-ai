@@ -101,7 +101,7 @@ const guideCategoryLocalizations: Record<
       title: "Anéis",
       description: "Tamanhos, modelos, materiais e dicas para escolher o anel certo.",
       intro: "Guias práticos sobre medidas, tipos de anéis, materiais e critérios para comprar com mais segurança.",
-      seoTitle: "Guias sobre anéis: tamanhos, tipos e dicas | joyas.ai",
+      seoTitle: "Guias sobre anéis: tamanhos, tipos e dicas | Joyas.ai",
       seoDescription: "Guias sobre anéis: medidas, materiais, estilos e dicas para escolher uma peça adequada sem complicar.",
       futureGuides: ["Como escolher um anel", "Tipos de anéis", "Anéis de noivado", "Anéis por estilo", "Anéis para cada tipo de mão"],
     },
@@ -109,7 +109,7 @@ const guideCategoryLocalizations: Record<
       title: "Colares e pingentes",
       description: "Comprimentos, estilos, decotes, materiais e dicas para escolher colares.",
       intro: "Guias para entender comprimentos, decotes, estilos e materiais antes de escolher um colar ou pingente.",
-      seoTitle: "Guias sobre colares e pingentes | joyas.ai",
+      seoTitle: "Guias sobre colares e pingentes | Joyas.ai",
       seoDescription: "Dicas para escolher colares e pingentes conforme comprimento, decote, estilo, material e ocasião.",
       futureGuides: ["Comprimentos de colar", "Tipos de correntes", "Como combinar colares"],
     },
@@ -117,7 +117,7 @@ const guideCategoryLocalizations: Record<
       title: "Brincos",
       description: "Tipos, fechos, tamanhos, estilos e dicas para escolher brincos.",
       intro: "Informação útil sobre tipos de brincos, fechos, tamanhos, peso, materiais e ocasiões de uso.",
-      seoTitle: "Guias sobre brincos: tipos, fechos e dicas | joyas.ai",
+      seoTitle: "Guias sobre brincos: tipos, fechos e dicas | Joyas.ai",
       seoDescription: "Guias para escolher brincos por tamanho, fecho, estilo, material, formato do rosto e ocasião.",
       futureGuides: ["Tipos de brincos", "Tipos de fecho", "Brincos para cada formato de rosto", "Brincos por ocasião"],
     },
@@ -125,7 +125,7 @@ const guideCategoryLocalizations: Record<
       title: "Pulseiras",
       description: "Tipos de pulseiras, medidas, materiais, pedras e dicas para escolher uma peça confortável.",
       intro: "Conheça os principais tipos de pulseiras, materiais, pedras e critérios para escolher uma peça confortável e adequada ao seu estilo.",
-      seoTitle: "Guias sobre pulseiras: tipos, materiais e dicas | joyas.ai",
+      seoTitle: "Guias sobre pulseiras: tipos, materiais e dicas | Joyas.ai",
       seoDescription: "Guias sobre tipos de pulseiras, medidas, materiais, pedras e dicas para escolher uma peça confortável para cada ocasião.",
       futureGuides: ["Tipos de pulseiras", "Como medir o tamanho da pulseira", "Pulseiras de berloques", "Bracelete ou pulseira", "Pulseiras de ouro", "Pulseiras de prata"],
     },
@@ -133,7 +133,7 @@ const guideCategoryLocalizations: Record<
       title: "Ouro e metais",
       description: "Guias sobre ouro, prata, platina, pureza, ligas e materiais usados em joias.",
       intro: "Guias para comparar ouro, prata, platina, purezas, marcações e acabamentos com critério antes de comprar.",
-      seoTitle: "Guias sobre ouro, prata e metais | joyas.ai",
+      seoTitle: "Guias sobre ouro, prata e metais | Joyas.ai",
       seoDescription: "Guias sobre ouro 14k, 18k e 24k, prata 925, platina, pureza, marcações e materiais de joalheria.",
       futureGuides: ["Ouro branco vs ouro amarelo", "Ouro rosé", "Ouro 18k vs 14k", "Ouro maciço vs folheado", "O que significa 585", "O que significa 750"],
     },
@@ -141,7 +141,7 @@ const guideCategoryLocalizations: Record<
       title: "Pedras preciosas",
       description: "Diamantes, rubis, safiras, esmeraldas e outras pedras usadas em joias.",
       intro: "Guias sobre diamantes, moissanita, gemas coloridas e outras pedras usadas em joias, com características, diferenças, dureza e cuidados.",
-      seoTitle: "Guias sobre pedras preciosas e gemas | joyas.ai",
+      seoTitle: "Guias sobre pedras preciosas e gemas | Joyas.ai",
       seoDescription: "Guias sobre diamantes, moissanita, gemas coloridas e pedras usadas em joias: características, diferenças e cuidados.",
       futureGuides: ["Diamantes", "Rubi", "Safira", "Esmeralda", "Ametista", "Topázio", "Água-marinha", "Granada"],
     },
@@ -149,7 +149,7 @@ const guideCategoryLocalizations: Record<
       title: "Pérolas",
       description: "Tipos de pérolas, autenticidade, qualidade, valor e dicas para escolher joias com pérolas.",
       intro: "Aprenda a reconhecer tipos de pérolas, entender fatores de qualidade e diferenciar uma pérola verdadeira de uma imitação.",
-      seoTitle: "Guias sobre pérolas: tipos, autenticidade e valor | joyas.ai",
+      seoTitle: "Guias sobre pérolas: tipos, autenticidade e valor | Joyas.ai",
       seoDescription: "Guias para conhecer tipos de pérolas, diferenciar pérolas verdadeiras de imitações e entender qualidade e valor.",
       futureGuides: ["Pérolas naturais vs cultivadas", "Como cuidar de pérolas", "Pérolas do Taiti", "Pérolas Akoya", "Pérolas dos Mares do Sul", "Como escolher um colar de pérolas"],
     },
@@ -157,7 +157,7 @@ const guideCategoryLocalizations: Record<
       title: "Cuidados com joias",
       description: "Limpeza, conservação, armazenamento e manutenção de joias e materiais.",
       intro: "Dicas para limpar, guardar e manter joias sem danificar metais, pedras, banhos ou acabamentos delicados.",
-      seoTitle: "Guias para cuidar de joias: limpeza e conservação | joyas.ai",
+      seoTitle: "Guias para cuidar de joias: limpeza e conservação | Joyas.ai",
       seoDescription: "Guias de cuidado de joias: limpeza, armazenamento, conservação e manutenção de metais e pedras.",
       futureGuides: ["Como limpar ouro", "Como limpar prata", "Como limpar diamantes", "Como guardar joias", "Como evitar que a prata escureça"],
     },
@@ -165,7 +165,7 @@ const guideCategoryLocalizations: Record<
       title: "Joias para presentear",
       description: "Dicas para escolher uma joia conforme pessoa, ocasião, orçamento e significado.",
       intro: "Ideias e critérios para escolher uma joia de presente conforme relação, ocasião, orçamento e estilo pessoal.",
-      seoTitle: "Guias para presentear com joias: ideias e dicas | joyas.ai",
+      seoTitle: "Guias para presentear com joias: ideias e dicas | Joyas.ai",
       seoDescription: "Dicas para presentear com joias conforme pessoa, ocasião, orçamento, estilo e significado.",
       futureGuides: ["Joias para aniversário de relacionamento", "Joias para aniversário", "Joias para Dia dos Namorados", "Joias para mãe", "Joias para parceiro ou parceira", "Joias por orçamento"],
     },
@@ -175,7 +175,7 @@ const guideCategoryLocalizations: Record<
       title: "Rings",
       description: "Ring sizes, styles, materials, and practical buying advice.",
       intro: "Practical guides to ring sizing, ring types, materials, and the criteria that help you choose with confidence.",
-      seoTitle: "Ring Guides: Sizes, Styles and Buying Advice | joyas.ai",
+      seoTitle: "Ring Guides: Sizes, Styles and Buying Advice | Joyas.ai",
       seoDescription: "Ring guides covering sizing, materials, styles, and practical tips for choosing the right piece.",
       futureGuides: ["How to choose a ring", "Types of rings", "Engagement rings", "Rings by style", "Rings for different hand shapes"],
     },
@@ -183,7 +183,7 @@ const guideCategoryLocalizations: Record<
       title: "Necklaces and pendants",
       description: "Lengths, styles, necklines, materials, and tips for choosing necklaces.",
       intro: "Guides to necklace lengths, necklines, styles, and materials before choosing a necklace or pendant.",
-      seoTitle: "Necklace and Pendant Guides | joyas.ai",
+      seoTitle: "Necklace and Pendant Guides | Joyas.ai",
       seoDescription: "Advice for choosing necklaces and pendants by length, neckline, style, material, and occasion.",
       futureGuides: ["Necklace lengths", "Types of chains", "How to layer necklaces"],
     },
@@ -191,7 +191,7 @@ const guideCategoryLocalizations: Record<
       title: "Earrings",
       description: "Earring types, backs, sizes, styles, and practical tips for choosing earrings.",
       intro: "Useful information on earring types, backs, sizes, weight, materials, and occasions.",
-      seoTitle: "Earring Guides: Types, Backs and Buying Tips | joyas.ai",
+      seoTitle: "Earring Guides: Types, Backs and Buying Tips | Joyas.ai",
       seoDescription: "Guides for choosing earrings by size, backing, style, material, face shape, and occasion.",
       futureGuides: ["Types of earrings", "Types of earring backs", "Earrings by face shape", "Earrings by occasion"],
     },
@@ -199,7 +199,7 @@ const guideCategoryLocalizations: Record<
       title: "Bracelets",
       description: "Bracelet types, sizing, materials, gemstones, and tips for choosing a comfortable piece.",
       intro: "Learn about bracelet types, materials, gemstones, and the criteria that make a bracelet comfortable and easy to wear.",
-      seoTitle: "Bracelet Guides: Types, Materials and Buying Tips | joyas.ai",
+      seoTitle: "Bracelet Guides: Types, Materials and Buying Tips | Joyas.ai",
       seoDescription: "Bracelet guides covering types, sizing, materials, gemstones, and practical tips for choosing a comfortable piece.",
       futureGuides: ["Types of bracelets", "How to measure bracelet size", "Charm bracelets", "Bangle vs bracelet", "Gold bracelets", "Silver bracelets"],
     },
@@ -207,7 +207,7 @@ const guideCategoryLocalizations: Record<
       title: "Gold and metals",
       description: "Guides to gold, silver, platinum, purity, alloys, and jewelry materials.",
       intro: "Guides to compare gold, silver, platinum, purity marks, and finishes before buying.",
-      seoTitle: "Gold, Silver and Jewelry Metals Guides | joyas.ai",
+      seoTitle: "Gold, Silver and Jewelry Metals Guides | Joyas.ai",
       seoDescription: "Guides to 14k, 18k and 24k gold, 925 silver, platinum, purity marks, and jewelry materials.",
       futureGuides: ["White gold vs yellow gold", "Rose gold", "18k vs 14k gold", "Solid gold vs plated", "What 585 means", "What 750 means"],
     },
@@ -215,7 +215,7 @@ const guideCategoryLocalizations: Record<
       title: "Gemstones",
       description: "Diamonds, rubies, sapphires, emeralds, and other gemstones used in jewelry.",
       intro: "Guides to diamonds, moissanite, colored gems, and other jewelry stones, including characteristics, differences, hardness, and care.",
-      seoTitle: "Gemstone Guides: Diamonds, Gems and Jewelry Stones | joyas.ai",
+      seoTitle: "Gemstone Guides: Diamonds, Gems and Jewelry Stones | Joyas.ai",
       seoDescription: "Guides to diamonds, moissanite, colored gems, and jewelry stones: characteristics, differences, and care.",
       futureGuides: ["Diamonds", "Ruby", "Sapphire", "Emerald", "Amethyst", "Topaz", "Aquamarine", "Garnet"],
     },
@@ -223,7 +223,7 @@ const guideCategoryLocalizations: Record<
       title: "Pearls",
       description: "Pearl types, authenticity, quality, value, and advice for choosing pearl jewelry.",
       intro: "Learn to recognize pearl types, understand quality factors, and tell real pearls from imitations.",
-      seoTitle: "Pearl Guides: Types, Authenticity and Value | joyas.ai",
+      seoTitle: "Pearl Guides: Types, Authenticity and Value | Joyas.ai",
       seoDescription: "Guides to pearl types, real vs imitation pearls, and the factors that affect quality and value.",
       futureGuides: ["Natural vs cultured pearls", "How to care for pearls", "Tahitian pearls", "Akoya pearls", "South Sea pearls", "How to choose a pearl necklace"],
     },
@@ -231,7 +231,7 @@ const guideCategoryLocalizations: Record<
       title: "Jewelry care",
       description: "Cleaning, storage, preservation, and maintenance for jewelry and materials.",
       intro: "Tips for cleaning, storing, and maintaining jewelry without damaging metals, stones, plating, or delicate finishes.",
-      seoTitle: "Jewelry Care Guides: Cleaning and Storage | joyas.ai",
+      seoTitle: "Jewelry Care Guides: Cleaning and Storage | Joyas.ai",
       seoDescription: "Jewelry care guides covering cleaning, storage, preservation, and maintenance for metals and stones.",
       futureGuides: ["How to clean gold", "How to clean silver", "How to clean diamonds", "How to store jewelry", "How to prevent silver tarnish"],
     },
@@ -239,7 +239,7 @@ const guideCategoryLocalizations: Record<
       title: "Jewelry gifts",
       description: "Advice for choosing jewelry by person, occasion, budget, and meaning.",
       intro: "Ideas and criteria for choosing a jewelry gift based on relationship, occasion, budget, and personal style.",
-      seoTitle: "Jewelry Gift Guides: Ideas and Buying Advice | joyas.ai",
+      seoTitle: "Jewelry Gift Guides: Ideas and Buying Advice | Joyas.ai",
       seoDescription: "Advice for gifting jewelry by person, occasion, budget, style, and meaning.",
       futureGuides: ["Anniversary jewelry gifts", "Birthday jewelry gifts", "Valentine's Day jewelry", "Jewelry for mom", "Jewelry for a partner", "Jewelry by budget"],
     },
@@ -286,6 +286,8 @@ const articleSlugs: Record<ContentKind, Record<string, Record<Locale, string>>> 
     "collares-segun-escote": { es: "collares-segun-escote", "pt-BR": "colares-para-cada-decote", en: "necklace-for-neckline" },
     "tipos-de-cadenas": { es: "tipos-de-cadenas", "pt-BR": "tipos-de-correntes", en: "types-of-necklace-chains" },
     "como-elegir-pendientes": { es: "como-elegir-pendientes", "pt-BR": "como-escolher-brincos", en: "how-to-choose-earrings" },
+    "pendientes-hipoalergenicos": { es: "pendientes-hipoalergenicos", "pt-BR": "brincos-hipoalergenicos", en: "hypoallergenic-earrings" },
+    "pendientes-graduacion": { es: "pendientes-graduacion", "pt-BR": "brincos-formatura", en: "graduation-earrings" },
     "tipos-cierre-pendientes": { es: "tipos-cierre-pendientes", "pt-BR": "tipos-de-fecho-de-brinco", en: "types-of-earring-backs" },
     "tipos-de-pendientes": { es: "tipos-de-pendientes", "pt-BR": "tipos-de-brincos", en: "types-of-earrings" },
     "como-cuidar-joyas": { es: "como-cuidar-joyas", "pt-BR": "como-cuidar-de-joias", en: "how-to-care-for-jewelry" },
@@ -312,6 +314,8 @@ const articleSlugs: Record<ContentKind, Record<string, Record<Locale, string>>> 
 
 const articleTitleOverrides: Record<LocalizedLocale, Record<string, { title: string; description: string; intro?: string }>> = {
   "pt-BR": {
+    "guias:pendientes-hipoalergenicos": { title: "Brincos hipoalergênicos: como escolher para orelhas sensíveis", description: "Guia para escolher brincos hipoalergênicos: materiais, pinos, fechos e informações para verificar antes de comprar." },
+    "guias:pendientes-graduacion": { title: "Brincos para formatura: como escolher conforme vestido e estilo", description: "Guia para escolher brincos para formatura conforme vestido, decote, penteado, estilo e conforto." },
     "joyas:anillos": { title: "Como escolher anéis: estilos, materiais e ocasiões", description: "Guia para escolher anéis de uso diário, presente, noivado ou aliança considerando medida, material, estilo e ocasião." },
     "joyas:collares": { title: "Como escolher um colar pelo decote, estilo e ocasião", description: "Dicas para escolher colares e pingentes conforme comprimento, material, estilo pessoal e momento de uso." },
     "joyas:pulseras": { title: "Como escolher uma pulseira confortável e elegante", description: "Guia para escolher pulseiras finas, rígidas, de corrente ou personalizadas conforme uso, tamanho e estilo." },
@@ -357,6 +361,8 @@ const articleTitleOverrides: Record<LocalizedLocale, Record<string, { title: str
     "guias:como-elegir-pendientes-novia": { title: "Como escolher brincos de noiva: vestido, penteado e estilo", description: "Dicas para escolher brincos de noiva conforme vestido, penteado, decote, véu, conforto e estilo do casamento." },
   },
   en: {
+    "guias:pendientes-hipoalergenicos": { title: "Hypoallergenic earrings: how to choose for sensitive ears", description: "A guide to choosing hypoallergenic earrings: materials, posts, backs and details to check before buying." },
+    "guias:pendientes-graduacion": { title: "Graduation earrings: how to choose by dress and style", description: "A guide to choosing graduation earrings by dress, neckline, hairstyle, style and comfort." },
     "joyas:anillos": { title: "How to Choose a Ring: Styles, Metals and Occasions", description: "A practical guide to choosing everyday rings, gifts, engagement rings and wedding bands by size, metal, style and occasion." },
     "joyas:collares": { title: "How to Choose a Necklace for Neckline, Style and Occasion", description: "Tips for choosing necklaces and pendants by length, material, personal style and moment of use." },
     "joyas:pulseras": { title: "How to Choose a Comfortable, Elegant Bracelet", description: "Guide to choosing delicate, bangle, chain or personalized bracelets by fit, use and style." },
@@ -903,7 +909,10 @@ export function getMetadataAlternates(kind: ContentKind, esSlug: string, locale:
 
 export function getHomeMetadataAlternates(locale: Locale) {
   const languages = getHomeAlternates();
-  return buildMetadataAlternates(languages, locale);
+  return {
+    ...buildMetadataAlternates(languages, locale),
+    canonical: locale === "es" ? "/" : languages[locale],
+  };
 }
 
 export function getIndexMetadataAlternates(kind: ContentKind, locale: Locale) {
@@ -921,23 +930,23 @@ export function buildArticleMetadata(article: ArticleData, kind: ContentKind, lo
   const ogImage = getOpenGraphImagePath(locale);
 
   return {
-    title: `${article.title} | joyas.ai`,
+    title: `${article.title} | Joyas.ai`,
     description: article.description,
     alternates,
     openGraph: {
-      title: `${article.title} | joyas.ai`,
+      title: `${article.title} | Joyas.ai`,
       description: article.description,
       url: alternates.canonical,
-      siteName: "joyas.ai",
+      siteName: "Joyas.ai",
       locale: openGraphLocales[locale],
       alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),
       type: "article",
-      images: [{ url: ogImage, width: 1200, height: 630, alt: `${article.title} | joyas.ai` }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: `${article.title} | Joyas.ai` }],
       modifiedTime: EDITORIAL_REVIEW_DATE,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${article.title} | joyas.ai`,
+      title: `${article.title} | Joyas.ai`,
       description: article.description,
       images: [ogImage],
     },
@@ -1072,12 +1081,20 @@ export function localizeLink(link: LinkItem, locale: Locale): LinkItem {
 }
 
 export function localizeHref(href: string, locale: Locale) {
-  if (locale === "es" || href.startsWith("http")) {
+  if (href.startsWith("http")) {
     return href;
   }
 
+  if (href === "/") {
+    return getLocaleHomePath(locale);
+  }
+
   if (href === "/#joyero-ia") {
-    return `/${localePrefixes[locale]}#joyero-ia`;
+    return `${getLocaleHomePath(locale)}#joyero-ia`;
+  }
+
+  if (locale === "es") {
+    return href;
   }
 
   const [path, hash = ""] = href.split("#");

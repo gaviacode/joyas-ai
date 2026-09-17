@@ -7,11 +7,11 @@ const kind = "transparencia-afiliacion";
 const page = getInfoPage(kind, "es");
 
 export const metadata: Metadata = {
-  title: `${page.title} | joyas.ai`,
+  title: `${page.title} | Joyas.ai`,
   description: page.description,
   alternates: getInfoMetadataAlternates(kind, "es"),
-  openGraph: { title: `${page.title} | joyas.ai`, description: page.description, url: getLocalizedInfoPath(kind, "es"), siteName: "joyas.ai", locale: openGraphLocales.es, alternateLocale: [openGraphLocales["pt-BR"], openGraphLocales.en], type: "website" },
-  twitter: { card: "summary_large_image", title: `${page.title} | joyas.ai`, description: page.description },
+  openGraph: { title: `${page.title} | Joyas.ai`, description: page.description, url: getLocalizedInfoPath(kind, "es"), siteName: "Joyas.ai", locale: openGraphLocales.es, alternateLocale: [openGraphLocales["pt-BR"], openGraphLocales.en], type: "website" },
+  twitter: { card: "summary_large_image", title: `${page.title} | Joyas.ai`, description: page.description },
 };
 
 export default function AffiliateTransparencyPage() {

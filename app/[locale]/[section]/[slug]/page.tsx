@@ -87,7 +87,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           title: category.seoTitle,
           description: category.seoDescription,
           url: category.href,
-          siteName: "joyas.ai",
+          siteName: "Joyas.ai",
           locale: openGraphLocales[locale],
           alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),
           type: "website",

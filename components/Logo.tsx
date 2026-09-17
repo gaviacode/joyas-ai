@@ -11,7 +11,7 @@ type LogoProps = {
 export default function Logo({
   className = "",
   href = "/",
-  ariaLabel = "Ir al inicio de joyas.ai",
+  ariaLabel = "Ir al inicio de Joyas.ai",
 }: LogoProps) {
   return (
     <Link

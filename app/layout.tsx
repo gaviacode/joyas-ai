@@ -12,24 +12,24 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "joyas.ai | Recomendador de joyas con IA",
+  title: "Joyas.ai | Recomendador de joyas con IA",
   description:
-    "Asistente de inteligencia artificial para elegir joyas según ocasión, presupuesto, estilo y destinatario.",
+    "Joyas.ai te ayuda a elegir joyas según la persona, la ocasión, el estilo y el presupuesto con inteligencia artificial.",
   openGraph: {
-    title: "joyas.ai | Recomendador de joyas con IA",
+    title: "Joyas.ai | Recomendador de joyas con IA",
     description:
-      "Asistente de inteligencia artificial para elegir joyas según ocasión, presupuesto, estilo y destinatario.",
+      "Joyas.ai te ayuda a elegir joyas según la persona, la ocasión, el estilo y el presupuesto con inteligencia artificial.",
     url: "/",
-    siteName: "joyas.ai",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "joyas.ai - Tu joyero IA" }],
+    siteName: "Joyas.ai",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Joyas.ai - Tu joyero IA" }],
     locale: "es_ES",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "joyas.ai | Recomendador de joyas con IA",
+    title: "Joyas.ai | Recomendador de joyas con IA",
     description:
-      "Asistente de inteligencia artificial para elegir joyas según ocasión, presupuesto, estilo y destinatario.",
+      "Joyas.ai te ayuda a elegir joyas según la persona, la ocasión, el estilo y el presupuesto con inteligencia artificial.",
     images: ["/opengraph-image"],
   },
 };

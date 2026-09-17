@@ -10,7 +10,7 @@ import RingSizeTable from "@/components/ring-size/RingSizeTable";
 const pageUrl = "https://joyas.ai/joyas/anillos/como-saber-talla-anillo";
 
 export const metadata: Metadata = {
-  title: "Como saber tu talla de anillo: tabla y calculadora | joyas.ai",
+  title: "Como saber tu talla de anillo: tabla y calculadora | Joyas.ai",
   description:
     "Calcula tu talla de anillo midiendo el diametro de un anillo o la circunferencia de tu dedo. Consulta nuestra tabla de tallas y equivalencias.",
   alternates: {
@@ -274,13 +274,13 @@ export default function RingSizeSeoPage() {
 
         <section className="mt-8 rounded-3xl border border-[#ead8b3] bg-[#17120b] p-6 text-white shadow-xl shadow-[#805400]/10 sm:p-8">
           <h2 className="text-3xl font-semibold tracking-[-0.04em]">
-            Ya conoces la talla pero no sabes que anillo elegir?
+            ¿Ya conoces la talla, pero no sabes qué anillo elegir?
           </h2>
           <p className="mt-3 max-w-2xl leading-7 text-[#f4e8d2]">
-            Cuentale al joyero IA para quien es, la ocasion, su estilo y tu presupuesto.
+            Cuéntale al joyero IA para quién es, la ocasión, su estilo y tu presupuesto.
           </p>
           <Link
-            href="/#joyero-ia"
+            href="/es?advisorType=anillo&advisorTopic=Ya%20conoces%20la%20talla%20del%20anillo#joyero-ia"
             className="mt-6 inline-flex rounded-xl bg-white px-6 py-3 font-semibold text-[#17120b] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f0c971]"
           >
             Preguntar al joyero IA

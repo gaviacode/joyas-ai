@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: seo.title,
     description: seo.description,
     url: "/ocasiones",
-    siteName: "joyas.ai",
+    siteName: "Joyas.ai",
     locale: openGraphLocales.es,
     alternateLocale: [openGraphLocales["pt-BR"], openGraphLocales.en],
     type: "website",

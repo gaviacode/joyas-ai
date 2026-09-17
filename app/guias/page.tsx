@@ -6,23 +6,23 @@ import { getIndexLanguageLinks, getIndexMetadataAlternates, openGraphLocales } f
 import { guideCategories, getGuidesForCategory } from "@/lib/site-content";
 
 export const metadata: Metadata = {
-  title: "Guías de joyería | joyas.ai",
+  title: "Guías de joyería | Joyas.ai",
   description:
     "Información práctica para entender materiales, tallas, piedras, cuidados y criterios de elección de joyas sin tecnicismos innecesarios.",
   alternates: getIndexMetadataAlternates("guias", "es"),
   openGraph: {
-    title: "Guías de joyería | joyas.ai",
+    title: "Guías de joyería | Joyas.ai",
     description:
       "Información práctica para entender materiales, tallas, piedras, cuidados y criterios de elección de joyas sin tecnicismos innecesarios.",
     url: "/guias",
-    siteName: "joyas.ai",
+    siteName: "Joyas.ai",
     locale: openGraphLocales.es,
     alternateLocale: [openGraphLocales["pt-BR"], openGraphLocales.en],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Guías de joyería | joyas.ai",
+    title: "Guías de joyería | Joyas.ai",
     description:
       "Información práctica para entender materiales, tallas, piedras, cuidados y criterios de elección de joyas sin tecnicismos innecesarios.",
   },

@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (infoKind) {
     const page = getInfoPage(infoKind, locale);
-    const title = `${page.title} | joyas.ai`;
+    const title = `${page.title} | Joyas.ai`;
 
     return {
       title,
@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title,
         description: page.description,
         url: getLocalizedInfoPath(infoKind, locale),
-        siteName: "joyas.ai",
+        siteName: "Joyas.ai",
         locale: openGraphLocales[locale],
         alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),
         type: "website",
@@ -90,7 +90,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const label = getSectionLabel(kind, locale);
   const hubSeo = kind === "guias" ? undefined : getHubSeo(kind, locale);
-  const title = hubSeo?.title ?? `${label} | joyas.ai`;
+  const title = hubSeo?.title ?? `${label} | Joyas.ai`;
   const description = hubSeo?.description ?? getDescription(kind, locale);
 
   return {
@@ -101,7 +101,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
       url: getLocalizedIndexPath(kind, locale),
-      siteName: "joyas.ai",
+      siteName: "Joyas.ai",
       locale: openGraphLocales[locale],
       alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),
       type: "website",

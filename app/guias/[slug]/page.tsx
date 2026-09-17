@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: category.seoTitle,
         description: category.seoDescription,
         url: category.href,
-        siteName: "joyas.ai",
+        siteName: "Joyas.ai",
         locale: openGraphLocales.es,
         alternateLocale: locales.filter((item) => item !== "es").map((item) => openGraphLocales[item]),
         type: "website",
@@ -69,60 +69,66 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const seoTitle =
-      slug === "plata-925"
-        ? "Plata 925 o plata de ley: qué significa y cómo reconocerla | joyas.ai"
+      slug === "pendientes-graduacion"
+        ? "Pendientes para graduación: cómo elegir los adecuados | Joyas.ai"
+        : slug === "pendientes-hipoalergenicos"
+        ? "Pendientes hipoalergénicos: materiales y cómo elegirlos | Joyas.ai"
+        : slug === "plata-925"
+        ? "Plata 925 o plata de ley: qué significa y cómo reconocerla | Joyas.ai"
         : slug === "collares-segun-escote"
-          ? "Collares según escote: qué collar elegir para cada escote | joyas.ai"
+          ? "Collares según escote: qué collar elegir para cada escote | Joyas.ai"
         : slug === "tipos-cierre-pendientes"
-          ? "Tipos de cierre de pendientes: guía para elegir el más adecuado | joyas.ai"
+          ? "Tipos de cierre de pendientes: guía para elegir el más adecuado | Joyas.ai"
         : slug === "moissanita-vs-diamante"
-          ? "Moissanita vs diamante: diferencias, precio y cuál elegir | joyas.ai"
+          ? "Moissanita vs diamante: diferencias, precio y cuál elegir | Joyas.ai"
         : slug === "tipos-de-anillos"
-          ? "Tipos de anillos: nombres, estilos y significado | joyas.ai"
+          ? "Tipos de anillos: nombres, estilos y significado | Joyas.ai"
         : slug === "oro-rosa"
-          ? "Oro rosa: qué es, composición, quilates y diferencias | joyas.ai"
+          ? "Oro rosa: qué es, composición, quilates y diferencias | Joyas.ai"
         : slug === "diamantes-rosados"
-          ? "Diamantes rosados: qué son, por qué son raros y cuánto valen | joyas.ai"
+          ? "Diamantes rosados: qué son, por qué son raros y cuánto valen | Joyas.ai"
         : slug === "oro-laminado-chapado-bano"
-          ? "Oro laminado, chapado y baño de oro: diferencias | joyas.ai"
+          ? "Oro laminado, chapado y baño de oro: diferencias | Joyas.ai"
         : slug === "tipos-de-cadenas"
-          ? "Tipos de cadenas: nombres, estilos y cómo elegir | joyas.ai"
+          ? "Tipos de cadenas: nombres, estilos y cómo elegir | Joyas.ai"
         : slug === "tipos-de-pendientes"
-          ? "Tipos de pendientes: nombres, estilos y guía para elegir | joyas.ai"
+          ? "Tipos de pendientes: nombres, estilos y guía para elegir | Joyas.ai"
         : slug === "oro-blanco"
-          ? "Oro blanco: qué es, composición, 18k y diferencias | joyas.ai"
+          ? "Oro blanco: qué es, composición, 18k y diferencias | Joyas.ai"
         : slug === "como-saber-si-una-perla-es-autentica"
-          ? "Cómo saber si una perla es auténtica: real o falsa | joyas.ai"
+          ? "Cómo saber si una perla es auténtica: real o falsa | Joyas.ai"
         : slug === "tipos-de-perlas"
-          ? "Tipos de perlas: diferencias y qué determina su valor | joyas.ai"
+          ? "Tipos de perlas: diferencias y qué determina su valor | Joyas.ai"
         : slug === "oro-vermeil"
-          ? "Oro vermeil: qué es, duración y diferencias | joyas.ai"
+          ? "Oro vermeil: qué es, duración y diferencias | Joyas.ai"
         : slug === "tipos-de-collares"
-          ? "Tipos de collares: nombres, longitudes y estilos | joyas.ai"
+          ? "Tipos de collares: nombres, longitudes y estilos | Joyas.ai"
         : slug === "pulsera-tennis"
-          ? "Pulsera tennis: qué es, origen y cómo elegirla | joyas.ai"
+          ? "Pulsera tennis: qué es, origen y cómo elegirla | Joyas.ai"
         : slug === "como-limpiar-plata"
-          ? "Cómo limpiar plata en casa sin dañar tus joyas | joyas.ai"
+          ? "Cómo limpiar joyas de plata en casa sin dañarlas | Joyas.ai"
         : slug === "como-limpiar-oro"
-          ? "Cómo limpiar oro en casa sin dañar tus joyas | joyas.ai"
+          ? "Cómo limpiar oro en casa sin dañar tus joyas | Joyas.ai"
         : slug === "pendientes-boda-invitada"
-          ? "Pendientes para boda de invitada: cómo elegirlos | joyas.ai"
+          ? "Pendientes para invitada de boda: cómo elegirlos | Joyas.ai"
         : slug === "joyas-para-regalar-mujer"
-          ? "Joyas para regalar a una mujer: ideas y consejos | joyas.ai"
+          ? "Joyas para regalar a una mujer: ideas para acertar | Joyas.ai"
+        : slug === "joyas-para-regalar-novia"
+          ? "Joyas para regalar a mi novia: ideas para acertar | Joyas.ai"
         : slug === "como-elegir-pendientes-novia"
-          ? "Cómo elegir pendientes de novia: guía completa | joyas.ai"
+          ? "Pendientes de novia: cómo elegirlos para tu boda | Joyas.ai"
         : slug === "oro-14k-18k-24k"
-          ? "Oro 14k, 18k y 24k: diferencias y qué significan | joyas.ai"
+          ? "Oro 14k, 18k y 24k: diferencias y qué significan | Joyas.ai"
           : slug === "como-saber-si-una-joya-es-de-oro"
-            ? "Cómo saber si una joya es de oro: pruebas y marcas | joyas.ai"
-        : `${article.title} | joyas.ai`;
+            ? "Cómo saber si una joya es de oro: pruebas y marcas | Joyas.ai"
+        : `${article.title} | Joyas.ai`;
   const seoDescription =
       slug === "oro-14k-18k-24k"
         ? "Descubre qué significan 14k, 18k y 24k, cuánta proporción de oro contiene cada aleación y qué diferencias tienen en joyería."
         : article.description;
 
   return {
-    ...buildArticleMetadata({ ...article, title: seoTitle.replace(" | joyas.ai", ""), description: seoDescription }, "guias", "es"),
+    ...buildArticleMetadata({ ...article, title: seoTitle.replace(" | Joyas.ai", ""), description: seoDescription }, "guias", "es"),
   };
 }
 

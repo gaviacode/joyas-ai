@@ -11,7 +11,7 @@ const footerGroups = [
     links: [
       { href: "/#joyero-ia", label: "Recomendador" },
       { href: "/como-funciona", label: "Cómo funciona" },
-      { href: "/sobre-joyas-ai", label: "Sobre joyas.ai" },
+      { href: "/sobre-joyas-ai", label: "Sobre Joyas.ai" },
     ],
   },
   {

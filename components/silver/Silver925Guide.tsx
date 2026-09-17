@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Script from "next/script";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import type { LanguageLink } from "@/components/LanguageSwitcher";
 import SiteHeader from "@/components/SiteHeader";
@@ -98,7 +97,7 @@ const structuredData = {
 export default function Silver925Guide({ languageLinks }: { languageLinks?: LanguageLink[] }) {
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
-      <Script
+      <script
         id="silver-925-structured-data"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -297,7 +296,7 @@ export default function Silver925Guide({ languageLinks }: { languageLinks?: Lang
             Cuéntale al joyero IA qué tipo de joya buscas, para quién es, la ocasión y tu presupuesto.
           </p>
           <Link
-            href="/#joyero-ia"
+            href="/es?advisorTopic=Joyas%20de%20plata#joyero-ia"
             className="mt-6 inline-flex rounded-xl bg-white px-6 py-3 font-semibold text-[#17120b] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f0c971]"
           >
             Preguntar al joyero IA
@@ -312,6 +311,8 @@ export default function Silver925Guide({ languageLinks }: { languageLinks?: Lang
             {[
               { href: "/guias/oro-14k-18k-24k", label: "Oro 14k, 18k y 24k" },
               { href: "/guias/como-saber-si-una-joya-es-de-oro", label: "Cómo saber si una joya es de oro" },
+              { href: "/guias/como-saber-si-es-plata", label: "Cómo saber si una joya es de plata" },
+              { href: "/guias/como-limpiar-plata", label: "Cómo limpiar joyas de plata" },
               { href: "/guias/como-cuidar-joyas", label: "Cómo cuidar joyas sin dañarlas" },
               { href: "/guias/platino", label: "Platino en joyería" },
             ].map((link) => (

@@ -1,4 +1,4 @@
-import { ApiError, GoogleGenAI } from "@google/genai";
+import { ApiError, GoogleGenAI, Type } from "@google/genai";
 import { createHash, randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { createClient } from "redis";
@@ -10,6 +10,7 @@ import type {
   ConversationMessage,
   GuidedPreferences,
   GuidedJewelryType,
+  RefinementPreferences,
 } from "@/lib/advisor";
 import { ADVISOR_RECOMMENDATION_COUNT, guidedJewelryTypes } from "@/lib/advisor";
 
@@ -23,13 +24,14 @@ Reglas obligatorias:
 - Devuelve exclusivamente JSON válido con esta forma: {"summary":"...","recommendations":[...],"followUpMessage":"..."}.
 - Incluye exactamente 6 recomendaciones, ordenadas de mejor a peor encaje con las preferencias del usuario. Si faltan datos esenciales, mantén seis alternativas prudentes y explica la incertidumbre en summary.
 - Cada recomendación debe incluir: id, genericName, reason, searchQuery, recommendedMaterials, styles, suitableOccasions, estimatedPriceRange, jewelerTip y disclaimer.
-- searchQuery debe ser una consulta de compra limpia de 3 a 8 términos útiles, describiendo el tipo de joya y, cuando proceda, material, estilo o destinatario. No debe contener frases conversacionales, URLs, Amazon, Awin, marketplaces, marcas, ASIN ni identificadores de producto.
-- Las 6 recomendaciones deben ser materialmente distintas: no repitas el mismo tipo, diseño o enfoque con variaciones mínimas, y no repitas ni uses consultas searchQuery prácticamente idénticas. Si se han indicado varios tipos de joya, reparte las recomendaciones entre ellos cuando sea coherente con las preferencias.
+- Para cada idea, genera una \`searchQuery\` de 3–8 palabras que describa una joya concreta y comprable: tipo de joya + material o acabado + rasgo diferenciador.
+
+Las ideas deben ser claramente distintas entre sí. No uses frases promocionales, precios, URLs, ASIN, tiendas, marketplaces, marcas salvo petición expresa, ni afirmes disponibilidad, stock o reseñas. Si no se conoce la talla, prioriza joyas sin talla o ajustables.
 - Si el tipo solicitado es "conjuntos", genera búsquedas concretas de sets coordinados, como "conjunto collar y pendientes", "conjunto collar pulsera pendientes" o "set de joyería elegante", incorporando material, estilo, ocasión o destinatario cuando aporte precisión. Nunca uses consultas genéricas como "conjuntos" o "joyas conjunto".
 - Si el tipo solicitado es "charms / abalorios", genera búsquedas concretas como "charm pulsera plata", "abalorio plata mujer", "charm corazón" o "charm regalo mujer", incorporando material, estilo, ocasión o destinatario cuando aporte precisión.
-- No inventes marcas, tiendas, URLs, ASIN, enlaces de afiliado, stock, descuentos, valoraciones, reseñas, disponibilidad ni precios exactos.
+- No inventes productos concretos, URLs, ASIN, enlaces de afiliado, stock, descuentos, valoraciones, reseñas, disponibilidad ni precios exactos.
 - Usa rangos de precio orientativos, nunca importes exactos, y deja claro que dependen del material y proveedor.
-- No afirmes que una joya concreta existe en una tienda.
+- No afirmes que una joya concreta esté disponible.
 - Trata el género solo como una preferencia comercial indicada por el usuario; no impongas estereotipos.
 - Si se proporciona una edad aproximada, úsala solo como una pista flexible para adaptar el estilo, tamaño, delicadeza y tipo de joya; evita estereotipos o reglas rígidas basados únicamente en la edad.
 - Permite opciones unisex y alternativas si el usuario no está seguro.
@@ -39,6 +41,13 @@ Reglas obligatorias:
 `;
 
 const ALLOWED_GUIDED_JEWELRY_TYPES = new Set<string>(guidedJewelryTypes);
+const REFINEMENT_VALUES = {
+  improvementGoal: new Set(["original", "discreet", "elegant", "special", "cheaper"]),
+  prominence: new Set(["discreet", "balanced", "statement"]),
+  usage: new Set(["daily", "occasions", "both"]),
+  meaningful: new Set(["yes", "no", "neutral"]),
+  personalizable: new Set(["yes", "no", "neutral"]),
+} as const;
 
 const PIECE_DETAILS_BY_TYPE: Record<string, readonly string[]> = {
   anillo: ["fine", "medium_band", "wide", "open", "gemstone", "no_gemstone", "signet", "no_preference"],
@@ -58,9 +67,9 @@ const PIECE_DETAIL_LABELS: Record<AdvisorLocale, Record<string, string>> = {
   "pt-BR": { fine: "fino e discreto", medium_band: "aro médio", wide: "largo e marcante", open: "aberto", gemstone: "com pedra", no_gemstone: "sem pedra", signet: "tipo sinete", short: "curto, junto ao pescoço", medium_length: "comprimento médio", long: "longo", v_drop: "caída em V", fine_chain: "corrente fina", bold_chain: "corrente marcante", layers: "camadas", small: "pequeno e discreto", geometric: "geométrico", initial: "inicial ou letra", meaningful_symbol: "símbolo com significado", medallion: "medalhão", vertical_drop: "queda vertical", bangle: "rígida ou bracelete", adjustable: "ajustável", charms: "com charms", heart_charm: "charm de coração", gold_tone: "tom dourado", silver_tone: "tom prateado", necklace_earrings: "colar e brincos", necklace_bracelet: "colar e pulseira", three_piece_set: "colar, pulseira e brincos", minimal: "minimalista", stud: "botão ou pequenos", small_hoops: "argolas pequenas", large_hoops: "argolas grandes", drop: "longos ou pendentes", climbers: "ear climbers", classic: "clássicos", original: "originais", formal: "elegantes ou formais", personalizable: "personalizáveis", case_small: "caixa pequena", case_medium: "caixa média", case_large: "caixa grande", dress: "clássico ou social", sport: "esportivo", metal_bracelet: "pulseira metálica", leather_strap: "pulseira de couro", no_preference: "" },
 };
 
-const PRIMARY_GEMINI_MODEL = "gemini-2.5-flash-lite";
-const FALLBACK_GEMINI_MODEL = "gemini-3.5-flash-lite";
-const FALLBACK_GEMINI_STATUS_CODES = new Set([404, 429, 500, 502, 503, 504]);
+const GEMINI_MODEL = "gemini-3.5-flash-lite";
+const GEMINI_RETRYABLE_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
+const GEMINI_MAX_ATTEMPTS = 2;
 const GEMINI_TIMEOUT_MS = 18_000;
 const RATE_LIMIT_SHORT_WINDOW_SECONDS = 10 * 60;
 const RATE_LIMIT_DAILY_WINDOW_SECONDS = 24 * 60 * 60;
@@ -88,6 +97,36 @@ end
 
 return { 1, 0, 0 }
 `;
+
+const ADVISOR_RESPONSE_SCHEMA = {
+  type: Type.OBJECT,
+  required: ["summary", "recommendations", "followUpMessage"],
+  properties: {
+    summary: { type: Type.STRING },
+    followUpMessage: { type: Type.STRING },
+    recommendations: {
+      type: Type.ARRAY,
+      minItems: "6",
+      maxItems: "6",
+      items: {
+        type: Type.OBJECT,
+        required: ["id", "genericName", "reason", "searchQuery", "recommendedMaterials", "styles", "suitableOccasions", "estimatedPriceRange", "jewelerTip", "disclaimer"],
+        properties: {
+          id: { type: Type.STRING },
+          genericName: { type: Type.STRING },
+          reason: { type: Type.STRING },
+          searchQuery: { type: Type.STRING },
+          recommendedMaterials: { type: Type.ARRAY, items: { type: Type.STRING } },
+          styles: { type: Type.ARRAY, items: { type: Type.STRING } },
+          suitableOccasions: { type: Type.ARRAY, items: { type: Type.STRING } },
+          estimatedPriceRange: { type: Type.STRING },
+          jewelerTip: { type: Type.STRING },
+          disclaimer: { type: Type.STRING },
+        },
+      },
+    },
+  },
+} as const;
 
 let redisClient: ReturnType<typeof createClient> | undefined;
 let redisConnection: Promise<ReturnType<typeof createClient>> | undefined;
@@ -247,7 +286,7 @@ export async function POST(request: Request) {
     const statusCode = getGeminiStatusCode(error);
     console.error("Gemini advisor internal error", stringifyLogPayload({
       statusCode,
-      retryable: statusCode ? FALLBACK_GEMINI_STATUS_CODES.has(statusCode) : false,
+      retryable: statusCode ? GEMINI_RETRYABLE_STATUS_CODES.has(statusCode) : false,
       errorName: error instanceof Error ? error.name : typeof error,
       errorMessage: getSanitizedErrorMessage(error),
     }));
@@ -269,31 +308,24 @@ async function generateWithRetry({
   ai,
   contents,
 }: GeminiGenerationOptions) {
-  const modelAttempts = [
-    { model: PRIMARY_GEMINI_MODEL, fallback: false },
-    { model: FALLBACK_GEMINI_MODEL, fallback: true },
-  ];
-  let lastFallbackStatus: number | undefined;
+  let lastRetryableStatus: number | undefined;
 
-  for (const [index, modelAttempt] of modelAttempts.entries()) {
-    const attempt = index + 1;
+  for (let attempt = 1; attempt <= GEMINI_MAX_ATTEMPTS; attempt += 1) {
     try {
       return await generateWithModel({
         ai,
-        model: modelAttempt.model,
+        model: GEMINI_MODEL,
         contents,
         attempt,
-        fallback: modelAttempt.fallback,
       });
     } catch (error) {
       const statusCode = getGeminiStatusCode(error);
-      const fallbackAllowed = isFallbackGeminiError(statusCode);
+      const retryAllowed = isRetryableGeminiError(statusCode);
 
       logGeminiError({
-        model: modelAttempt.model,
+        model: GEMINI_MODEL,
         attempt,
         statusCode,
-        fallback: modelAttempt.fallback,
         error,
       });
 
@@ -301,19 +333,19 @@ async function generateWithRetry({
         throw error;
       }
 
-      if (!fallbackAllowed) {
+      if (!retryAllowed) {
         throw error;
       }
 
-      lastFallbackStatus = statusCode;
+      lastRetryableStatus = statusCode;
 
-      if (modelAttempt.fallback) {
+      if (attempt === GEMINI_MAX_ATTEMPTS) {
         throw new TemporaryGeminiUnavailableError(statusCode);
       }
     }
   }
 
-  throw new TemporaryGeminiUnavailableError(lastFallbackStatus);
+  throw new TemporaryGeminiUnavailableError(lastRetryableStatus);
 }
 
 async function generateWithModel({
@@ -321,13 +353,11 @@ async function generateWithModel({
   model,
   contents,
   attempt,
-  fallback,
 }: GeminiGenerationOptions & {
   model: string;
   attempt: number;
-  fallback: boolean;
 }) {
-  logGeminiAttempt({ model, attempt, fallback });
+  logGeminiAttempt({ model, attempt });
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), GEMINI_TIMEOUT_MS);
 
@@ -339,6 +369,7 @@ async function generateWithModel({
         systemInstruction: SYSTEM_PROMPT,
         maxOutputTokens: 3200,
         responseMimeType: "application/json",
+        responseSchema: ADVISOR_RESPONSE_SCHEMA,
         abortSignal: controller.signal,
       },
     });
@@ -583,23 +614,20 @@ function logGeminiApiKeyState(rawApiKey: string | undefined, apiKey: string | un
   }));
 }
 
-function isFallbackGeminiError(statusCode: number | undefined) {
-  return statusCode !== undefined && FALLBACK_GEMINI_STATUS_CODES.has(statusCode);
+function isRetryableGeminiError(statusCode: number | undefined) {
+  return statusCode !== undefined && GEMINI_RETRYABLE_STATUS_CODES.has(statusCode);
 }
 
 function logGeminiAttempt({
   model,
   attempt,
-  fallback,
 }: {
   model: string;
   attempt: number;
-  fallback: boolean;
 }) {
   console.info("Gemini advisor request", stringifyLogPayload({
     model,
     attempt,
-    fallback,
   }));
 }
 
@@ -620,20 +648,17 @@ function logGeminiError({
   model,
   attempt,
   statusCode,
-  fallback,
   error,
 }: {
   model: string;
   attempt: number;
   statusCode?: number;
-  fallback: boolean;
   error: unknown;
 }) {
   console.error("Gemini advisor error", stringifyLogPayload({
     model,
     attempt,
     statusCode,
-    fallback,
     errorName: error instanceof Error ? error.name : typeof error,
     errorMessage: getSanitizedErrorMessage(error),
   }));
@@ -707,6 +732,10 @@ function validateAdvisorRequest(body: unknown): ValidationResult {
     return { ok: false, error: "La conversación no tiene formato válido.", status: 400 };
   }
 
+  if (!isValidRefinementPreferences(candidate.refinementPreferences)) {
+    return { ok: false, error: "Las preferencias de afinado no son válidas.", status: 400 };
+  }
+
   return {
     ok: true,
     value: {
@@ -714,6 +743,7 @@ function validateAdvisorRequest(body: unknown): ValidationResult {
       locale: isAdvisorLocale(candidate.locale) ? candidate.locale : "es",
       directDescription: cleanOptionalString(candidate.directDescription),
       guidedPreferences: cleanGuidedPreferences(candidate.guidedPreferences),
+      refinementPreferences: cleanRefinementPreferences(candidate.refinementPreferences),
       conversation: candidate.conversation?.slice(-10),
     },
   };
@@ -810,6 +840,37 @@ function cleanOptionalString(value: unknown) {
   return typeof value === "string" ? value.trim() || undefined : undefined;
 }
 
+function isValidRefinementPreferences(value: unknown): value is RefinementPreferences | undefined {
+  if (value === undefined) return true;
+  if (!value || typeof value !== "object") return false;
+  const candidate = value as RefinementPreferences;
+  return (
+    isOptionalRefinementValue(candidate.improvementGoal, REFINEMENT_VALUES.improvementGoal) &&
+    isOptionalRefinementValue(candidate.prominence, REFINEMENT_VALUES.prominence) &&
+    isOptionalRefinementValue(candidate.usage, REFINEMENT_VALUES.usage) &&
+    isOptionalRefinementValue(candidate.meaningful, REFINEMENT_VALUES.meaningful) &&
+    isOptionalRefinementValue(candidate.personalizable, REFINEMENT_VALUES.personalizable) &&
+    (candidate.additionalAvoid === undefined || (typeof candidate.additionalAvoid === "string" && candidate.additionalAvoid.length <= 280))
+  );
+}
+
+function isOptionalRefinementValue(value: unknown, allowed: ReadonlySet<string>) {
+  return value === undefined || (typeof value === "string" && allowed.has(value));
+}
+
+function cleanRefinementPreferences(preferences?: RefinementPreferences): RefinementPreferences | undefined {
+  if (!preferences) return undefined;
+  const cleaned: RefinementPreferences = {
+    improvementGoal: preferences.improvementGoal,
+    prominence: preferences.prominence,
+    usage: preferences.usage,
+    meaningful: preferences.meaningful,
+    personalizable: preferences.personalizable,
+    additionalAvoid: cleanOptionalString(preferences.additionalAvoid)?.slice(0, 280),
+  };
+  return Object.values(cleaned).some(Boolean) ? cleaned : undefined;
+}
+
 function buildUserPrompt(request: AdvisorRequest) {
   const preferenceText =
     request.mode === "direct"
@@ -826,6 +887,9 @@ function buildUserPrompt(request: AdvisorRequest) {
         .map((message) => `${message.role === "user" ? "Usuario" : "Joyero IA"}: ${message.content}`)
         .join("\n")
     : "Sin conversación previa.";
+  const refinementText = request.refinementPreferences
+    ? `\nPREFERENCIAS ADICIONALES DE AFINADO\nEstas preferencias complementan las preferencias originales y no las sustituyen. Prioridad: 1) respeta todas las restricciones originales; 2) usa el afinado para mejorar la precisión; 3) si hay conflicto, prevalece lo original; 4) mantén variedad real entre las seis ideas.\nRefinement:\n${formatRefinementPreferences(request.refinementPreferences)}\nGenera seis recomendaciones nuevas. No cambies tipo de joya, presupuesto, acabado ni otra restricción original salvo que permita varias opciones. Si improvement=cheaper, prioriza la parte baja del presupuesto original sin cambiarlo. Si meaningful=yes, favorece conceptos con simbolismo, relación, recuerdos, fechas, iniciales o símbolos sin inventar significados. Si personalizable=yes, favorece ideas conceptualmente personalizables sin inventar productos concretos.`
+    : "";
 
   return `
 ${preferenceText}
@@ -834,6 +898,7 @@ Idioma de respuesta solicitado: ${getAdvisorLanguageName(request.locale ?? "es")
 
 Contexto de conversación para conservar preferencias y refinamientos:
 ${conversationText}
+${refinementText}
 
 Genera recomendaciones conceptuales personalizadas para joyas.ai. Devuelve solo JSON.
 `;
@@ -993,6 +1058,19 @@ function getRecommendationValidationIssues(value: unknown) {
 
 function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+function formatRefinementPreferences(preferences: RefinementPreferences) {
+  const entries = [
+    ["improvement", preferences.improvementGoal],
+    ["prominence", preferences.prominence],
+    ["usage", preferences.usage],
+    ["meaning", preferences.meaningful],
+    ["personalizable", preferences.personalizable],
+    ["avoid", preferences.additionalAvoid],
+  ].filter((entry): entry is [string, string] => Boolean(entry[1]));
+
+  return entries.map(([key, value]) => `${key}=${value}`).join("\n");
 }
 
 function normalizeRecommendationIdentity(value: unknown) {

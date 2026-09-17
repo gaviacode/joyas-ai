@@ -7,6 +7,8 @@ import { getStoredConsent } from "@/lib/cookie-consent";
 export type GAEventName =
   | "ai_recommender_open"
   | "ai_recommender_message"
+  | "refinement_open"
+  | "refinement_submit"
   | "guide_click"
   | "affiliate_click";
 

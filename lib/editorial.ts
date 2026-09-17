@@ -15,9 +15,9 @@ export const editorialDetails: Record<
   }
 > = {
   es: {
-    authorName: "Equipo editorial de joyas.ai",
+    authorName: "Equipo editorial de Joyas.ai",
     title: "Sobre este contenido",
-    reviewedBy: "Revisado por el equipo editorial de joyas.ai",
+    reviewedBy: "Revisado por el equipo editorial de Joyas.ai",
     reviewDateLabel: "Ultima revision: 17 de agosto de 2026",
     methodologyLabel: "Metodologia",
     methodology:
@@ -25,9 +25,9 @@ export const editorialDetails: Record<
     aboutPath: "/sobre-joyas-ai",
   },
   "pt-BR": {
-    authorName: "Equipe editorial da joyas.ai",
+    authorName: "Equipe editorial da Joyas.ai",
     title: "Sobre este conteúdo",
-    reviewedBy: "Revisado pela equipe editorial da joyas.ai",
+    reviewedBy: "Revisado pela equipe editorial da Joyas.ai",
     reviewDateLabel: "Ultima revisao: 17 de agosto de 2026",
     methodologyLabel: "Metodologia",
     methodology:
@@ -35,9 +35,9 @@ export const editorialDetails: Record<
     aboutPath: "/pt-br/sobre-joyas-ai",
   },
   en: {
-    authorName: "joyas.ai editorial team",
+    authorName: "Joyas.ai editorial team",
     title: "About this content",
-    reviewedBy: "Reviewed by the joyas.ai editorial team",
+    reviewedBy: "Reviewed by the Joyas.ai editorial team",
     reviewDateLabel: "Last reviewed: August 17, 2026",
     methodologyLabel: "Methodology",
     methodology:

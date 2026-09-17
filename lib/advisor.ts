@@ -17,6 +17,12 @@ export const guidedJewelryTypes = [
 
 export type GuidedJewelryType = (typeof guidedJewelryTypes)[number];
 
+export type AdvisorContext = {
+  jewelryType?: GuidedJewelryType;
+  occasion?: "aniversario" | "cumpleanos" | "compromiso" | "boda" | "san-valentin" | "navidad" | "regalo-sorpresa";
+  topic?: string;
+};
+
 export type ConversationMessage = {
   role: "user" | "assistant";
   content: string;
@@ -36,11 +42,21 @@ export type GuidedPreferences = {
   additionalDetails?: string;
 };
 
+export type RefinementPreferences = {
+  improvementGoal?: "original" | "discreet" | "elegant" | "special" | "cheaper";
+  prominence?: "discreet" | "balanced" | "statement";
+  usage?: "daily" | "occasions" | "both";
+  meaningful?: "yes" | "no" | "neutral";
+  personalizable?: "yes" | "no" | "neutral";
+  additionalAvoid?: string;
+};
+
 export type AdvisorRequest = {
   mode: AdvisorMode;
   locale?: AdvisorLocale;
   directDescription?: string;
   guidedPreferences?: GuidedPreferences;
+  refinementPreferences?: RefinementPreferences;
   conversation?: ConversationMessage[];
 };
 

@@ -21,7 +21,7 @@ export default function GuideCategoryPage({ category, guides, locale = "es", lan
       <section className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14 lg:px-10">
         <Breadcrumbs
           homeLabel={localizeText("Inicio", locale)}
-          homeHref={locale === "es" ? "/" : locale === "pt-BR" ? "/pt-br" : "/en"}
+          homeHref={locale === "es" ? "/es" : locale === "pt-BR" ? "/pt-br" : "/en"}
           items={[
             { href: guidesHref, label: localizeText("Guías", locale) },
             { href: category.href, label: category.title },
@@ -46,7 +46,7 @@ export default function GuideCategoryPage({ category, guides, locale = "es", lan
             {localizeText("Todas las categorías", locale)}
           </Link>
           <Link
-            href={locale === "es" ? "/#joyero-ia" : `/${locale === "pt-BR" ? "pt-br" : locale}#joyero-ia`}
+            href={locale === "es" ? "/es#joyero-ia" : `/${locale === "pt-BR" ? "pt-br" : locale}#joyero-ia`}
             className="rounded-full border border-[#17120b] bg-[#17120b] px-4 py-2 text-white transition hover:bg-[#3a2b16] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]"
           >
             {localizeText("Preguntar al joyero IA", locale)}

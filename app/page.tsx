@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import Script from "next/script";
 import SiteHeader from "@/components/SiteHeader";
 import AdvisorResetLink from "@/components/AdvisorResetLink";
 import JewelryChat from "@/components/JewelryChat";
@@ -10,26 +9,26 @@ import { getHomeMetadataAlternates, openGraphLocales } from "@/lib/i18n";
 import { absoluteUrl, PUBLIC_CONTACT_EMAIL, SITE_NAME } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "Encuentra la joya perfecta con IA | joyas.ai",
+  title: "Joyas.ai | Encuentra la joya perfecta con inteligencia artificial",
   description:
-    "Joyero IA para elegir collares, pulseras, pendientes o anillos según ocasión, presupuesto y estilo de la persona.",
+    "Joyas.ai te ayuda a encontrar la joya perfecta según persona, ocasión, estilo y presupuesto con inteligencia artificial.",
   alternates: getHomeMetadataAlternates("es"),
   openGraph: {
-    title: "Encuentra la joya perfecta con IA | joyas.ai",
+    title: "Joyas.ai | Encuentra la joya perfecta con inteligencia artificial",
     description:
-      "Joyero IA para elegir collares, pulseras, pendientes o anillos según ocasión, presupuesto y estilo de la persona.",
-    url: "/es",
-    siteName: "joyas.ai",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "joyas.ai - Tu joyero IA" }],
+      "Joyas.ai te ayuda a encontrar la joya perfecta según persona, ocasión, estilo y presupuesto con inteligencia artificial.",
+    url: "/",
+    siteName: "Joyas.ai",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Joyas.ai - Tu joyero IA" }],
     locale: openGraphLocales.es,
     alternateLocale: [openGraphLocales["pt-BR"], openGraphLocales.en],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Encuentra la joya perfecta con IA | joyas.ai",
+    title: "Joyas.ai | Encuentra la joya perfecta con inteligencia artificial",
     description:
-      "Joyero IA para elegir collares, pulseras, pendientes o anillos según ocasión, presupuesto y estilo de la persona.",
+      "Joyas.ai te ayuda a encontrar la joya perfecta según persona, ocasión, estilo y presupuesto con inteligencia artificial.",
     images: ["/opengraph-image"],
   },
 };
@@ -43,14 +42,14 @@ const categories = [
 ];
 
 const occasions = [
-  { href: "/ocasiónes/aniversario", label: "Aniversario" },
-  { href: "/ocasiónes/compromiso", label: "Compromiso" },
-  { href: "/ocasiónes/boda", label: "Boda" },
-  { href: "/ocasiónes/cumpleanos", label: "Cumpleaños" },
-  { href: "/ocasiónes/san-valentin", label: "San Valentín" },
-  { href: "/ocasiónes/dia-de-la-madre", label: "Día de la madre" },
-  { href: "/ocasiónes/Graduación", label: "Graduación" },
-  { href: "/ocasiónes/regalo-sorpresa", label: "Regalo sorpresa" },
+  { href: "/ocasiones/aniversario", label: "Aniversario" },
+  { href: "/ocasiones/compromiso", label: "Compromiso" },
+  { href: "/ocasiones/boda", label: "Boda" },
+  { href: "/ocasiones/cumpleanos", label: "Cumpleaños" },
+  { href: "/ocasiones/san-valentin", label: "San Valentín" },
+  { href: "/ocasiones/dia-de-la-madre", label: "Día de la madre" },
+  { href: "/ocasiones/graduacion", label: "Graduación" },
+  { href: "/ocasiones/regalo-sorpresa", label: "Regalo sorpresa" },
 ];
 
 const guideLinks = [
@@ -63,7 +62,7 @@ const guideLinks = [
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
-      <Script
+      <script
         id="home-website-organization-structured-data"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildHomeStructuredData()) }}
@@ -81,11 +80,9 @@ export default function Home() {
           <p className="mt-6 max-w-2xl text-lg leading-8 text-[#63584c]">
             Habla con un joyero experto con inteligencia artificial y descubre anillos, collares, pulseras o pendientes según la ocasión, tu presupuesto y el estilo de la persona.
           </p>
-          <div className="mt-9">
-            <AdvisorResetLink href="/#joyero-ia" className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#b97a05] to-[#d7a63c] px-7 py-4 font-semibold text-white shadow-lg shadow-[#b97a05]/20 transition hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-[220px]">
-              Probar el joyero IA
-            </AdvisorResetLink>
-          </div>
+          <AdvisorResetLink href="/es#joyero-ia" className="mt-9 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#b97a05] to-[#d7a63c] px-7 py-4 font-semibold text-white shadow-lg shadow-[#b97a05]/20 transition hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-[220px]">
+            Probar el joyero IA
+          </AdvisorResetLink>
         </div>
         <HeroJewelry />
       </section>
@@ -114,13 +111,13 @@ export default function Home() {
       <ExternalGiftIdeasCta
         title="¿Buscas algo más que una joya?"
         description="Descubre ideas de regalos personalizadas con IA para encontrar otras opciones según la persona, la ocasión y el presupuesto."
-        ctaLabel="Ver ideas de regalos en regalos.ai"
+        ctaLabel="Ver ideas de regalos en Regalar.ai"
       />
 
       <section className="bg-white/55 px-5 py-14 sm:px-8 lg:px-10">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">ocasiónes</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">Ocasiones</p>
             <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em]">Elige según el momento</h2>
           </div>
           <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -157,7 +154,7 @@ export default function Home() {
             Respuestas claras sobre el recomendador, afiliación, tallas, oro, plata y límites de una recomendación.
           </p>
           <div className="mt-6 grid gap-3">
-            {["joyas.ai vende joyas directamente?", "Cómo sabe la IA que joya recomendarme?", "Qué significa plata 925?"].map((question) => (
+            {["¿Joyas.ai vende joyas directamente?", "¿Cómo sabe la IA qué joya recomendarme?", "¿Qué significa plata 925?"].map((question) => (
               <Link key={question} href="/preguntas-frecuentes" className="rounded-2xl border border-[#ead8b3] bg-[#fffdf8] p-4 font-semibold text-[#2b241f] transition hover:bg-[#fff5df] hover:text-[#9a6b08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
                 {question}
               </Link>
@@ -177,7 +174,7 @@ function buildHomeStructuredData() {
         "@type": "WebSite",
         "@id": `${absoluteUrl("/")}#website`,
         name: SITE_NAME,
-        alternateName: "joyas.ai - Recomendador de joyas con IA",
+        alternateName: ["Joyas", "joyas.ai"],
         url: absoluteUrl("/"),
       },
       {
@@ -205,7 +202,7 @@ function CategoryCard({ href, title, text, image }: { href: string; title: strin
   return (
     <Link href={href} className="group overflow-hidden rounded-3xl border border-[#ead8b3] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-[#805400]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
       <div className="relative h-48 bg-[#f8ecd4]">
-        <Image src={image} alt={`Guia de ${title.toLowerCase()} en joyas.ai`} fill sizes="(max-width: 1024px) 100vw, 420px" className="object-cover transition duration-300 group-hover:scale-[1.03]" />
+        <Image src={image} alt={`Guía de ${title.toLowerCase()} en Joyas.ai`} fill sizes="(max-width: 1024px) 100vw, 420px" className="object-cover transition duration-300 group-hover:scale-[1.03]" />
       </div>
       <div className="p-6">
         <h3 className="text-2xl font-semibold tracking-[-0.03em]">{title}</h3>

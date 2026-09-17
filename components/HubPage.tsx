@@ -15,7 +15,7 @@ type HubPageProps = {
 export default function HubPage({ kind, locale = "es", languageLinks }: HubPageProps) {
   const content = getHubContent(kind, locale);
   const indexHref = getLocalizedIndexPath(kind, locale);
-  const homeHref = locale === "es" ? "/" : locale === "pt-BR" ? "/pt-br" : "/en";
+  const homeHref = locale === "es" ? "/es" : locale === "pt-BR" ? "/pt-br" : "/en";
 
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">

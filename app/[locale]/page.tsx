@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   if (locale === "es") {
-    const title = "Encuentra la joya perfecta con IA | joyas.ai";
+    const title = "Encuentra la joya perfecta con IA | Joyas.ai";
     const description = "Joyero IA para elegir collares, pulseras, pendientes o anillos según ocasión, presupuesto y estilo de la persona.";
 
     return {
@@ -40,8 +40,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title,
         description,
         url: getLocaleHomePath(locale),
-        siteName: "joyas.ai",
-        images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "joyas.ai - Tu joyero IA" }],
+        siteName: "Joyas.ai",
+        images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Joyas.ai - Tu joyero IA" }],
         locale: openGraphLocales[locale],
         alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),
         type: "website",
@@ -50,13 +50,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const title = locale === "pt-BR" ? "Encontre a joia perfeita com IA | joyas.ai" : "Find the Perfect Jewelry With AI | joyas.ai";
+  const title = locale === "pt-BR" ? "Encontre a joia perfeita com IA | Joyas.ai" : "Find the Perfect Jewelry With AI | Joyas.ai";
   const description =
     locale === "pt-BR"
         ? "Joalheiro IA para escolher anéis, colares, pulseiras ou brincos conforme ocasião, orçamento e estilo da pessoa."
         : "AI jewelry advisor for choosing rings, necklaces, bracelets or earrings by occasion, budget and personal style.";
   const ogImage = locale === "pt-BR" ? "/pt-br/opengraph-image" : "/en/opengraph-image";
-  const ogAlt = locale === "pt-BR" ? "joyas.ai - Seu joalheiro IA" : "joyas.ai - Your AI jeweler";
+  const ogAlt = locale === "pt-BR" ? "Joyas.ai - Seu joalheiro IA" : "Joyas.ai - Your AI jeweler";
 
   return {
     title,
@@ -66,7 +66,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
       url: getLocaleHomePath(locale),
-      siteName: "joyas.ai",
+      siteName: "Joyas.ai",
       images: [{ url: ogImage, width: 1200, height: 630, alt: ogAlt }],
       locale: openGraphLocales[locale],
       alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),

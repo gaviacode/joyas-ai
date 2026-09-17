@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Script from "next/script";
 import AiAdvisorCta from "@/components/AiAdvisorCta";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import type { LanguageLink } from "@/components/LanguageSwitcher";
@@ -7,7 +6,8 @@ import SiteHeader from "@/components/SiteHeader";
 import { EDITORIAL_REVIEW_DATE, editorialDetails, getOpenGraphImagePath } from "@/lib/editorial";
 import type { ArticleData, LinkItem, RichParagraph } from "@/lib/site-content";
 import { absoluteUrl, PUBLIC_CONTACT_EMAIL, SITE_NAME } from "@/lib/site-config";
-import { localizeText } from "@/lib/i18n";
+import { localizeHref, localizeText, type Locale } from "@/lib/i18n";
+import type { AdvisorContext } from "@/lib/advisor";
 
 type StructuredDataFaq = {
   question: string;
@@ -46,7 +46,7 @@ export default function ArticlePage({ article, parent, breadcrumbItems, language
 
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
-      <Script
+      <script
         id={jsonLd.id}
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd.data) }}
@@ -55,7 +55,7 @@ export default function ArticlePage({ article, parent, breadcrumbItems, language
       <article className="mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-14 lg:px-10">
         <Breadcrumbs
           homeLabel={localizeText("Inicio", locale)}
-          homeHref={locale === "es" ? "/" : locale === "pt-BR" ? "/pt-br" : "/en"}
+          homeHref={locale === "es" ? "/es" : locale === "pt-BR" ? "/pt-br" : "/en"}
           items={breadcrumbs}
         />
 
@@ -80,7 +80,7 @@ export default function ArticlePage({ article, parent, breadcrumbItems, language
               </h2>
               <div className="mt-4 space-y-4 text-base leading-8 text-[#625746]">
                 {section.paragraphs.map((paragraph) => (
-                  <ArticleParagraph key={getParagraphKey(paragraph)} paragraph={paragraph} />
+                  <ArticleParagraph key={getParagraphKey(paragraph)} paragraph={paragraph} locale={locale} />
                 ))}
               </div>
               {section.table ? (
@@ -151,7 +151,7 @@ export default function ArticlePage({ article, parent, breadcrumbItems, language
                       {subsection.paragraphs ? (
                         <div className="mt-3 space-y-4 leading-8 text-[#625746]">
                           {subsection.paragraphs.map((paragraph) => (
-                            <ArticleParagraph key={getParagraphKey(paragraph)} paragraph={paragraph} />
+                            <ArticleParagraph key={getParagraphKey(paragraph)} paragraph={paragraph} locale={locale} />
                           ))}
                         </div>
                       ) : null}
@@ -192,7 +192,12 @@ export default function ArticlePage({ article, parent, breadcrumbItems, language
         ) : null}
 
         <div className="mt-8">
-          <AiAdvisorCta title={article.advisorCta?.title} description={article.advisorCta?.description} locale={locale} />
+          <AiAdvisorCta
+            title={article.advisorCta?.title}
+            description={article.advisorCta?.description}
+            locale={locale}
+            context={getArticleAdvisorContext(article, parent.href)}
+          />
         </div>
 
         {structuredData?.faqs?.length ? (
@@ -293,7 +298,7 @@ function buildStructuredData(data: ArticleStructuredData, article: ArticleData) 
   };
 }
 
-function ArticleParagraph({ paragraph }: { paragraph: string | RichParagraph }) {
+function ArticleParagraph({ paragraph, locale }: { paragraph: string | RichParagraph; locale: Locale }) {
   if (typeof paragraph === "string") {
     return <p>{paragraph}</p>;
   }
@@ -306,7 +311,7 @@ function ArticleParagraph({ paragraph }: { paragraph: string | RichParagraph }) 
         ) : (
           <Link
             key={`${part.href}-${index}`}
-            href={part.href}
+            href={localizeHref(part.href, locale)}
             className="font-semibold text-[#8a5d07] underline decoration-[#d7a63c]/50 underline-offset-4 transition hover:text-[#17120b]"
           >
             {part.label}
@@ -319,4 +324,36 @@ function ArticleParagraph({ paragraph }: { paragraph: string | RichParagraph }) 
 
 function getParagraphKey(paragraph: string | RichParagraph) {
   return typeof paragraph === "string" ? paragraph : paragraph.parts.map((part) => (typeof part === "string" ? part : part.href)).join("|");
+}
+
+function getArticleAdvisorContext(article: ArticleData, parentHref: string): AdvisorContext | undefined {
+  const originalSlug = article.originalSlug ?? article.slug;
+  const source = `${article.categorySlug ?? ""} ${originalSlug}`;
+  const jewelryType = source.includes("pendientes")
+    ? "pendientes"
+    : source.includes("anillos") || source.includes("anillo")
+      ? "anillo"
+      : source.includes("collares") || source.includes("collar")
+        ? "collar"
+        : source.includes("pulseras") || source.includes("pulsera")
+          ? "pulsera"
+          : undefined;
+  const occasion = /ocas|occasion/.test(parentHref)
+    ? getOccasionContext(originalSlug)
+    : /pendientes-novia|boda|madrina|invitada/.test(originalSlug)
+      ? "boda"
+      : undefined;
+  const topic = /guias|guides/.test(parentHref) ? article.title : undefined;
+
+  return jewelryType || occasion || topic ? { jewelryType, occasion, topic } : undefined;
+}
+
+function getOccasionContext(slug: string): AdvisorContext["occasion"] | undefined {
+  if (slug === "aniversario") return "aniversario";
+  if (slug === "cumpleanos") return "cumpleanos";
+  if (slug === "compromiso") return "compromiso";
+  if (slug === "boda") return "boda";
+  if (slug === "san-valentin") return "san-valentin";
+  if (slug === "regalo-sorpresa") return "regalo-sorpresa";
+  return undefined;
 }
