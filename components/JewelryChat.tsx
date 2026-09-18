@@ -222,6 +222,7 @@ const chatCopy = {
     additionalAvoid: "¿Quieres evitar algo más?",
     additionalAvoidPlaceholder: "Por ejemplo: nada demasiado grande, sin corazones, no quiero algo muy clásico...",
     optionalRefinement: "Opcional",
+    skip: "Saltar",
     noRefinementSelected: "Selecciona alguna opción para afinar tus recomendaciones.",
     moreOriginal: "Más original", moreDiscreet: "Más discreto", moreElegant: "Más elegante", moreSpecial: "Más especial", moreAffordable: "Más económico",
     discreet: "Discreto", balanced: "Equilibrado", statement: "Llamativo",
@@ -335,6 +336,7 @@ const chatCopy = {
     improvementGoal: "O que você gostaria de melhorar?", prominence: "Nível de destaque", usage: "Uso principal",
     meaningful: "Você busca algo com significado?", personalizable: "Deve poder ser personalizada?",
     additionalAvoid: "Algo que você prefere evitar", additionalAvoidPlaceholder: "Ex.: designs muito chamativos ou pedras grandes", optionalRefinement: "Opcional",
+    skip: "Pular",
     noRefinementSelected: "Selecione ao menos uma opção para refinar as recomendações.",
     moreOriginal: "Mais original", moreDiscreet: "Mais discreto", moreElegant: "Mais elegante", moreSpecial: "Mais especial", moreAffordable: "Mais econômico",
     discreet: "Discreto", balanced: "Equilibrado", statement: "Marcante", daily: "Diário", occasionsUse: "Ocasiões especiais", both: "Ambos", yes: "Sim", no: "Não", neutral: "Tanto faz",
@@ -446,6 +448,7 @@ const chatCopy = {
     improvementGoal: "What would you like to improve?", prominence: "Level of presence", usage: "Primary use",
     meaningful: "Would you like it to be meaningful?", personalizable: "Should it be personalizable?",
     additionalAvoid: "Anything you would rather avoid", additionalAvoidPlaceholder: "E.g. very ornate designs or large stones", optionalRefinement: "Optional",
+    skip: "Skip",
     noRefinementSelected: "Select at least one option to refine the recommendations.",
     moreOriginal: "More original", moreDiscreet: "More understated", moreElegant: "More elegant", moreSpecial: "More special", moreAffordable: "More affordable",
     discreet: "Understated", balanced: "Balanced", statement: "Statement", daily: "Everyday", occasionsUse: "Special occasions", both: "Both", yes: "Yes", no: "No", neutral: "No preference",
@@ -587,6 +590,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
   const [refinementPreferences, setRefinementPreferences] = useState<RefinementPreferences>(emptyRefinementPreferences);
   const [isRefinementOpen, setIsRefinementOpen] = useState(false);
+  const [refinementStep, setRefinementStep] = useState(0);
   const [refinementError, setRefinementError] = useState("");
   const [error, setError] = useState("");
   const [status, setStatus] = useState<RequestState>("idle");
@@ -647,6 +651,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
     setConversation([]);
     setRefinementPreferences(emptyRefinementPreferences);
     setIsRefinementOpen(false);
+    setRefinementStep(0);
     setRefinementError("");
     setError("");
     setStatus("idle");
@@ -729,7 +734,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
     }
 
     const frameId = requestAnimationFrame(() => {
-      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      scrollToSectionBelowHeader(resultsRef.current);
     });
 
     return () => cancelAnimationFrame(frameId);
@@ -741,7 +746,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
     }
 
     const frameId = requestAnimationFrame(() => {
-      preferencesEditorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      scrollToSectionBelowHeader(preferencesEditorRef.current);
     });
 
     return () => cancelAnimationFrame(frameId);
@@ -771,6 +776,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       setConversation([]);
       setRefinementPreferences(emptyRefinementPreferences);
       setIsRefinementOpen(false);
+      setRefinementStep(0);
       setRefinementError("");
       setError("");
       setStatus("idle");
@@ -892,6 +898,10 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       setAdvisorResponse(data);
       setConversation(nextConversation);
       setStatus(data.recommendations.length ? "results" : "empty");
+      if (refinement) {
+        setIsRefinementOpen(false);
+        setRefinementStep(0);
+      }
       if (data.recommendations.length) {
         setResultsGeneration((generation) => generation + 1);
       }
@@ -951,16 +961,13 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
 
   function openRefinement() {
     setIsRefinementOpen(true);
+    setRefinementStep(0);
     setRefinementError("");
     trackGAEvent("refinement_open", { locale });
-    requestAnimationFrame(() => refinementRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+    requestAnimationFrame(() => scrollToSectionBelowHeader(refinementRef.current));
   }
 
   function submitRefinement() {
-    if (!hasRefinementPreferences(refinementPreferences)) {
-      setRefinementError(copy.noRefinementSelected);
-      return;
-    }
     trackGAEvent("refinement_submit", {
       locale,
       improvementGoal: refinementPreferences.improvementGoal,
@@ -1036,6 +1043,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   }
 
   const isGuidedResultState = mode === "guided" && Boolean(advisorResponse);
+  const hasVisibleResults = Boolean(advisorResponse?.recommendations.length);
 
   return (
     <section
@@ -1044,7 +1052,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       className="w-full max-w-full scroll-mt-24 overflow-hidden rounded-[1.75rem] border border-[#ead8b3] bg-white p-4 shadow-2xl shadow-[#805400]/10 sm:p-6 lg:p-8"
       style={{ overflowAnchor: "none" }}
     >
-      <div className="mx-auto max-w-4xl text-center">
+      {!hasVisibleResults ? <><div className="mx-auto max-w-4xl text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#9b722b]">
           {copy.heroEyebrow}
         </p>
@@ -1117,7 +1125,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
         </div>
 
         <TrustPanel copy={copy} />
-      </div> : null}
+      </div> : null}</> : null}
 
       {!(mode === "guided" && isLoading) ? <StatusPanel
         status={status}
@@ -1168,12 +1176,14 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
         <RefinementPanel
           panelRef={refinementRef}
           isOpen={isRefinementOpen}
+          currentStep={refinementStep}
           preferences={refinementPreferences}
           isLoading={isLoading}
           isRequestBlocked={isCooldownActive}
           copy={copy}
           error={refinementError}
           onChange={setRefinementPreferences}
+          onStepChange={setRefinementStep}
           onSubmit={submitRefinement}
         />
       ) : null}
@@ -2276,8 +2286,9 @@ function RecommendationResults({
 
   return (
     <section ref={resultsRef} className="mt-8 scroll-mt-24">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9b722b]">
             {copy.resultsEyebrow}
           </p>
@@ -2289,6 +2300,11 @@ function RecommendationResults({
               {chip}
             </span>)}
           </div> : null}
+          </div>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:justify-end">
+            <button type="button" onClick={onOpenRefinement} className="min-h-11 w-full rounded-xl bg-[#17120b] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 sm:w-auto">{copy.refineButton}</button>
+            {onModifyPreferences ? <button type="button" onClick={onModifyPreferences} className="min-h-11 w-full rounded-xl border border-[#c89a43] bg-white px-4 py-2 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-auto">{copy.modifyPreferences}</button> : null}
+          </div>
         </div>
         <p className="max-w-xl rounded-2xl border border-[#ead8b3] bg-[#fff9ed] px-4 py-3 text-xs leading-5 text-[#6d6256]">
           {copy.resultsDisclaimer}
@@ -2309,10 +2325,6 @@ function RecommendationResults({
         ))}
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-3">
-        <button type="button" onClick={onOpenRefinement} className="min-h-11 rounded-xl border border-[#c89a43] bg-[#fff9ed] px-4 py-2 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff1d2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">{copy.refineButton}</button>
-        {onModifyPreferences ? <button type="button" onClick={onModifyPreferences} className="min-h-11 rounded-xl border border-[#c89a43] bg-white px-4 py-2 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">{copy.modifyPreferences}</button> : null}
-      </div>
     </section>
   );
 }
@@ -2421,22 +2433,26 @@ function InfoBlock({ title, text }: { title: string; text: string }) {
 function RefinementPanel({
   panelRef,
   isOpen,
+  currentStep,
   preferences,
   isLoading,
   isRequestBlocked,
   copy,
   error,
   onChange,
+  onStepChange,
   onSubmit,
 }: {
   panelRef: React.RefObject<HTMLElement | null>;
   isOpen: boolean;
+  currentStep: number;
   preferences: RefinementPreferences;
   isLoading: boolean;
   isRequestBlocked: boolean;
   copy: ChatCopy;
   error: string;
   onChange: (value: RefinementPreferences) => void;
+  onStepChange: (step: number) => void;
   onSubmit: () => void;
 }) {
   if (!isOpen) {
@@ -2450,6 +2466,9 @@ function RefinementPanel({
     { key: "meaningful" as const, label: copy.meaningful, options: [["yes", copy.yes], ["no", copy.no], ["neutral", copy.neutral]] },
     { key: "personalizable" as const, label: copy.personalizable, options: [["yes", copy.yes], ["no", copy.no], ["neutral", copy.neutral]] },
   ];
+  const lastStep = choices.length;
+  const safeStep = Math.min(Math.max(currentStep, 0), lastStep);
+  const currentChoice = choices[safeStep];
 
   return (
     <section ref={panelRef} className="mt-8 scroll-mt-24 rounded-3xl border border-[#ead8b3] bg-[#fffdf8] p-4 sm:p-5">
@@ -2459,19 +2478,17 @@ function RefinementPanel({
       <p className="mt-2 max-w-3xl text-sm leading-6 text-[#625746]">
         {copy.refinementHelp}
       </p>
-      <div className="mt-5 space-y-5">
-        {choices.map(({ key, label, options }) => (
-          <fieldset key={key}>
-            <legend className="text-sm font-semibold text-[#2b241f]">{label} <span className="font-normal text-[#75695d]">{copy.optionalRefinement}</span></legend>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {options.map(([value, optionLabel]) => {
-                const selected = preferences[key] === value;
-                return <button key={value} type="button" aria-pressed={selected} onClick={() => onChange({ ...preferences, [key]: selected ? undefined : value })} className={`min-h-11 rounded-full border px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] ${selected ? "border-[#b97a05] bg-[#fff1d2] text-[#68420c]" : "border-[#ead8b3] bg-white text-[#5f4a24] hover:bg-[#fff9ed]"}`}>{optionLabel}</button>;
-              })}
-            </div>
-          </fieldset>
-        ))}
-        <label htmlFor="refinement-avoid" className="block text-sm font-semibold text-[#2b241f]">
+      <p className="mt-5 text-sm font-semibold text-[#806632]" aria-live="polite">{copy.step} {safeStep + 1} {copy.of} {lastStep + 1}</p>
+      <div className="mt-3">
+        {currentChoice ? <fieldset>
+          <legend className="text-base font-semibold text-[#2b241f]">{currentChoice.label} <span className="font-normal text-[#75695d]">{copy.optionalRefinement}</span></legend>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {currentChoice.options.map(([value, optionLabel]) => {
+              const selected = preferences[currentChoice.key] === value;
+              return <button key={value} type="button" aria-pressed={selected} onClick={() => { onChange({ ...preferences, [currentChoice.key]: value }); onStepChange(safeStep + 1); }} className={`min-h-11 rounded-full border px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] ${selected ? "border-[#b97a05] bg-[#fff1d2] text-[#68420c]" : "border-[#ead8b3] bg-white text-[#5f4a24] hover:bg-[#fff9ed]"}`}>{optionLabel}</button>;
+            })}
+          </div>
+        </fieldset> : <label htmlFor="refinement-avoid" className="block text-base font-semibold text-[#2b241f]">
           {copy.additionalAvoid} <span className="font-normal text-[#75695d]">{copy.optionalRefinement}</span>
           <textarea
             id="refinement-avoid"
@@ -2481,26 +2498,25 @@ function RefinementPanel({
             placeholder={copy.additionalAvoidPlaceholder}
             className="mt-2 min-h-[4.75rem] w-full resize-y rounded-2xl border border-[#ead8b3] bg-white px-4 py-3 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25"
           />
-        </label>
+        </label>}
       </div>
       {error ? <p className="mt-4 text-sm text-[#9a3f2a]" role="alert">{error}</p> : null}
-      <div className="mt-5 flex justify-end">
-        <button
+      <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex gap-2">
+          {safeStep > 0 ? <button type="button" onClick={() => onStepChange(safeStep - 1)} className="min-h-11 rounded-xl px-4 py-2 text-sm font-semibold text-[#5f4a24] transition hover:bg-[#fff4dd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">← {copy.back}</button> : null}
+          {currentChoice ? <button type="button" onClick={() => onStepChange(safeStep + 1)} className="min-h-11 rounded-xl px-4 py-2 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff4dd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">{copy.skip}</button> : null}
+        </div>
+        {safeStep === lastStep ? <button
           type="button"
           onClick={onSubmit}
           disabled={isLoading || isRequestBlocked}
           className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
-          {isLoading ? copy.refining : copy.sendRefinement}
+          {isLoading ? copy.refining : copy.updateRecommendations}
         </button>
+        : null}
       </div>
     </section>
-  );
-}
-
-function hasRefinementPreferences(preferences: RefinementPreferences) {
-  return Boolean(
-    preferences.improvementGoal || preferences.prominence || preferences.usage || preferences.meaningful || preferences.personalizable || preferences.additionalAvoid?.trim(),
   );
 }
 

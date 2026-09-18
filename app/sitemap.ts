@@ -26,8 +26,6 @@ const staticRoutes = [
   "/sobre-joyas-ai",
   "/transparencia",
   "/contacto",
-  "/aviso-legal",
-  "/politica-privacidad",
   "/cookies",
   "/transparencia-afiliacion",
 ];
@@ -73,7 +71,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     route: item.path,
     languages: item.languages,
   }));
-  const infoRoutes = getAllLocalizedInfoRoutes().map((item) => ({
+  const infoRoutes = getAllLocalizedInfoRoutes().filter(
+    (item) => item.kind !== "aviso-legal" && item.kind !== "politica-privacidad",
+  ).map((item) => ({
     route: item.path,
     languages: item.languages,
   }));

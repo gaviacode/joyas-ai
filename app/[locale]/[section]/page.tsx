@@ -62,10 +62,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (infoKind) {
     const page = getInfoPage(infoKind, locale);
     const title = `${page.title} | Joyas.ai`;
+    const isPrivateLegalPage = infoKind === "aviso-legal" || infoKind === "politica-privacidad";
 
     return {
       title,
       description: page.description,
+      robots: isPrivateLegalPage ? { index: false, follow: false } : undefined,
       alternates: getInfoMetadataAlternates(infoKind, locale),
       openGraph: {
         title,
