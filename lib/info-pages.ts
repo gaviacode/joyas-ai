@@ -1,4 +1,6 @@
 import type { InfoPageKind, Locale } from "@/lib/i18n";
+import { LEGAL_OWNER_ADDRESS, LEGAL_OWNER_NAME, LEGAL_OWNER_NIF } from "@/lib/legal-config";
+import { PUBLIC_CONTACT_EMAIL } from "@/lib/site-config";
 
 export type LocalizedInfoPage = {
   kind: InfoPageKind;
@@ -89,7 +91,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Página de contacto de joyas.ai.",
       eyebrow: "Contacto",
       intro: "Puedes contactar con joyas.ai para consultas, colaboraciones o información sobre el proyecto.",
-      sections: [{ title: "Email", paragraphs: ["Email de contacto: gaviacode@gmail.com"] }],
+      sections: [{ title: "Email", paragraphs: [`Email de contacto: ${PUBLIC_CONTACT_EMAIL}`] }],
     },
     "aviso-legal": {
       kind: "aviso-legal",
@@ -98,8 +100,8 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       eyebrow: "Legal",
       intro: "Esta página reúne información legal básica del proyecto joyas.ai.",
       sections: [
-        { title: "Titular", paragraphs: ["Titular: Alberto Gamarra.", "Dirección de contacto legal: Calle Tramuntana 3, escalera 2, 3.º C, Alicante, España."] },
-        { title: "Contacto", paragraphs: ["Email de contacto: gaviacode@gmail.com"] },
+        { title: "Titular", paragraphs: [`Titular: ${LEGAL_OWNER_NAME}.`, `NIF: ${LEGAL_OWNER_NIF}.`, `Dirección de contacto legal: ${LEGAL_OWNER_ADDRESS.es}.`] },
+        { title: "Contacto", paragraphs: [`Email de contacto: ${PUBLIC_CONTACT_EMAIL}`] },
         { title: "Uso del sitio", paragraphs: ["El contenido de joyas.ai tiene carácter informativo y no sustituye la revisión de datos concretos antes de comprar una joya."] },
       ],
     },
@@ -110,7 +112,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       eyebrow: "Privacidad",
       intro: "Esta política explica de forma básica qué datos podrían tratarse al usar joyas.ai.",
       sections: [
-        { title: "Responsable del tratamiento", paragraphs: ["El responsable del tratamiento es Alberto Gamarra. Dirección de contacto legal: Calle Tramuntana 3, escalera 2, 3.º C, Alicante, España. Email de contacto: gaviacode@gmail.com."] },
+        { title: "Responsable del tratamiento", paragraphs: [`El responsable del tratamiento es ${LEGAL_OWNER_NAME}. Dirección de contacto legal: ${LEGAL_OWNER_ADDRESS.es}. Email de contacto: ${PUBLIC_CONTACT_EMAIL}.`] },
         { title: "Datos del chat", paragraphs: ["El chat puede tratar la información que introduces voluntariamente para generar recomendaciones. No conviene introducir datos especialmente sensibles, información financiera, documentos de identidad ni datos personales innecesarios para elegir una joya."] },
         { title: "Analítica con consentimiento", paragraphs: ["Google Analytics solo se carga si existe configuración de Analytics y si aceptas las cookies analíticas. Puedes retirar o cambiar el consentimiento desde la configuración de cookies."] },
       ],
@@ -195,7 +197,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Página de contato da joyas.ai.",
       eyebrow: "Contato",
       intro: "Você pode entrar em contato com a joyas.ai para consultas, colaborações ou informações sobre o projeto.",
-      sections: [{ title: "Email", paragraphs: ["Email de contato: gaviacode@gmail.com"] }],
+      sections: [{ title: "Email", paragraphs: [`Email de contato: ${PUBLIC_CONTACT_EMAIL}`] }],
     },
     "aviso-legal": {
       kind: "aviso-legal",
@@ -204,8 +206,8 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       eyebrow: "Legal",
       intro: "Esta página reúne informação legal básica do projeto joyas.ai.",
       sections: [
-        { title: "Titular", paragraphs: ["Titular: Alberto Gamarra.", "Endereço de contato legal: Calle Tramuntana 3, escalera 2, 3.º C, Alicante, Espanha."] },
-        { title: "Contato", paragraphs: ["Email de contato: gaviacode@gmail.com"] },
+        { title: "Titular", paragraphs: [`Titular: ${LEGAL_OWNER_NAME}.`, `NIF: ${LEGAL_OWNER_NIF}.`, `Endereço de contato legal: ${LEGAL_OWNER_ADDRESS["pt-BR"]}.`] },
+        { title: "Contato", paragraphs: [`Email de contato: ${PUBLIC_CONTACT_EMAIL}`] },
         { title: "Uso do site", paragraphs: ["O conteúdo da joyas.ai tem caráter informativo e não substitui a revisão de dados concretos antes de comprar uma joia."] },
       ],
     },
@@ -216,7 +218,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       eyebrow: "Privacidade",
       intro: "Esta política explica de forma básica quais dados podem ser tratados ao usar a joyas.ai.",
       sections: [
-        { title: "Responsável pelo tratamento", paragraphs: ["O responsável pelo tratamento é Alberto Gamarra. Endereço de contato legal: Calle Tramuntana 3, escalera 2, 3.º C, Alicante, Espanha. Email de contato: gaviacode@gmail.com."] },
+        { title: "Responsável pelo tratamento", paragraphs: [`O responsável pelo tratamento é ${LEGAL_OWNER_NAME}. Endereço de contato legal: ${LEGAL_OWNER_ADDRESS["pt-BR"]}. Email de contato: ${PUBLIC_CONTACT_EMAIL}.`] },
         { title: "Dados do chat", paragraphs: ["O chat pode tratar as informações que você fornece voluntariamente para gerar recomendações. Não convém inserir dados especialmente sensíveis, informação financeira, documentos de identidade nem dados pessoais desnecessários para escolher uma joia."] },
         { title: "Analytics com consentimento", paragraphs: ["O Google Analytics só é carregado se houver configuração de Analytics e se você aceitar cookies analíticos. Você pode retirar ou alterar o consentimento na configuração de cookies."] },
       ],
@@ -301,7 +303,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       description: "Contact page for joyas.ai.",
       eyebrow: "Contact",
       intro: "You can contact joyas.ai for questions, collaborations or information about the project.",
-      sections: [{ title: "Email", paragraphs: ["Contact email: gaviacode@gmail.com"] }],
+      sections: [{ title: "Email", paragraphs: [`Contact email: ${PUBLIC_CONTACT_EMAIL}`] }],
     },
     "aviso-legal": {
       kind: "aviso-legal",
@@ -310,8 +312,8 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       eyebrow: "Legal",
       intro: "This page gathers basic legal information about the joyas.ai project.",
       sections: [
-        { title: "Owner", paragraphs: ["Owner: Alberto Gamarra.", "Legal contact address: Calle Tramuntana 3, staircase 2, 3rd floor C, Alicante, Spain."] },
-        { title: "Contact", paragraphs: ["Contact email: gaviacode@gmail.com"] },
+        { title: "Owner", paragraphs: [`Owner: ${LEGAL_OWNER_NAME}.`, `NIF: ${LEGAL_OWNER_NIF}.`, `Legal contact address: ${LEGAL_OWNER_ADDRESS.en}.`] },
+        { title: "Contact", paragraphs: [`Contact email: ${PUBLIC_CONTACT_EMAIL}`] },
         { title: "Site use", paragraphs: ["The content on joyas.ai is informational and does not replace checking concrete details before buying jewelry."] },
       ],
     },
@@ -322,7 +324,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       eyebrow: "Privacy",
       intro: "This policy explains in basic terms what data may be processed when using joyas.ai.",
       sections: [
-        { title: "Data controller", paragraphs: ["The data controller is Alberto Gamarra. Legal contact address: Calle Tramuntana 3, staircase 2, 3rd floor C, Alicante, Spain. Contact email: gaviacode@gmail.com."] },
+        { title: "Data controller", paragraphs: [`The data controller is ${LEGAL_OWNER_NAME}. Legal contact address: ${LEGAL_OWNER_ADDRESS.en}. Contact email: ${PUBLIC_CONTACT_EMAIL}.`] },
         { title: "Chat data", paragraphs: ["The chat may process the information you voluntarily provide to generate recommendations. Do not enter especially sensitive data, financial information, identity documents or personal data that is unnecessary for choosing jewelry."] },
         { title: "Analytics with consent", paragraphs: ["Google Analytics only loads if Analytics is configured and you accept analytics cookies. You can withdraw or change consent from cookie settings."] },
       ],

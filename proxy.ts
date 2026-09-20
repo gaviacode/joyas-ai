@@ -7,8 +7,28 @@ import {
   localeFromPath,
   localePath,
 } from "@/lib/language-preference";
+import { checkLegalPageRateLimit } from "@/lib/legal-page-rate-limit";
 
-export function proxy(request: NextRequest) {
+const LEGAL_PAGE_PATHS = new Set([
+  "/aviso-legal",
+  "/politica-privacidad",
+  "/pt-br/aviso-legal",
+  "/pt-br/politica-de-privacidade",
+  "/en/legal-notice",
+  "/en/privacy-policy",
+]);
+
+export async function proxy(request: NextRequest) {
+  if (LEGAL_PAGE_PATHS.has(request.nextUrl.pathname)) {
+    const rateLimit = await checkLegalPageRateLimit(getClientIp(request));
+    if (!rateLimit.allowed) {
+      return new NextResponse("Too many requests. Please try again later.", {
+        status: 429,
+        headers: { "Retry-After": String(rateLimit.retryAfterSeconds) },
+      });
+    }
+  }
+
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set(LANGUAGE_HEADER_NAME, localeFromPath(request.nextUrl.pathname));
   const nextResponse = NextResponse.next({
@@ -34,6 +54,20 @@ export function proxy(request: NextRequest) {
   const url = request.nextUrl.clone();
   url.pathname = destinationPath;
   return NextResponse.redirect(url, 307);
+}
+
+function getClientIp(request: NextRequest) {
+  const railwayIp = request.headers.get("x-real-ip")?.trim();
+  if (railwayIp) {
+    return railwayIp;
+  }
+
+  const cloudflareIp = request.headers.get("cf-connecting-ip")?.trim();
+  if (cloudflareIp) {
+    return cloudflareIp;
+  }
+
+  return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
 }
 
 export const config = {
