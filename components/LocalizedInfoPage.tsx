@@ -10,6 +10,7 @@ type LocalizedInfoPageProps = {
   locale: Locale;
   href: string;
   languageLinks?: LanguageLink[];
+  compact?: boolean;
 };
 
 export default function LocalizedInfoPage({
@@ -17,42 +18,49 @@ export default function LocalizedInfoPage({
   locale,
   href,
   languageLinks,
+  compact = false,
 }: LocalizedInfoPageProps) {
   const homeHref = locale === "es" ? "/es" : locale === "pt-BR" ? "/pt-br" : "/en";
   const homeLabel = locale === "pt-BR" ? "Início" : locale === "en" ? "Home" : "Inicio";
+  const isCompactLegalNotice = compact && page.kind === "aviso-legal";
 
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
       <SiteHeader locale={locale} languageLinks={languageLinks} />
-      <article className="mx-auto max-w-5xl px-5 py-10 sm:px-8 sm:py-14 lg:px-10">
+      <article className={`mx-auto max-w-5xl px-5 sm:px-8 lg:px-10 ${compact ? "py-7 sm:py-9" : "py-10 sm:py-14"}`}>
         <Breadcrumbs
           homeLabel={homeLabel}
           homeHref={homeHref}
           items={[{ href, label: page.title }]}
         />
-        <header className="mt-8 max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">
+        <header className={`max-w-3xl ${compact ? "mt-6" : "mt-8"}`}>
+          <p className={`${compact ? "text-[13px] tracking-[0.18em]" : "text-sm tracking-[0.22em]"} font-semibold uppercase text-[#9b7b3a]`}>
             {page.eyebrow}
           </p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
+          <h1 className={`${compact ? "mt-3 text-3xl sm:text-4xl" : "mt-4 text-4xl sm:text-5xl"} font-semibold tracking-[-0.04em]`}>
             {page.title}
           </h1>
-          <p className="mt-6 text-lg leading-8 text-[#63584c]">{page.intro}</p>
+          <p className={`${compact ? "mt-4 text-base leading-7" : "mt-6 text-lg leading-8"} text-[#63584c]`}>{page.intro}</p>
         </header>
 
-        <section className="mt-10 grid gap-5">
+        <section className={`grid ${compact ? "mt-7 gap-3" : "mt-10 gap-5"}`}>
           {page.sections.map((section) => (
             <section
               key={section.title}
-              className="rounded-3xl border border-[#ead8b3] bg-white p-6 shadow-sm sm:p-8"
+              className={`${compact ? "rounded-2xl p-4 sm:p-5" : "rounded-3xl p-6 sm:p-8"} border border-[#ead8b3] bg-white shadow-sm`}
             >
-              <h2 className="text-2xl font-semibold tracking-[-0.03em]">
+              <h2 className={`${compact ? "text-lg" : "text-2xl"} font-semibold tracking-[-0.03em]`}>
                 {section.title}
               </h2>
-              <div className="mt-4 space-y-4 leading-8 text-[#625746]">
-                {section.paragraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
+              <div className={`${compact ? "mt-2 space-y-2 text-sm leading-6" : "mt-4 space-y-4 leading-8"} text-[#625746]`}>
+                {isCompactLegalNotice && section.title === "Titular" ? (
+                  <>
+                    <p>{`${section.paragraphs[0]} · ${section.paragraphs[1]}`}</p>
+                    <p>{section.paragraphs[2]}</p>
+                  </>
+                ) : (
+                  section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)
+                )}
               </div>
             </section>
           ))}

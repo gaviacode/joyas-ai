@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
       title,
       description: page.description,
-      robots: isPrivateLegalPage ? { index: false, follow: false } : undefined,
+      robots: isPrivateLegalPage ? { index: false, follow: true, googleBot: { index: false, follow: true } } : undefined,
       alternates: getInfoMetadataAlternates(infoKind, locale),
       openGraph: {
         title,

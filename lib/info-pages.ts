@@ -100,7 +100,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
       eyebrow: "Legal",
       intro: "Esta página reúne información legal básica del proyecto joyas.ai.",
       sections: [
-        { title: "Titular", paragraphs: [`Titular: ${LEGAL_OWNER_NAME}.`, `NIF: ${LEGAL_OWNER_NIF}.`, `Dirección de contacto legal: ${LEGAL_OWNER_ADDRESS.es}.`] },
+        { title: "Titular", paragraphs: [`Titular: ${LEGAL_OWNER_NAME}.`, `NIF: ${LEGAL_OWNER_NIF}.`, `Dirección legal: ${LEGAL_OWNER_ADDRESS.es}.`] },
         { title: "Contacto", paragraphs: [`Email de contacto: ${PUBLIC_CONTACT_EMAIL}`] },
         { title: "Uso del sitio", paragraphs: ["El contenido de joyas.ai tiene carácter informativo y no sustituye la revisión de datos concretos antes de comprar una joya."] },
       ],

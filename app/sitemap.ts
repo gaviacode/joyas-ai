@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { EDITORIAL_REVIEW_DATE } from "@/lib/editorial";
 import {
   getAllLocalizedArticleRoutes,
   getAllLocalizedInfoRoutes,
@@ -9,54 +10,48 @@ import {
   getLocalizedGuideCategoryPath,
   getLocalizedIndexPath,
   locales,
+  type InfoPageKind,
 } from "@/lib/i18n";
-import { guideCategories, guides, jewelryCategories, occasions } from "@/lib/site-content";
+import { guideCategories } from "@/lib/site-content";
 import { absoluteUrl } from "@/lib/site-config";
 
-const staticRoutes = [
-  "/",
-  "/afiliacion",
-  "/joyas",
-  "/joyas/anillos/como-saber-talla-anillo",
-  "/ocasiones",
-  "/guias",
-  "/joyero-ia",
-  "/como-funciona",
-  "/preguntas-frecuentes",
-  "/sobre-joyas-ai",
-  "/transparencia",
-  "/contacto",
-  "/cookies",
-  "/transparencia-afiliacion",
+type SitemapRoute = {
+  route: string;
+  languages?: Record<string, string>;
+  lastModified?: string;
+  changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
+  priority: number;
+};
+
+const nonIndexableInfoPageKinds = new Set<InfoPageKind>(["aviso-legal", "politica-privacidad"]);
+
+const standaloneRoutes: SitemapRoute[] = [
+  { route: "/", languages: getHomeAlternates(), changeFrequency: "weekly", priority: 1 },
+  {
+    route: "/joyas/anillos/como-saber-talla-anillo",
+    lastModified: EDITORIAL_REVIEW_DATE,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = [
-    ...staticRoutes,
-    ...jewelryCategories.map((item) => `/joyas/${item.slug}`),
-    ...occasions.map((item) => `/ocasiones/${item.slug}`),
-    ...guideCategories.map((item) => item.href),
-    ...guides.map((item) => `/guias/${item.slug}`),
-  ];
-
-  const localizedIndexes = locales
+  const localizedHomeRoutes = locales
     .filter((locale) => locale !== "es")
-    .flatMap((locale) => [
-      getLocaleHomePath(locale),
-      getLocalizedIndexPath("joyas", locale),
-      getLocalizedIndexPath("ocasiones", locale),
-      getLocalizedIndexPath("guias", locale),
-    ]);
-
-  const homeRoutes = locales.map((locale) => ({
+    .map((locale) => ({
     route: getLocaleHomePath(locale),
     languages: getHomeAlternates(),
-  }));
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    }));
 
   const indexRoutes = locales.flatMap((locale) =>
     (["joyas", "ocasiones", "guias"] as const).map((kind) => ({
       route: getLocalizedIndexPath(kind, locale),
       languages: getIndexAlternates(kind),
+      lastModified: EDITORIAL_REVIEW_DATE,
+      changeFrequency: "weekly" as const,
+      priority: kind === "guias" ? 0.9 : 0.8,
     })),
   );
 
@@ -64,63 +59,51 @@ export default function sitemap(): MetadataRoute.Sitemap {
     locales.map((locale) => ({
       route: getLocalizedGuideCategoryPath(category.slug, locale),
       languages: getGuideCategoryAlternates(category.slug),
+      lastModified: EDITORIAL_REVIEW_DATE,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
     })),
   );
 
   const articleRoutes = getAllLocalizedArticleRoutes().map((item) => ({
     route: item.path,
     languages: item.languages,
-  }));
-  const infoRoutes = getAllLocalizedInfoRoutes().filter(
-    (item) => item.kind !== "aviso-legal" && item.kind !== "politica-privacidad",
-  ).map((item) => ({
-    route: item.path,
-    languages: item.languages,
+    lastModified: EDITORIAL_REVIEW_DATE,
+    changeFrequency: "monthly" as const,
+    priority: item.kind === "guias" ? 0.7 : 0.6,
   }));
 
-  const basicRoutes = Array.from(new Set([...routes, ...localizedIndexes])).map((route) => ({
-    route,
-    languages: undefined,
-  }));
+  const infoRoutes = getAllLocalizedInfoRoutes()
+    .filter((item) => !nonIndexableInfoPageKinds.has(item.kind))
+    .map((item) => ({
+      route: item.path,
+      languages: item.languages,
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    }));
 
-  const allRoutes = [...basicRoutes, ...homeRoutes, ...indexRoutes, ...categoryRoutes, ...articleRoutes, ...infoRoutes];
-  const uniqueRoutes = new Map(allRoutes.map((item) => [item.route, item]));
-
-  return Array.from(uniqueRoutes.values()).map(({ route, languages }) => ({
+  return uniqueByRoute([
+    ...standaloneRoutes,
+    ...localizedHomeRoutes,
+    ...indexRoutes,
+    ...categoryRoutes,
+    ...articleRoutes,
+    ...infoRoutes,
+  ]).map(({ route, languages, lastModified, changeFrequency, priority }) => ({
     url: absoluteUrl(route),
-    changeFrequency: route === "/" ? "weekly" : "monthly",
-    priority: getPriority(route),
+    lastModified,
+    changeFrequency,
+    priority,
     alternates: languages
       ? {
           languages: Object.fromEntries(
-            Object.entries({
-              es: languages.es,
-              "pt-BR": languages["pt-BR"],
-              en: languages.en,
-              "x-default": languages.es,
-            }).map(([locale, path]) => [locale, absoluteUrl(path)]),
+            Object.entries({ ...languages, "x-default": languages.es }).map(([locale, path]) => [locale, absoluteUrl(path)]),
           ),
         }
       : undefined,
   }));
 }
 
-function getPriority(route: string) {
-  if (route === "/") {
-    return 1;
-  }
-
-  if (route === "/guias") {
-    return 0.9;
-  }
-
-  if (guideCategories.some((category) => category.href === route)) {
-    return 0.8;
-  }
-
-  if (route.startsWith("/guias/")) {
-    return 0.7;
-  }
-
-  return 0.6;
+function uniqueByRoute(routes: SitemapRoute[]) {
+  return Array.from(new Map(routes.map((item) => [item.route, item])).values());
 }

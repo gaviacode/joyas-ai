@@ -12,9 +12,17 @@ export const metadata: Metadata = {
   alternates: getInfoMetadataAlternates(kind, "es"),
   openGraph: { title: `${page.title} | Joyas.ai`, description: page.description, url: getLocalizedInfoPath(kind, "es"), siteName: "Joyas.ai", locale: openGraphLocales.es, alternateLocale: [openGraphLocales["pt-BR"], openGraphLocales.en], type: "website" },
   twitter: { card: "summary_large_image", title: `${page.title} | Joyas.ai`, description: page.description },
-  robots: { index: false, follow: false },
+  robots: { index: false, follow: true, googleBot: { index: false, follow: true } },
 };
 
 export default function LegalNoticePage() {
-  return <LocalizedInfoPage page={page} locale="es" href={getLocalizedInfoPath(kind, "es")} languageLinks={getInfoLanguageLinks(kind)} />;
+  return (
+    <LocalizedInfoPage
+      page={page}
+      locale="es"
+      href={getLocalizedInfoPath(kind, "es")}
+      languageLinks={getInfoLanguageLinks(kind)}
+      compact
+    />
+  );
 }

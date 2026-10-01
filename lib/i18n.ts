@@ -1059,13 +1059,23 @@ export function getAllLocalizedArticleRoutes() {
   ];
 
   return all.flatMap(({ kind, slug }) =>
-    locales.map((locale) => ({
-      locale,
-      kind,
-      esSlug: slug,
-      path: getLocalizedPath(kind, slug, locale),
-      languages: getArticleAlternates(kind, slug),
-    })),
+    locales
+      .filter((locale) => locale === "es" || Boolean(articleSlugs[kind][slug]?.[locale]))
+      .map((locale) => ({
+        locale,
+        kind,
+        esSlug: slug,
+        path: getLocalizedPath(kind, slug, locale),
+        languages: getIndexableArticleAlternates(kind, slug),
+      })),
+  );
+}
+
+function getIndexableArticleAlternates(kind: ContentKind, esSlug: string) {
+  return Object.fromEntries(
+    locales
+      .filter((locale) => locale === "es" || Boolean(articleSlugs[kind][esSlug]?.[locale]))
+      .map((locale) => [locale, getLocalizedPath(kind, esSlug, locale)]),
   );
 }
 
