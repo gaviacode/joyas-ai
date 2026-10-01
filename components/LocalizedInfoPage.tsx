@@ -47,15 +47,15 @@ export default function LocalizedInfoPage({
           {page.sections.map((section) => (
             <section
               key={section.title}
-              className={`${compact ? "rounded-2xl p-4 sm:p-5" : "rounded-3xl p-6 sm:p-8"} border border-[#ead8b3] bg-white shadow-sm`}
+              className={`${compact ? "rounded-2xl p-3.5 sm:p-4" : "rounded-3xl p-6 sm:p-8"} border border-[#ead8b3] bg-white shadow-sm`}
             >
               <h2 className={`${compact ? "text-lg" : "text-2xl"} font-semibold tracking-[-0.03em]`}>
                 {section.title}
               </h2>
-              <div className={`${compact ? "mt-2 space-y-2 text-sm leading-6" : "mt-4 space-y-4 leading-8"} text-[#625746]`}>
+              <div className={`${compact ? "mt-1.5 space-y-1.5 text-[13px] leading-5" : "mt-4 space-y-4 leading-8"} text-[#625746]`}>
                 {isCompactLegalNotice && section.title === "Titular" ? (
                   <>
-                    <p>{`${section.paragraphs[0]} · ${section.paragraphs[1]}`}</p>
+                    <p>{`${withoutFinalPeriod(section.paragraphs[0])} · ${withoutFinalPeriod(section.paragraphs[1])}`}</p>
                     <p>{section.paragraphs[2]}</p>
                   </>
                 ) : (
@@ -74,4 +74,8 @@ export default function LocalizedInfoPage({
       </article>
     </main>
   );
+}
+
+function withoutFinalPeriod(value: string) {
+  return value.endsWith(".") ? value.slice(0, -1) : value;
 }
