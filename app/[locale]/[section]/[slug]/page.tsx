@@ -148,6 +148,7 @@ export default async function LocalizedArticlePage({ params }: PageProps) {
       breadcrumbItems={breadcrumbItems}
       languageLinks={getLanguageLinks(kind, article.originalSlug ?? article.slug)}
       structuredData={getLocalizedStructuredData(kind, article, locale, parent, breadcrumbItems)}
+      showGuideAdvisorCta={kind === "guias"}
     />
   );
 }
@@ -273,20 +274,24 @@ const localizedStructuredFaqs: Record<LocalizedLocale, Record<string, Array<{ qu
   en: {
     "oro-14k-18k-24k": [
       {
-        question: "What does 18k mean in jewelry?",
-        answer: "It means the alloy contains 18 parts gold out of 24, or about 75% gold.",
+        question: "Is 14K or 18K gold better?",
+        answer: "Neither is better in every case. 14K is generally more durable and more affordable for frequent wear, while 18K has higher gold content and a richer yellow color.",
       },
       {
-        question: "What percentage of gold is in 14k gold?",
-        answer: "14k gold contains approximately 58.5% gold; the rest is made up of other metals in the alloy.",
+        question: "Is 24K gold good for jewelry?",
+        answer: "It can be suitable for traditional, occasional or high-purity pieces, but its softness can make it less practical for jewelry exposed to daily knocks and friction.",
       },
       {
-        question: "What does 750 mean on gold?",
-        answer: "750 means 750 parts gold per 1,000 parts alloy and usually corresponds to 18k gold.",
+        question: "Does 18K gold scratch easily?",
+        answer: "18K gold is softer than 14K because it contains more gold, so it can mark more easily. Resistance also depends on the piece's design, thickness, setting and use.",
       },
       {
-        question: "Is 14k or 18k gold better?",
-        answer: "It depends on the piece, intended use, budget, color preference, and maintenance expectations.",
+        question: "Which gold karat is best for everyday wear?",
+        answer: "14K is often a practical choice for everyday jewelry because its alloy offers higher durability. 18K can also work well when the piece and your routine suit it.",
+      },
+      {
+        question: "Is 14K gold real gold?",
+        answer: "Yes. 14K gold is a real gold alloy containing 14 parts gold out of 24, or approximately 58.5% pure gold.",
       },
     ],
     "como-saber-si-una-joya-es-de-oro": [

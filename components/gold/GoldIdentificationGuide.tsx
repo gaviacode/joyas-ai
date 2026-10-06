@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AiAdvisorCta from "@/components/AiAdvisorCta";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import type { LanguageLink } from "@/components/LanguageSwitcher";
 import SiteHeader from "@/components/SiteHeader";
@@ -133,6 +134,8 @@ export default function GoldIdentificationGuide({ languageLinks }: { languageLin
             585 se relaciona con oro de 14k, 750 con oro de 18k y 999 con oro de muy alta pureza. Aun así, un grabado puede falsificarse o interpretarse mal: 750 por sí solo no demuestra que una pieza sea oro de 18k.
           </p>
         </Section>
+
+        <AiAdvisorCta variant="compact" context={{ topic: "Cómo saber si una joya es de oro" }} />
 
         <Section title="¿Sirve un imán para saber si es oro?">
           <p>

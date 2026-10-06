@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Script from "next/script";
+import AiAdvisorCta from "@/components/AiAdvisorCta";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import type { LanguageLink } from "@/components/LanguageSwitcher";
 import SiteHeader from "@/components/SiteHeader";
@@ -133,6 +134,8 @@ export default function GoldKaratGuide({ languageLinks }: { languageLinks?: Lang
             El oro de 14k contiene aproximadamente un 58,5 % de oro, el oro de 18k contiene un 75 % y el oro de 24k se asocia a oro de muy alta pureza. El resto de la aleacion puede incorporar distintos metales segun color, fabricante, pieza y objetivo tecnico.
           </p>
         </Section>
+
+        <AiAdvisorCta variant="compact" context={{ topic: "Oro 14k, 18k y 24k" }} />
 
         <GoldPurityTable />
 

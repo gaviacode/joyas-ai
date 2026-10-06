@@ -28,9 +28,10 @@ type ArticlePageProps = {
   breadcrumbItems?: LinkItem[];
   languageLinks?: LanguageLink[];
   structuredData?: ArticleStructuredData;
+  showGuideAdvisorCta?: boolean;
 };
 
-export default function ArticlePage({ article, parent, breadcrumbItems, languageLinks, structuredData }: ArticlePageProps) {
+export default function ArticlePage({ article, parent, breadcrumbItems, languageLinks, structuredData, showGuideAdvisorCta = false }: ArticlePageProps) {
   const relatedLinks = article.related.filter((link) => link.href !== "/#joyero-ia");
   const locale = article.locale ?? "es";
   const breadcrumbs = breadcrumbItems ?? [parent, { href: `${parent.href}/${article.slug}`, label: article.title }];
@@ -70,9 +71,9 @@ export default function ArticlePage({ article, parent, breadcrumbItems, language
         </header>
 
         <div className="mt-10 grid gap-5">
-          {article.sections.map((section) => (
-            <section
-              key={section.title}
+          {article.sections.map((section, index) => (
+            <div key={section.title}>
+              <section
               className="rounded-3xl border border-[#ead8b3] bg-white/85 p-6 shadow-sm sm:p-8"
             >
               <h2 className="text-2xl font-semibold tracking-[-0.03em] text-[#17120b]">
@@ -168,7 +169,13 @@ export default function ArticlePage({ article, parent, breadcrumbItems, language
                   ))}
                 </div>
               ) : null}
-            </section>
+              </section>
+              {showGuideAdvisorCta && index === 0 ? (
+                <div className="mt-5">
+                  <AiAdvisorCta variant="compact" locale={locale} context={getArticleAdvisorContext(article, parent.href)} />
+                </div>
+              ) : null}
+            </div>
           ))}
         </div>
 

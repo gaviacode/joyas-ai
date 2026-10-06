@@ -32,6 +32,7 @@ export type ArticleData = {
   locale?: "es" | "pt-BR" | "en";
   categorySlug?: string;
   title: string;
+  seoTitle?: string;
   description: string;
   eyebrow: string;
   intro: string;

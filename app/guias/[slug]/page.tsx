@@ -130,7 +130,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         : slug === "pendientes-hipoalergenicos"
         ? "Pendientes hipoalergénicos: materiales y cómo elegirlos | Joyas.ai"
         : slug === "plata-925"
-        ? "Plata 925 o plata de ley: qué significa y cómo reconocerla | Joyas.ai"
+          ? "Plata de ley 925: qué significa y cómo saber si es auténtica | Joyas.ai"
         : slug === "collares-segun-escote"
           ? "Collares según escote: qué collar elegir para cada escote | Joyas.ai"
         : slug === "tipos-cierre-pendientes"
@@ -179,7 +179,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             ? "Cómo saber si una joya es de oro: pruebas y marcas | Joyas.ai"
         : `${article.title} | Joyas.ai`;
   const seoDescription =
-      slug === "oro-14k-18k-24k"
+      slug === "plata-925"
+        ? "Descubre qué significa plata de ley 925, su composición con 92,5 % de plata, cómo identificarla y cómo comprobar si una joya es auténtica."
+        : slug === "oro-14k-18k-24k"
         ? "Descubre qué significan 14k, 18k y 24k, cuánta proporción de oro contiene cada aleación y qué diferencias tienen en joyería."
         : article.description;
 
@@ -226,6 +228,7 @@ export default async function GuidePage({ params }: PageProps) {
         { href: `/guias/${article.slug}`, label: article.title },
       ]}
       languageLinks={getLanguageLinks("guias", article.slug)}
+      showGuideAdvisorCta
     />
   );
 }

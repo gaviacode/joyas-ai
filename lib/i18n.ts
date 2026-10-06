@@ -312,7 +312,7 @@ const articleSlugs: Record<ContentKind, Record<string, Record<Locale, string>>> 
   },
 };
 
-const articleTitleOverrides: Record<LocalizedLocale, Record<string, { title: string; description: string; intro?: string }>> = {
+const articleTitleOverrides: Record<LocalizedLocale, Record<string, { title: string; seoTitle?: string; description: string; intro?: string }>> = {
   "pt-BR": {
     "guias:pendientes-hipoalergenicos": { title: "Brincos hipoalergênicos: como escolher para orelhas sensíveis", description: "Guia para escolher brincos hipoalergênicos: materiais, pinos, fechos e informações para verificar antes de comprar." },
     "guias:pendientes-graduacion": { title: "Brincos para formatura: como escolher conforme vestido e estilo", description: "Guia para escolher brincos para formatura conforme vestido, decote, penteado, estilo e conforto." },
@@ -368,7 +368,7 @@ const articleTitleOverrides: Record<LocalizedLocale, Record<string, { title: str
     "joyas:pulseras": { title: "How to Choose a Comfortable, Elegant Bracelet", description: "Guide to choosing delicate, bangle, chain or personalized bracelets by fit, use and style." },
     "joyas:pendientes": { title: "How to Choose Earrings: Size, Backing, Material and Style", description: "Tips for choosing studs, hoops, drop earrings or gemstone earrings by face, use and occasion." },
     "joyas:boda": { title: "Wedding Jewelry: Rings, Bride, Groom and Guests", description: "Guide to wedding bands, bridal jewelry and accessories for the groom, mother of the bride and guests." },
-    "guias:oro-14k-18k-24k": { title: "14k vs 18k vs 24k Gold: Differences, Purity and Which to Choose", description: "Learn what 14k, 18k and 24k mean, how much gold each alloy contains and how to compare gold jewelry." },
+    "guias:oro-14k-18k-24k": { title: "14K vs 18K vs 24K Gold: What's the Difference?", seoTitle: "14K vs 18K vs 24K Gold: Differences, Purity & Which Is Best", description: "Compare 14K, 18K and 24K gold by purity, durability, color, price and best use to choose the right gold for everyday jewelry, rings, chains and more." },
     "guias:plata-925": { title: "925 Sterling Silver: Meaning, Marks and How to Identify It", description: "Understand what 925 sterling silver means, its 92.5% silver content and what to check before buying silver jewelry." },
     "guias:como-saber-si-una-joya-es-de-oro": { title: "How to Tell if Jewelry Is Gold: Marks, Tests and Reliable Checks", description: "Learn how to check marks, documentation and reliable tests when you need to know whether jewelry is real gold." },
     "ocasiones:aniversario": { title: "Anniversary Jewelry Gifts: Meaningful Ideas by Style and Budget", description: "Tips for choosing anniversary jewelry by relationship length, personal style, metal, budget and personalization." },
@@ -500,26 +500,48 @@ const articleContentOverrides: Record<LocalizedLocale, Record<string, { intro?: 
   },
   en: {
     "guias:oro-14k-18k-24k": {
-      intro: "Pure gold is associated with 24k gold, but alloys are common in jewelry because very pure metals can be impractical for some pieces.",
+      intro: "14K, 18K and 24K gold differ mainly in purity: 14K contains 58.5% gold and is generally the most durable, affordable choice for everyday jewelry; 18K contains 75% gold and balances richer color with practical wear; and 24K is almost pure gold, with a deep yellow tone but a softer feel that is less suited to daily wear.",
       sections: [
         {
-          title: "Approximate Composition",
+          title: "14K vs 18K vs 24K Gold: Quick Comparison",
           paragraphs: [
-            "18k gold contains approximately 75% gold. 14k gold contains approximately 58.5% gold.",
-            "The remaining composition depends on the alloy used, which can affect color, hardness, maintenance and how the piece behaves in daily wear.",
+            "The higher the karat, the greater the share of gold in the alloy. That usually means a richer yellow color and higher material value, but also a softer metal. The best option depends on whether you prioritize durability, color, budget or purity.",
+          ],
+          table: {
+            columns: ["Gold", "Purity", "Durability", "Color", "Price", "Best for"],
+            rows: [
+              ["14K", "58.5%", "High", "Lighter yellow", "More affordable", "Everyday jewelry"],
+              ["18K", "75%", "Medium-high", "Richer yellow", "Higher", "Fine jewelry and everyday luxury"],
+              ["24K", "About 99.9%", "Low", "Deep yellow", "Highest", "Traditional pieces, investment or occasional wear"],
+            ],
+          },
+        },
+        {
+          title: "What Is 14K Gold?",
+          paragraphs: [
+            "14K gold contains 14 parts gold out of 24, or 58.5% pure gold. The remaining metals make the alloy more resistant to everyday knocks and scratches than higher-karat gold, while keeping its price relatively accessible.",
+            { parts: ["It is often a practical choice for rings, bracelets and other pieces worn frequently. For fit and style considerations, see our guide to ", { href: "/guias/tipos-de-anillos", label: "types of rings" }, "."] },
           ],
         },
         {
-          title: "Use in Jewelry",
+          title: "What Is 18K Gold?",
           paragraphs: [
-            "24k gold has high purity, but it may be less practical for jewelry exposed to everyday wear. That is why many pieces use alloys.",
-            "There is no universally better karat: the right choice depends on design, use, budget and color preference.",
+            "18K gold contains 75% pure gold. It generally looks more yellow than 14K because it contains a higher proportion of gold, while still using an alloy that can work well for many rings, earrings and chains.",
+            "It can be a strong middle ground when you want a richer gold color and higher purity without moving to the softness of 24K. Exact wear resistance also depends on the design, thickness, setting and how the piece is used.",
           ],
         },
         {
-          title: "Before Buying",
+          title: "Why Is 24K Gold Softer?",
           paragraphs: [
-            "Check the hallmark, product details, treatment, warranty and care recommendations. The exact characteristics can vary by maker and piece.",
+            "24K gold is almost pure gold, at roughly 99.9%. Pure gold atoms slide more easily against one another than a gold alloy, so the metal can bend, mark or scratch more readily in a thin or frequently worn piece.",
+            "Its deep yellow color and high purity can be appealing for traditional jewelry, investment-oriented pieces or occasional wear, but it is not automatically the best choice for every ring, chain or earring.",
+          ],
+        },
+        {
+          title: "Which Is Better for Everyday Jewelry?",
+          paragraphs: [
+            "For most everyday jewelry, 14K is the more durable and budget-conscious option. 18K can be a better fit when richer color and higher purity matter more, provided the design suits regular wear. 24K is usually less practical for pieces that receive frequent knocks or friction.",
+            { parts: ["Before buying, check the hallmark, product details and care advice. Our guides to ", { href: "/guias/como-cuidar-joyas", label: "how to care for jewelry" }, " and ", { href: "/guias/tipos-de-cadenas", label: "types of necklace chains" }, " can help you match the metal to the piece and how you plan to wear it."] },
           ],
         },
       ],
@@ -597,6 +619,10 @@ const exactText: Record<LocalizedLocale, Record<string, string>> = {
     "Guía de materiales": "Guia de materiais",
     "Oro y metales": "Ouro e metais",
     "También te puede interesar": "Você também pode gostar",
+    "¿Quieres que te ayudemos a elegir una joya?": "Quer ajuda para escolher uma joia?",
+    "Cuéntanos para quién es, la ocasión y tu presupuesto, y el joyero IA te propondrá opciones.": "Conte para quem é, a ocasião e seu orçamento, e o joalheiro IA sugerirá opções.",
+    "Describir lo que busco": "Descrever o que procuro",
+    "Guiarme paso a paso": "Guiar-me passo a passo",
     "Joyero IA": "Joalheiro IA",
     "¿No sabes qué joya elegir?": "Não sabe qual joia escolher?",
     "Cuéntale a nuestro joyero IA para quién es la joya, la ocasión y tu presupuesto, y te ayudará a encontrar una opción adecuada.": "Conte ao nosso joalheiro IA para quem é a joia, a ocasião e seu orçamento, e ele ajudará a encontrar uma opção adequada.",
@@ -650,6 +676,10 @@ const exactText: Record<LocalizedLocale, Record<string, string>> = {
     "Guía de materiales": "Materials guide",
     "Oro y metales": "Gold and metals",
     "También te puede interesar": "You may also like",
+    "¿Quieres que te ayudemos a elegir una joya?": "Would you like help choosing a piece of jewelry?",
+    "Cuéntanos para quién es, la ocasión y tu presupuesto, y el joyero IA te propondrá opciones.": "Tell us who it is for, the occasion, and your budget, and the AI jeweler will suggest options.",
+    "Describir lo que busco": "Describe what I am looking for",
+    "Guiarme paso a paso": "Guide me step by step",
     "Joyero IA": "AI Jeweler",
     "¿No sabes qué joya elegir?": "Not sure which jewelry to choose?",
     "Cuéntale a nuestro joyero IA para quién es la joya, la ocasión y tu presupuesto, y te ayudará a encontrar una opción adecuada.": "Tell the AI jeweler who the piece is for, the occasion and your budget, and it will help you find a suitable option.",
@@ -928,25 +958,26 @@ export function getGuideCategoryMetadataAlternates(esSlug: string, locale: Local
 export function buildArticleMetadata(article: ArticleData, kind: ContentKind, locale: Locale): Metadata {
   const alternates = getMetadataAlternates(kind, article.originalSlug ?? article.slug, locale);
   const ogImage = getOpenGraphImagePath(locale);
+  const seoTitle = article.seoTitle ?? article.title;
 
   return {
-    title: `${article.title} | Joyas.ai`,
+    title: `${seoTitle} | Joyas.ai`,
     description: article.description,
     alternates,
     openGraph: {
-      title: `${article.title} | Joyas.ai`,
+      title: `${seoTitle} | Joyas.ai`,
       description: article.description,
       url: alternates.canonical,
       siteName: "Joyas.ai",
       locale: openGraphLocales[locale],
       alternateLocale: locales.filter((item) => item !== locale).map((item) => openGraphLocales[item]),
       type: "article",
-      images: [{ url: ogImage, width: 1200, height: 630, alt: `${article.title} | Joyas.ai` }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: `${seoTitle} | Joyas.ai` }],
       modifiedTime: EDITORIAL_REVIEW_DATE,
     },
     twitter: {
       card: "summary_large_image",
-      title: `${article.title} | Joyas.ai`,
+      title: `${seoTitle} | Joyas.ai`,
       description: article.description,
       images: [ogImage],
     },
@@ -980,6 +1011,7 @@ export function localizeArticle(article: ArticleData, kind: ContentKind, locale:
     slug: articleSlugs[kind][originalSlug]?.[locale] ?? article.slug,
     categorySlug: article.categorySlug ? guideCategorySlugs[article.categorySlug]?.[locale] ?? article.categorySlug : undefined,
     title: override?.title ?? localizeText(article.title, locale),
+    seoTitle: override?.seoTitle,
     description: override?.description ?? localizeText(article.description, locale),
     eyebrow: localizeText(article.eyebrow, locale),
     intro: contentOverride?.intro ?? override?.intro ?? localizeText(article.intro, locale),

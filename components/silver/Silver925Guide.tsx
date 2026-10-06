@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AiAdvisorCta from "@/components/AiAdvisorCta";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import type { LanguageLink } from "@/components/LanguageSwitcher";
 import SiteHeader from "@/components/SiteHeader";
@@ -7,7 +8,7 @@ const pageUrl = "https://joyas.ai/guias/plata-925";
 
 const faqs = [
   {
-    question: "¿Qué significa el número 925 en una joya?",
+    question: "¿Qué significa 925 en plata?",
     answer:
       "Indica que la aleación contiene 925 partes de plata por cada 1.000 partes de material, es decir, un 92,5 % de plata.",
   },
@@ -42,7 +43,7 @@ const faqs = [
       "Puede cambiar por deslustre, contacto con cosmeticos, humedad, sustancias del ambiente, sudor o por tratamientos y acabados propios de la pieza.",
   },
   {
-    question: "¿Cómo saber si una joya es plata 925?",
+    question: "¿Cómo comprobar si una joya de plata 925 es auténtica?",
     answer:
       "Busca marcado o contraste, revisa la informacion del vendedor, conserva factura o documentacion y acude a un profesional si necesitas certeza.",
   },
@@ -118,14 +119,14 @@ export default function Silver925Guide({ languageLinks }: { languageLinks?: Lang
             Guía de materiales
           </p>
           <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-[-0.04em] text-[#17120b] sm:text-5xl">
-            Plata 925 o plata de ley: qué significa y cómo reconocerla
+            Plata de ley 925: qué significa y cómo saber si es auténtica
           </h1>
           <div className="mt-6 space-y-4 text-lg leading-8 text-[#63584c]">
             <p>
-              Plata 925 significa que la aleación contiene 925 partes de plata por cada 1.000 partes de material: un 92,5 % de plata. El porcentaje restante corresponde a otros metales de la aleación.
+              La plata de ley 925 es una aleación con un 92,5 % de plata pura y un 7,5 % de otros metales, habitualmente cobre. El número 925 indica la pureza de la aleación: 925 partes de plata por cada 1.000.
             </p>
             <p>
-              Es una forma habitual de plata de ley utilizada en joyería porque combina contenido alto de plata con características prácticas para fabricar piezas que se puedan usar con más comodidad.
+              Es una forma habitual de plata de ley utilizada en joyería porque combina un contenido alto de plata con mayor resistencia para el uso diario. La composición exacta de ese 7,5 % puede variar según fabricante y pieza.
             </p>
           </div>
         </header>
@@ -134,7 +135,9 @@ export default function Silver925Guide({ languageLinks }: { languageLinks?: Lang
           Una joya marcada como 925 puede ser una buena indicación, pero no demuestra por sí sola la autenticidad. Para una compra importante, revisa documentación, vendedor y condiciones de la pieza.
         </Highlight>
 
-        <Section title="¿Qué significa plata 925?">
+        <Silver925SummaryTable />
+
+        <Section title="¿Qué significa 925 en una joya?">
           <p>
             El numero 925 indica una finura de 925 milesimas: 925 partes de plata por cada 1.000 partes de aleacion. Dicho de forma sencilla, corresponde a un 92,5 % de plata.
           </p>
@@ -145,6 +148,8 @@ export default function Silver925Guide({ languageLinks }: { languageLinks?: Lang
             Por eso conviene evitar asumir que toda plata 925 contiene siempre exactamente los mismos metales secundarios, salvo que la joya concreta lo documente.
           </p>
         </Section>
+
+        <AiAdvisorCta variant="compact" context={{ topic: "Plata 925" }} />
 
         <Section title="¿Qué es la plata de ley?">
           <p>
@@ -175,7 +180,7 @@ export default function Silver925Guide({ languageLinks }: { languageLinks?: Lang
           </p>
         </Section>
 
-        <Section title="Plata 925 y plata de ley: ¿son lo mismo?">
+        <Section title="¿La plata 925 es plata auténtica?">
           <p>
             En el uso habitual de joyería, plata 925 y plata de ley suelen referirse a la misma idea cuando la pieza contiene un 92,5 % de plata. La forma más precisa es hablar de plata de ley 925.
           </p>
@@ -190,6 +195,9 @@ export default function Silver925Guide({ languageLinks }: { languageLinks?: Lang
           </p>
           <p>
             La plata puede reaccionar con compuestos presentes en el ambiente y con sustancias como perfumes, cosmeticos, humedad, sudor o productos de limpieza. El resultado suele ser una capa oscura superficial que puede limpiarse con metodos adecuados si la pieza lo permite.
+          </p>
+          <p>
+            Consulta cómo <Link href="/guias/como-limpiar-plata" className="font-semibold text-[#9a6b08] hover:text-[#17120b]">limpiar joyas de plata sin dañarlas</Link> antes de aplicar un producto, especialmente si la pieza tiene piedras, perlas o acabados delicados.
           </p>
         </Section>
 
@@ -245,6 +253,9 @@ export default function Silver925Guide({ languageLinks }: { languageLinks?: Lang
           <p>
             Ninguno es universalmente mejor. La decision depende de estilo, presupuesto, uso, sensibilidad personal, acabado y pieza concreta.
           </p>
+          <p>
+            Si buscas comparar tonos y composición de otros metales, consulta también nuestra guía sobre <Link href="/guias/oro-blanco" className="font-semibold text-[#9a6b08] hover:text-[#17120b]">oro blanco</Link>.
+          </p>
         </Section>
 
         <Section title="Cómo cuidar las joyas de plata 925">
@@ -261,9 +272,12 @@ export default function Silver925Guide({ languageLinks }: { languageLinks?: Lang
               </li>
             ))}
           </ul>
+          <p>
+            Para pautas generales de almacenamiento y mantenimiento, consulta cómo <Link href="/guias/como-cuidar-joyas" className="font-semibold text-[#9a6b08] hover:text-[#17120b]">cuidar joyas sin dañarlas</Link>.
+          </p>
         </Section>
 
-        <Section title="¿Cuánto dura la plata 925?">
+        <Section title="¿Es buena la plata 925 para uso diario?">
           <p>
             No existe una duracion universal. Una joya de plata 925 puede conservarse muy bien o deteriorarse antes segun uso, cuidado, construccion de la pieza, grosor, engastes, acabados y exposicion a sustancias.
           </p>
@@ -379,6 +393,34 @@ function SilverComparisonTable() {
                 <th scope="row" className="p-3 font-semibold text-[#17120b]">{row.label}</th>
                 <td className="p-3 leading-6 text-[#625746]">{row.sterling}</td>
                 <td className="p-3 leading-6 text-[#625746]">{row.fine}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function Silver925SummaryTable() {
+  const rows = [
+    ["Plata 925", "92,5 % de plata pura"],
+    ["925", "Sello o indicación de la finura de la aleación"],
+    ["Resto", "7,5 % de otros metales, habitualmente cobre"],
+    ["Uso", "Joyería práctica para uso diario, según diseño y cuidados"],
+  ];
+
+  return (
+    <section className="mt-8 rounded-3xl border border-[#ead8b3] bg-white p-5 shadow-sm sm:p-7">
+      <h2 className="text-3xl font-semibold tracking-[-0.04em] text-[#17120b]">Plata de ley 925: significado en resumen</h2>
+      <div className="mt-5 overflow-hidden rounded-2xl border border-[#ead8b3]">
+        <table className="w-full border-collapse text-left text-sm">
+          <caption className="sr-only">Resumen de qué significa plata de ley 925</caption>
+          <tbody>
+            {rows.map(([concept, meaning]) => (
+              <tr key={concept} className="border-t border-[#ead8b3] first:border-t-0 odd:bg-white even:bg-[#fffdf8]">
+                <th scope="row" className="w-1/3 p-4 font-semibold text-[#17120b]">{concept}</th>
+                <td className="p-4 leading-7 text-[#625746]">{meaning}</td>
               </tr>
             ))}
           </tbody>
