@@ -3,7 +3,7 @@ import AiAdvisorCta from "@/components/AiAdvisorCta";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import type { LanguageLink } from "@/components/LanguageSwitcher";
 import SiteHeader from "@/components/SiteHeader";
-import { EDITORIAL_REVIEW_DATE, editorialDetails, getOpenGraphImagePath } from "@/lib/editorial";
+import { editorialDetails, getOpenGraphImagePath } from "@/lib/editorial";
 import type { ArticleData, LinkItem, RichParagraph } from "@/lib/site-content";
 import { absoluteUrl, PUBLIC_CONTACT_EMAIL, SITE_NAME } from "@/lib/site-config";
 import { localizeHref, localizeText, type Locale } from "@/lib/i18n";
@@ -266,7 +266,8 @@ function buildStructuredData(data: ArticleStructuredData, article: ArticleData) 
       headline: article.title,
       description: article.description,
       image: [absoluteUrl(getOpenGraphImagePath(locale))],
-      dateModified: EDITORIAL_REVIEW_DATE,
+      ...(article.datePublished ? { datePublished: article.datePublished } : {}),
+      ...(article.dateModified ? { dateModified: article.dateModified } : {}),
       inLanguage: locale === "es" ? "es-ES" : locale,
       author: {
         "@type": "Organization",
@@ -277,6 +278,7 @@ function buildStructuredData(data: ArticleStructuredData, article: ArticleData) 
         "@type": "Organization",
         name: SITE_NAME,
         url: absoluteUrl("/"),
+        logo: absoluteUrl("/favicon.ico"),
         email: PUBLIC_CONTACT_EMAIL,
       },
     },

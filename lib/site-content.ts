@@ -33,6 +33,8 @@ export type ArticleData = {
   categorySlug?: string;
   title: string;
   seoTitle?: string;
+  datePublished?: string;
+  dateModified?: string;
   description: string;
   eyebrow: string;
   intro: string;
@@ -57,6 +59,94 @@ export type GuideCategory = {
 };
 
 const advisorLink = { href: "/#joyero-ia", label: "Probar el joyero IA" };
+
+const guidePublicationDates: Record<string, string> = {
+  "oro-14k-18k-24k": "2026-09-14",
+  "como-saber-si-una-joya-es-de-oro": "2026-09-14",
+  "como-saber-si-es-plata": "2026-09-14",
+  "plata-925": "2026-09-14",
+  "platino": "2026-09-14",
+  "como-saber-talla-anillo": "2026-09-14",
+  "como-elegir-collar": "2026-09-14",
+  "collares-segun-escote": "2026-09-14",
+  "tipos-de-cadenas": "2026-09-14",
+  "como-elegir-pendientes": "2026-09-14",
+  "tipos-cierre-pendientes": "2026-09-14",
+  "tipos-de-pendientes": "2026-09-14",
+  "como-cuidar-joyas": "2026-09-14",
+  "como-elegir-una-joya-para-regalar": "2026-09-14",
+  "piedras-preciosas": "2026-09-14",
+  "tipos-de-anillos": "2026-09-14",
+  "oro-rosa": "2026-09-14",
+  "oro-laminado-chapado-bano": "2026-09-14",
+  "oro-blanco": "2026-09-14",
+  "moissanita-vs-diamante": "2026-09-14",
+  "diamantes-rosados": "2026-09-14",
+  "como-saber-si-una-perla-es-autentica": "2026-09-14",
+  "tipos-de-perlas": "2026-09-14",
+  "oro-vermeil": "2026-09-14",
+  "tipos-de-collares": "2026-09-14",
+  "pulsera-tennis": "2026-09-14",
+  "como-limpiar-plata": "2026-09-14",
+  "como-limpiar-oro": "2026-09-14",
+  "pendientes-boda-invitada": "2026-09-14",
+  "joyas-para-regalar-mujer": "2026-09-14",
+  "joyas-para-regalar-novia": "2026-09-14",
+  "pulseras-de-la-amistad": "2026-09-14",
+  "pulseras-para-mama": "2026-09-14",
+  "joya-regalo-madre-primeriza": "2026-09-14",
+  "joyas-para-parejas": "2026-09-14",
+  "pulseras-para-regalar": "2026-09-14",
+  "pendientes-madrina-mantilla": "2026-09-14",
+  "pendientes-madrina-boda": "2026-09-14",
+  "pendientes-vestido-azul-marino": "2026-09-14",
+  "pendientes-vestido-rojo-boda": "2026-09-14",
+  "collares-invitada-boda": "2026-09-16",
+  "como-elegir-pendientes-novia": "2026-09-16",
+  "en-que-mano-va-anillo-compromiso": "2026-09-16",
+  "anillo-de-promesa": "2026-09-16",
+  "en-que-mano-anillo-casado": "2026-09-16",
+  "pulseras-con-coordenadas": "2026-09-16",
+  "pulseras-nombres-hijos": "2026-09-16",
+  "pulseras-de-novia": "2026-09-16",
+  "pendientes-hipoalergenicos": "2026-09-16",
+  "pendientes-graduacion": "2026-09-16",
+  "esclavas-bebes-oro": "2026-09-16",
+  "cadenas-oro-mujer": "2026-09-16",
+  "combinar-joyas-oro-plata": "2026-09-16",
+  "collar-con-inicial": "2026-09-16",
+  "pulsera-con-nombre": "2026-09-16",
+  "pulseras-plata-mujer": "2026-09-16",
+  "pulseras-oro-mujer": "2026-09-16",
+  "cadenas-plata-mujer": "2026-09-16",
+  "anillos-plata-mujer": "2026-09-16",
+  "pendientes-oro-18k": "2026-09-16",
+  "gargantillas-oro": "2026-09-16",
+  "cruz-oro": "2026-09-16",
+  "anillos-oro-mujer": "2026-09-16",
+  "aros-plata-mujer": "2026-09-16",
+  "aros-oro-mujer": "2026-09-16",
+  "collar-estrella": "2026-09-16",
+  "pulsera-infinito": "2026-09-16",
+  "collar-sol": "2026-09-16",
+  "collar-luna": "2026-09-16",
+  "anillo-sello-mujer": "2026-09-16",
+  "pendientes-estrella-plata": "2026-09-16",
+  "pendientes-pequenos-plata": "2026-09-16",
+  "anillos-tungsteno": "2026-09-16",
+  "collares-conchas": "2026-09-16",
+  "pulsera-grabada-mujer": "2026-09-16",
+  "collares-finos-mujer": "2026-09-16",
+  "cadena-fina-oro": "2026-09-16",
+  "brazalete-oro-mujer": "2026-09-16",
+  "como-desenredar-una-cadena": "2026-09-16",
+};
+
+const guideModificationDates: Partial<Record<string, string>> = {
+  "oro-14k-18k-24k": "2026-10-06",
+  "como-saber-si-una-joya-es-de-oro": "2026-10-06",
+  "plata-925": "2026-10-06",
+};
 
 export const jewelryCategories: ArticleData[] = [
   {
@@ -395,35 +485,66 @@ export const occasions: ArticleData[] = [
   {
     slug: "cumpleanos",
     eyebrow: "Ocasiones",
-    title: "Joyas para cumpleaños segun edad, relacion y estilo",
+    title: "Joyas para cumpleaños: qué regalar según estilo y presupuesto",
+    seoTitle: "Joyas para cumpleaños: qué regalar según estilo y presupuesto",
     description:
-      "Como elegir joyas de cumpleaños considerando edad, relacion, uso diario, presupuesto y estilo personal.",
+      "Descubre qué joya regalar por cumpleaños según la persona, su estilo, edad y presupuesto. Ideas de anillos, pendientes, collares y pulseras.",
     intro:
-      "Un cumpleaños admite regalos muy distintos: un detalle sencillo, una pieza para diario o una joya mas especial. La clave es adaptar la eleccion a la relacion y al uso real.",
+      "Una joya puede ser un regalo de cumpleaños personal y duradero. Para elegirla, piensa en la relación con esa persona, su estilo y tu presupuesto; en Joyas.ai te ayudamos a comparar anillos, pendientes, collares, pulseras y otras opciones con criterio.",
     sections: [
       {
-        title: "Edad y relacion",
+        title: "Qué joya regalar por cumpleaños",
         paragraphs: [
-          "Para alguien joven puede funcionar una pieza ligera y resistente. Para una relacion cercana, un detalle personalizado puede tener mas sentido.",
-          "No hace falta que la joya sea formal; debe encajar con su vida cotidiana.",
+          "Empieza por lo que ya usa: el metal que repite, si prefiere piezas discretas o visibles y cuánto las lleva a diario. Los pendientes suelen ser una opción segura si no conoces la talla; un collar o una pulsera ajustable también dan margen para acertar. Un anillo puede ser especial, pero conviene confirmar su medida y el significado que puede transmitir.",
+          "Si la joya es una sorpresa, prioriza una pieza fácil de combinar sobre una muy marcada. La intención cuenta, pero una elección que encaje con su rutina suele durar más que una opción elegida solo para la fecha.",
         ],
       },
       {
-        title: "Uso diario",
+        title: "Joyas de cumpleaños según la persona",
         paragraphs: [
-          "Pendientes pequeños, collares finos y pulseras ajustables suelen ser faciles de llevar. Si la persona cambia mucho de estilo, una joya versatil puede ser mejor que una muy marcada.",
+          "La relación ayuda a decidir cuánto significado, personalización o presencia puede tener el regalo. No hay una fórmula fija: usa estas pistas para ajustar la elección a la persona, no a un estereotipo.",
+        ],
+        subsections: [
+          { title: "Para pareja", paragraphs: ["Un grabado, una inicial o una piedra con un recuerdo común pueden aportar intención. Evita un anillo si puede interpretarse como un compromiso que no queréis expresar o no conoces bien la talla."] },
+          { title: "Para madre", paragraphs: ["Una pieza cómoda para diario, un colgante con significado familiar o una pulsera discreta pueden funcionar si encajan con los metales y formas que ya suele llevar."] },
+          { title: "Para hermana o amiga", paragraphs: ["Una joya ponible y fácil de combinar suele ser una elección natural. Puedes apoyarte en un color, símbolo o estilo que reconozcas como suyo sin hacer el regalo demasiado literal."] },
+          { title: "Para hombre", paragraphs: ["Una cadena sobria, una pulsera de líneas limpias, unos gemelos o un anillo sello pueden encajar si ya usa accesorios. Observa antes el material, el grosor y el nivel de presencia que prefiere."] },
         ],
       },
       {
-        title: "Presupuesto",
+        title: "Qué joya elegir según el estilo",
         paragraphs: [
-          "Define un rango antes de elegir. En joyeria, material, acabado, piedra, tamaño y marca pueden cambiar mucho el precio.",
+          "El estilo habitual es una pista más útil que una tendencia puntual. Minimalista suele asociarse a líneas finas, pendientes pequeños o colgantes sencillos; clásico, a piezas atemporales y acabados sobrios; romántico, a detalles personales o formas suaves; moderno, a volúmenes o geometrías que ya formen parte de su manera de vestir; y elegante, a una pieza cuidada con presencia contenida.",
+          "Si no conoces bien sus gustos, revisa las joyas que repite y elige una versión parecida antes que una pieza muy llamativa. También conviene comprobar alergias conocidas, cierres y cuidados del material.",
+        ],
+      },
+      {
+        title: "Joyas de cumpleaños según presupuesto",
+        paragraphs: [
+          "El presupuesto sirve para acotar opciones, no para medir la importancia del regalo. Compara siempre el material declarado, el acabado, las medidas, el cierre y las condiciones de cambio antes de decidir.",
+        ],
+        table: {
+          columns: ["Presupuesto", "Qué priorizar"],
+          rows: [
+            ["Menos de 50 €", "Diseños sencillos, materiales claramente indicados y una pieza fácil de llevar."],
+            ["50–100 €", "Versatilidad, buen cierre y acabados que encajen con su estilo diario."],
+            ["100–250 €", "Material, fabricación, piedras y posibilidad de ajuste o devolución."],
+            ["Más de 250 €", "Documentación, garantía, cuidados y una elección que tenga sentido para la persona."],
+          ],
+        },
+      },
+      {
+        title: "Ideas de joyas según la edad",
+        paragraphs: [
+          "La edad no determina el gusto, pero puede orientar el uso. Para alguien joven suelen ser prácticas las piezas resistentes, ligeras y ajustables; en una etapa profesional, una joya versátil que acompañe el día a día; y para una persona con un estilo ya definido, una pieza que respete sus preferencias habituales. En todos los casos, el estilo personal pesa más que una regla por edad.",
         ],
       },
     ],
     related: [
-      { href: "/joyas/pendientes", label: "Como elegir pendientes" },
-      { href: "/guias", label: "Guías para regalar joyas" },
+      { href: "/guias/como-elegir-una-joya-para-regalar", label: "Cómo elegir una joya para regalar" },
+      { href: "/guias/joyas-para-regalar-mujer", label: "Joyas para regalar a una mujer" },
+      { href: "/guias/joyas-para-parejas", label: "Joyas para parejas" },
+      { href: "/joyas/pendientes", label: "Cómo elegir pendientes" },
       advisorLink,
     ],
   },
@@ -1134,6 +1255,13 @@ export const guides: ArticleData[] = [
         title: "Tabla rápida de tipos de cadenas",
         paragraphs: [
           "Esta comparativa resume estilos habituales. La resistencia real depende también del grosor, material, soldaduras, calidad, cierre y construcción.",
+          {
+            parts: [
+              "El tipo de cadena describe el eslabón; para comparar longitud, caída y formato del conjunto, consulta ",
+              { href: "/guias/tipos-de-collares", label: "tipos de collares" },
+              ".",
+            ],
+          },
         ],
         table: {
           columns: ["Tipo", "Aspecto", "Flexibilidad", "Adecuada para colgante", "Estilo"],
@@ -1699,7 +1827,7 @@ export const guides: ArticleData[] = [
       {
         title: "Significado",
         paragraphs: [
-          "Una fecha, inicial o piedra vinculada a un recuerdo puede aportar cercanía, siempre que el resultado siga siendo ponible.",
+          { parts: ["Una fecha, inicial o piedra vinculada a un recuerdo puede aportar cercanía, siempre que el resultado siga siendo ponible. Si el regalo es para ", { href: "/ocasiones/cumpleanos", label: "un cumpleaños" }, ", prioriza además una pieza que encaje con el uso diario."] },
         ],
       },
     ],
@@ -1775,7 +1903,7 @@ export const guides: ArticleData[] = [
           {
             parts: [
               "Si estás mirando anillos para regalar, recuerda que la talla también importa. Puedes revisar nuestra guía sobre ",
-              { href: "/guias/como-saber-talla-anillo", label: "cómo saber la talla de un anillo" },
+              { href: "/joyas/anillos/como-saber-talla-anillo", label: "cómo saber la talla de un anillo" },
               ".",
             ],
           },
@@ -3756,7 +3884,7 @@ export const guides: ArticleData[] = [
         title: "Qué joya regalar según la ocasión",
         paragraphs: [],
         subsections: [
-          { title: "Cumpleaños", paragraphs: ["Una pieza ponible con un detalle personal suele tener buen equilibrio entre intención y uso diario."] },
+          { title: "Cumpleaños", paragraphs: [{ parts: ["Una pieza ponible con un detalle personal suele tener buen equilibrio entre intención y uso diario. Encuentra más ideas de ", { href: "/ocasiones/cumpleanos", label: "joyas para regalar por cumpleaños" }, "."] }] },
           { title: "Aniversario", paragraphs: ["Puede tener más sentido simbólico: iniciales, piedras con recuerdo o una pieza que conecte con vuestra historia."] },
           { title: "Navidad", paragraphs: ["Funcionan joyas versátiles, fáciles de combinar y con margen de cambio si no se conoce todo."] },
           { title: "San Valentín", paragraphs: ["Un detalle romántico funciona mejor cuando conserva su estilo real y no transmite un compromiso que no buscas expresar."] },
@@ -3909,7 +4037,7 @@ export const guides: ArticleData[] = [
       {
         title: "Joyas para regalar a mi novia según la ocasión",
         paragraphs: [
-          "Para su cumpleaños busca una pieza que pueda estrenar pronto. En un aniversario, un símbolo compartido puede aportar valor. En Navidad conviene una joya versátil y con margen de cambio; en San Valentín, un detalle romántico sin alejarse de su estilo. Un regalo sorpresa o una celebración especial funciona mejor cuando el diseño se parece a lo que ya usa.",
+          { parts: ["Al elegir ", { href: "/ocasiones/cumpleanos", label: "un regalo de cumpleaños" }, ", busca una pieza que pueda estrenar pronto. En un aniversario, un símbolo compartido puede aportar valor. En Navidad conviene una joya versátil y con margen de cambio; en San Valentín, un detalle romántico sin alejarse de su estilo. Un regalo sorpresa o una celebración especial funciona mejor cuando el diseño se parece a lo que ya usa."] },
         ],
       },
       {
@@ -3993,7 +4121,7 @@ export const guides: ArticleData[] = [
         { title: "Sentimental o colorida", paragraphs: ["Una inicial, una fecha, un charm o una piedra puede tener sentido si refleja sus gustos y no un cliché sobre la maternidad."] },
       ] },
       { title: "Pulseras con significado para mamá", paragraphs: ["Las referencias familiares, una fecha importante o un símbolo compartido pueden aportar intención. Antes de grabar, confirma la ortografía, los plazos y las condiciones de cambio; las personalizaciones suelen tener menos margen de devolución."] },
-      { title: "Pulseras según la ocasión", paragraphs: ["Para cumpleaños, Día de la Madre o Navidad, busca una pieza que pueda disfrutar enseguida. Un aniversario, una jubilación, un agradecimiento o el nacimiento de un nieto pueden justificar un detalle más personal, siempre acorde a su gusto."] },
+      { title: "Pulseras según la ocasión", paragraphs: [{ parts: ["Para ", { href: "/ocasiones/cumpleanos", label: "un cumpleaños" }, ", Día de la Madre o Navidad, busca una pieza que pueda disfrutar enseguida. Un aniversario, una jubilación, un agradecimiento o el nacimiento de un nieto pueden justificar un detalle más personal, siempre acorde a su gusto."] }] },
       { title: "Qué material elegir y cómo acertar con la talla", paragraphs: ["El oro, la plata, el acero y otros materiales habituales se diferencian por aspecto, cuidados y presupuesto; observa qué metal lleva ya. Comprueba también el cierre, el diámetro o la longitud. Si no conoces la medida, una pulsera ajustable o con alargador reduce el riesgo."] },
       { title: "Cómo acertar si no sabes qué pulsera le gustaría", paragraphs: [
         { parts: ["Fíjate en si usa pulseras con frecuencia, qué tono de metal repite y si prefiere líneas sencillas o detalles visibles. Puedes ordenar esas pistas con ", { href: "/#joyero-ia", label: "el recomendador IA de joyas.ai" }, "."] },
@@ -4049,6 +4177,7 @@ export const guides: ArticleData[] = [
     related: [
       { href: "/guias/joyas-para-regalar-novia", label: "Joyas para regalar a mi novia" },
       { href: "/ocasiones/aniversario", label: "Joyas para aniversario" },
+      { href: "/ocasiones/cumpleanos", label: "Joyas para cumpleaños" },
       { href: "/guias/pulseras-para-regalar", label: "Pulseras para regalar" },
     ],
     advisorCta: { title: "Encuentra una joya para vuestra historia", description: "Cuéntale a nuestro joyero IA la ocasión, lo que compartís y el estilo de ambos." },
@@ -4076,6 +4205,7 @@ export const guides: ArticleData[] = [
       { href: "/guias/pulseras-para-mama", label: "Pulseras para mamá" },
       { href: "/guias/pulseras-de-la-amistad", label: "Pulseras de la amistad" },
       { href: "/guias/joyas-para-parejas", label: "Joyas para parejas" },
+      { href: "/ocasiones/cumpleanos", label: "Joyas para cumpleaños" },
     ],
     advisorCta: { title: "Encuentra la pulsera perfecta para regalar", description: "Indica para quién es, qué suele llevar y la ocasión para recibir una recomendación más útil." },
   },
@@ -4964,7 +5094,7 @@ export const guides: ArticleData[] = [
   {
     slug: "anillos-plata-mujer", categorySlug: "anillos", eyebrow: "Guías", title: "Anillos de plata para mujer: tipos y cómo elegir", description: "Descubre cómo elegir anillos de plata para mujer: plata 925, tallas, estilos, piedras y consejos para encontrar el anillo adecuado.", intro: "Para elegir anillos de plata para mujer, empieza por talla y estilo de uso. Después compara plata 925, grosor, acabado, piedras y si buscas una pieza minimalista, un sello o varios anillos.",
     sections: [
-      { title: "Plata 925 y tipos de anillo", paragraphs: [{ parts: ["La plata 925 es habitual en joyería. Puedes elegir anillos finos, anchos, minimalistas, tipo sello, ajustables o apilables. Consulta ", { href: "/guias/plata-925", label: "plata 925" }, "."] }] },
+      { title: "Plata 925 y tipos de anillo", paragraphs: [{ parts: ["La plata 925 es habitual en joyería. Puedes elegir anillos finos, anchos, minimalistas, tipo sello, ajustables o apilables. Consulta ", { href: "/guias/plata-925", label: "plata 925" }, " y los ", { href: "/guias/tipos-de-anillos", label: "principales tipos de anillos" }, "."] }] },
       { title: "Talla y anillos ajustables", paragraphs: ["La talla cambia entre dedos y manos. Un ajustable puede aportar margen, pero debe quedar cómodo y tiene límites de diseño. Para regalo, intenta confirmar talla o revisa cambios.", { parts: ["Consulta ", { href: "/guias/como-saber-talla-anillo", label: "cómo saber la talla de un anillo" }, "."] }] },
       { title: "Acabados, piedras y combinación", paragraphs: ["Un pulido refleja más luz; un mate o envejecido da otro efecto. Las piedras requieren revisar engaste y cuidados. Puedes apilar anillos finos o mezclar plata y oro con una proporción clara."] },
       { title: "Uso y cuidado", paragraphs: ["Para diario, prioriza talla y comodidad; para eventos puedes buscar más volumen. Comprueba composición, talla, acabado, piedras y devolución. La plata puede cambiar con el uso; consulta ", { parts: ["cómo ", { href: "/guias/como-limpiar-plata", label: "limpiar plata" }, "."] }] },
@@ -5025,7 +5155,7 @@ export const guides: ArticleData[] = [
   {
     slug: "anillos-oro-mujer", categorySlug: "anillos", eyebrow: "Guías", title: "Anillos de oro para mujer: tipos, estilos y cómo elegir", description: "Descubre cómo elegir anillos de oro para mujer según estilo, talla, piedras, color de oro y ocasión, con criterios útiles para comprar o regalar.", intro: "Los anillos de oro para mujer pueden ser minimalistas, de sello, solitarios o llevar piedras. Elegir bien requiere empezar por talla y uso, y después comparar diseño, color de oro y comodidad.",
     sections: [
-      { title: "Anillos minimalistas, sello, solitario y con piedras", paragraphs: ["Un anillo fino y minimalista suele combinar con facilidad; un sello tiene más volumen; un solitario concentra el foco en una piedra; y los diseños con varias piedras requieren mirar el engaste. Elige por el uso real, no solo por la imagen de producto."] },
+      { title: "Anillos minimalistas, sello, solitario y con piedras", paragraphs: [{ parts: ["Un anillo fino y minimalista suele combinar con facilidad; un sello tiene más volumen; un solitario concentra el foco en una piedra; y los diseños con varias piedras requieren mirar el engaste. Para comparar ", { href: "/guias/tipos-de-anillos", label: "tipos de anillos" }, ", parte del uso real, no solo de la imagen de producto."] }] },
       { title: "Talla y ajuste", paragraphs: [{ parts: ["La talla varía entre dedos y puede cambiar con el ancho del aro. Para regalar, intenta confirmar una pieza que ya use o elige solo un modelo ajustable diseñado para ello. Consulta ", { href: "/guias/como-saber-talla-anillo", label: "cómo saber la talla de un anillo" }, "."] }] },
       { title: "Oro amarillo, blanco y rosa", paragraphs: [{ parts: ["El amarillo aporta un tono cálido; el blanco y el rosa ofrecen alternativas visuales distintas. Compara la composición en ", { href: "/guias/oro-blanco", label: "oro blanco" }, ", ", { href: "/guias/oro-rosa", label: "oro rosa" }, " y ", { href: "/guias/oro-14k-18k-24k", label: "oro 14k, 18k y 24k" }, "."] }] },
       { title: "Piedras, uso diario y combinación", paragraphs: [{ parts: ["Revisa el engaste, la altura y los cuidados si el anillo lleva piedras. Para diario, prima comodidad y que no se enganche; para combinar, alterna anchos o deja una pieza protagonista. Como contraste de material, consulta los ", { href: "/guias/anillos-plata-mujer", label: "anillos de plata para mujer" }, "."] }] },
@@ -5216,7 +5346,7 @@ export const guides: ArticleData[] = [
       { title: "Qué es un anillo de tungsteno", paragraphs: ["En joyería se comercializan con frecuencia anillos basados en carburo de tungsteno u otras composiciones según el fabricante. No conviene asumir que todos sean tungsteno puro: comprueba siempre la descripción específica de la pieza."] },
       { title: "Características y limitaciones", paragraphs: ["Suelen asociarse a elevada dureza superficial y resistencia al rayado frente a metales más blandos, además de un peso perceptible y una construcción rígida. Eso no significa que no puedan marcarse o dañarse, ni que todos se comporten igual: composición, acabado y uso importan."] },
       { title: "Tungsteno frente a oro, plata, titanio y acero", paragraphs: [{ parts: ["Oro, plata, titanio, acero y tungsteno tienen aspecto, peso, rigidez y mantenimiento diferentes. Ninguno es universalmente mejor: depende de estilo, uso y necesidad de ajuste. Para comparar los metales tradicionales, consulta ", { href: "/guias/anillos-oro-mujer", label: "anillos de oro para mujer" }, " y ", { href: "/guias/anillos-plata-mujer", label: "anillos de plata para mujer" }, "."] }] },
-      { title: "Colores, acabados y anchura", paragraphs: ["El gris metálico, negro, dorado, pulido, mate, cepillado o combinaciones de acabado pueden cambiar el resultado visual. Algunos colores dependen de recubrimientos o tratamientos superficiales. Un aro estrecho, medio o ancho también cambia la presencia y comodidad; no existe una anchura correcta para todas las personas."] },
+      { title: "Colores, acabados y anchura", paragraphs: [{ parts: ["El gris metálico, negro, dorado, pulido, mate, cepillado o combinaciones de acabado pueden cambiar el resultado visual. Algunos colores dependen de recubrimientos o tratamientos superficiales. Un aro estrecho, medio o ancho también cambia la presencia y comodidad; para comparar ", { href: "/guias/tipos-de-anillos", label: "formatos y estilos de anillo" }, ", no existe una anchura correcta para todas las personas."] }] },
       { title: "Talla, interior comfort fit y grabados", paragraphs: [{ parts: ["Mide correctamente antes de comprar: muchos anillos de tungsteno no se redimensionan con facilidad, por lo que debes consultar las condiciones del vendedor. Algunos modelos usan un interior ligeramente redondeado, conocido como comfort fit, que puede cambiar la sensación al llevarlo. El grabado de nombres, iniciales, fechas o mensajes depende del modelo y fabricante. Consulta ", { href: "/guias/como-saber-talla-anillo", label: "cómo saber la talla de un anillo" }, "."] }] },
       { title: "Compra, regalo y uso", paragraphs: ["Puede considerarse para pareja o boda, además de uso personal, sin que eso defina todo el producto. Revisa composición declarada, talla, anchura, grosor, peso, acabado, recubrimientos, grabado y condiciones de cambio por talla antes de decidir."] },
       { title: "Preguntas frecuentes", paragraphs: [], subsections: [
@@ -5234,7 +5364,7 @@ export const guides: ArticleData[] = [
     slug: "collares-conchas", categorySlug: "collares", eyebrow: "Guías", title: "Collares de conchas: tipos, materiales y cómo elegir", description: "Descubre los tipos de collares de conchas, materiales, estilos y acabados, cómo combinarlos y qué revisar antes de elegir uno.", intro: "Los collares de conchas pueden usar conchas naturales, materiales que las imitan o motivos de concha fabricados en metal. Para elegirlos, confirma el material real, el tamaño, la longitud y el tipo de unión.",
     sections: [
       { title: "Qué es un collar de conchas", paragraphs: ["Puede llevar conchas como elemento principal, pequeñas piezas intercaladas, un colgante con forma de concha o un diseño inspirado en ellas. Una concha natural, una imitación y un motivo metálico no son materiales equivalentes; no des por hecha la autenticidad solo por una fotografía."] },
-      { title: "Tipos, tamaños y materiales", paragraphs: ["Hay collares cortos, largos, gargantillas, colgantes, diseños minimalistas y piezas protagonistas con cuentas, perlas, cordón, acero, plata u oro. Un detalle pequeño da un resultado sutil; una concha central o varias piezas grandes atraen más la atención. Elige según el efecto visual y el uso que buscas."] },
+      { title: "Tipos, tamaños y materiales", paragraphs: [{ parts: ["Hay collares cortos, largos, gargantillas, colgantes, diseños minimalistas y piezas protagonistas con cuentas, perlas, cordón, acero, plata u oro. Para distinguir ", { href: "/guias/tipos-de-collares", label: "tipos de collares y longitudes" }, ", compara el efecto visual y el uso que buscas."] }] },
       { title: "Longitud y combinación", paragraphs: [{ parts: ["La longitud cambia cómo se percibe el collar y no cae igual en todas las personas. Puedes llevarlo con ropa neutra, looks informales, vestidos u otros collares de distinta altura. Si el collar es protagonista, unos pendientes discretos pueden equilibrar el conjunto. Para mezclar metales, consulta ", { href: "/guias/combinar-joyas-oro-plata", label: "cómo combinar joyas de oro y plata" }, " y revisa las longitudes en ", { href: "/guias/collares-segun-escote", label: "qué collar elegir según el escote" }, "."] }] },
       { title: "Regalo, cuidado y compra", paragraphs: [{ parts: ["Puede encajar como regalo de cumpleaños, verano, viaje o para una persona a la que le guste el mar, sin que tenga un significado universal. Revisa material real, dimensiones, longitud, cierre, cadena o cordón, acabado, peso, resistencia de la unión y devolución. Evita golpes, productos químicos agresivos y humedad prolongada cuando el material lo requiera; guarda la pieza separada. Para más criterios de regalo, consulta ", { href: "/guias/como-elegir-una-joya-para-regalar", label: "cómo elegir una joya para regalar" }, "."] }] },
       { title: "Preguntas frecuentes", paragraphs: [], subsections: [
@@ -5383,7 +5513,11 @@ export const guides: ArticleData[] = [
     ],
     advisorCta: { title: "Encuentra una cadena adecuada para tu uso", description: "Indica si la llevarás sola o con colgante, el material, el grosor y el uso para comparar opciones con más criterio." },
   },
-];
+].map((article) => ({
+  ...article,
+  datePublished: guidePublicationDates[article.slug],
+  ...(guideModificationDates[article.slug] ? { dateModified: guideModificationDates[article.slug] } : {}),
+}));
 
 export const guideCategories: GuideCategory[] = [
   {
