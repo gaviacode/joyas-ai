@@ -2,10 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
 import CookieSettingsButton from "@/components/CookieSettingsButton";
 import { localizeHref, localizeText, type Locale } from "@/lib/i18n";
 
-const footerGroups = [
+type FooterLink = {
+  href: string;
+  label: string;
+  legal?: boolean;
+};
+
+type FooterGroup = {
+  title: string;
+  links: FooterLink[];
+  extra?: "cookie-settings";
+};
+
+const footerGroups: FooterGroup[] = [
   {
     title: "JOYAS.AI",
     links: [
@@ -51,9 +65,9 @@ const footerGroups = [
       { href: "/transparencia", label: "Transparencia" },
       { href: "/transparencia-afiliacion", label: "Transparencia de afiliación" },
       { href: "/contacto", label: "Contacto" },
-      { href: "/aviso-legal", label: "Aviso legal" },
-      { href: "/politica-privacidad", label: "Privacidad" },
-      { href: "/cookies", label: "Cookies" },
+      { href: "/aviso-legal", label: "Aviso legal", legal: true },
+      { href: "/politica-privacidad", label: "Privacidad", legal: true },
+      { href: "/cookies", label: "Cookies", legal: true },
     ],
     extra: "cookie-settings",
   },
@@ -62,8 +76,17 @@ const footerGroups = [
 export default function SiteFooter() {
   const pathname = usePathname();
   const locale = getLocaleFromPath(pathname);
+  const [openGroups, setOpenGroups] = useState<string[]>([]);
   const footerAriaLabel =
     locale === "pt-BR" ? "Links do rodapé" : locale === "en" ? "Footer links" : "Enlaces del pie de página";
+
+  function toggleGroup(title: string) {
+    setOpenGroups((groups) => (
+      groups.includes(title)
+        ? groups.filter((group) => group !== title)
+        : [...groups, title]
+    ));
+  }
 
   return (
     <footer className="border-t border-[#eadfca] bg-[#fbf7ef]">
@@ -82,28 +105,58 @@ export default function SiteFooter() {
             </p>
           </div>
 
-          <nav aria-label={footerAriaLabel} className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-            {footerGroups.map((group) => (
-              <div key={group.title}>
-                <h2 className="text-xs font-semibold tracking-[0.18em] text-[#9b7b3a]">
-                  {group.title === "JOYAS.AI" ? group.title : localizeText(group.title, locale)}
+          <nav aria-label={footerAriaLabel} className="grid gap-0 border-t border-[#eadfca] md:grid-cols-2 md:gap-6 md:border-t-0 lg:grid-cols-5">
+            {footerGroups.map((group, index) => {
+              const isOpen = openGroups.includes(group.title);
+              const groupTitle = group.title === "JOYAS.AI" ? group.title : localizeText(group.title, locale);
+              const groupId = `footer-group-${index}`;
+
+              return (
+              <div key={group.title} className="border-b border-[#eadfca] md:border-0">
+                <button
+                  type="button"
+                  aria-expanded={isOpen}
+                  aria-controls={groupId}
+                  onClick={() => toggleGroup(group.title)}
+                  className="flex w-full items-center justify-between py-4 text-left text-xs font-semibold tracking-[0.18em] text-[#9b7b3a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] md:hidden"
+                >
+                  {groupTitle}
+                  <ChevronDown className={`size-4 transition-transform ${isOpen ? "rotate-180" : ""}`} aria-hidden="true" />
+                </button>
+                <h2 className="hidden text-xs font-semibold tracking-[0.18em] text-[#9b7b3a] md:block">
+                  {groupTitle}
                 </h2>
-                <ul className="mt-3 space-y-2">
+                <ul id={groupId} className={`${isOpen ? "block" : "hidden"} space-y-2 pb-4 md:mt-3 md:block md:pb-0`}>
                   {group.links.map((link) => (
-                    <li key={link.href}>
+                    <li key={link.href} className={link.legal ? "hidden md:list-item" : undefined}>
                       <Link href={localizeHref(link.href, locale)} className="transition hover:text-[#17120b]">
                         {localizeText(link.label, locale)}
                       </Link>
                     </li>
                   ))}
                   {group.extra === "cookie-settings" ? (
-                    <li>
+                    <li className="hidden md:list-item">
                       <CookieSettingsButton locale={locale} />
                     </li>
                   ) : null}
                 </ul>
               </div>
-            ))}
+              );
+            })}
+            <div className="border-b border-[#eadfca] py-4 md:hidden">
+              <div className="flex flex-wrap gap-x-4 gap-y-2">
+                {footerGroups.flatMap((group) => group.links.filter((link) => link.legal)).map((link) => (
+                  <Link
+                    key={link.href}
+                    href={localizeHref(link.href, locale)}
+                    className="text-xs transition hover:text-[#17120b]"
+                  >
+                    {localizeText(link.label, locale)}
+                  </Link>
+                ))}
+                <CookieSettingsButton locale={locale} />
+              </div>
+            </div>
           </nav>
         </div>
       </div>

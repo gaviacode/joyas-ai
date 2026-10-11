@@ -10,7 +10,7 @@ export default function ExternalGiftIdeasCta({
   ctaLabel,
 }: ExternalGiftIdeasCtaProps) {
   return (
-    <section className="mx-auto max-w-7xl px-5 pb-4 sm:px-8 lg:px-10">
+    <section className="mx-auto max-w-7xl px-5 pb-0 pt-8 sm:px-8 md:pb-4 md:pt-0 lg:px-10">
       <div className="max-w-3xl rounded-3xl border border-[#ead8b3] bg-white/75 p-6 shadow-sm sm:p-8">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9b722b]">
           Regalar.ai

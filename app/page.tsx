@@ -69,39 +69,40 @@ export default function Home() {
       />
       <SiteHeader />
 
-      <section className="mx-auto grid max-w-7xl gap-10 px-5 pb-10 pt-8 sm:px-8 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:px-10 lg:pb-14 lg:pt-10">
+      <section className="mx-auto grid max-w-7xl gap-10 px-5 pb-0 pt-8 sm:px-8 md:pb-10 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:px-10 lg:pb-14 lg:pt-10">
         <div>
-          <p className="mb-4 inline-flex rounded-full border border-[#d7a63c]/30 bg-white/80 px-4 py-2 text-sm text-[#9a6b08] shadow-sm">
+          <p className="mb-4 hidden rounded-full border border-[#d7a63c]/30 bg-white/80 px-4 py-2 text-sm text-[#9a6b08] shadow-sm md:inline-flex">
             Recomendador de joyas con inteligencia artificial
           </p>
-          <h1 className="max-w-3xl text-5xl font-semibold leading-[0.98] tracking-[-0.04em] text-[#17120f] sm:text-6xl lg:text-7xl">
+          <h1 className="max-w-3xl text-[36px] font-semibold leading-[1.03] tracking-[-0.04em] text-[#17120f] md:text-6xl md:leading-[0.98] lg:text-7xl">
             Encuentra la joya perfecta con IA
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-[#63584c]">
-            Habla con un joyero experto con inteligencia artificial y descubre anillos, collares, pulseras o pendientes según la ocasión, tu presupuesto y el estilo de la persona.
+          <p className="mt-4 max-w-2xl text-base leading-7 text-[#63584c] md:mt-6 md:text-lg md:leading-8">
+            La IA de joyas.ai te ayuda a elegir anillos, collares, pulseras o pendientes según la ocasión, el estilo y tu presupuesto.
           </p>
-          <AdvisorResetLink href="/es#joyero-ia" className="mt-9 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#b97a05] to-[#d7a63c] px-7 py-4 font-semibold text-white shadow-lg shadow-[#b97a05]/20 transition hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-[220px]">
+          <AdvisorResetLink href="/es#joyero-ia" className="mt-9 hidden w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#b97a05] to-[#d7a63c] px-7 py-4 font-semibold text-white shadow-lg shadow-[#b97a05]/20 transition hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-[220px] md:inline-flex">
             Probar el joyero IA
           </AdvisorResetLink>
         </div>
-        <HeroJewelry />
+        <HeroJewelry className="hidden md:block" />
       </section>
 
-      <section className="px-5 py-12 sm:px-8 lg:px-10 lg:py-16">
+      <section className="px-5 pb-0 pt-6 sm:px-8 md:py-12 lg:px-10 lg:py-16">
         <div className="mx-auto max-w-7xl">
           <JewelryChat />
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:px-10">
+      <section className="mx-auto max-w-7xl px-5 pb-0 pt-8 sm:px-8 md:py-14 lg:px-10">
         <div className="max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">Categorías</p>
           <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em]">Explora por tipo de joya</h2>
           <p className="mt-4 text-lg leading-8 text-[#63584c]">
-            Cada guía explica estilos, materiales, momentos de uso y errores frecuentes para elegir con más criterio.
+            <span className="md:hidden">Guías para elegir mejor según estilo, material y ocasión.</span>
+            <span className="hidden md:inline">Cada guía explica estilos, materiales, momentos de uso y errores frecuentes para elegir con más criterio.</span>
           </p>
         </div>
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid gap-3 md:mt-8 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {categories.map((category) => (
             <CategoryCard key={category.href} {...category} />
           ))}
@@ -114,15 +115,15 @@ export default function Home() {
         ctaLabel="Ver ideas de regalos en Regalar.ai"
       />
 
-      <section className="bg-white/55 px-5 py-14 sm:px-8 lg:px-10">
+      <section className="bg-white/55 px-5 pb-0 pt-8 sm:px-8 md:py-14 lg:px-10">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">Ocasiones</p>
             <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em]">Elige según el momento</h2>
           </div>
-          <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-3 md:mt-7 md:grid-cols-2 lg:grid-cols-4">
             {occasions.map((occasion) => (
-              <Link key={occasion.href} href={occasion.href} className="rounded-2xl border border-[#ead8b3] bg-white p-5 font-semibold text-[#2b241f] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d7a63c] hover:text-[#9a6b08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
+              <Link key={occasion.href} href={occasion.href} className="flex min-h-16 items-center rounded-2xl border border-[#ead8b3] bg-white p-3 text-sm font-semibold leading-5 text-[#2b241f] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d7a63c] hover:text-[#9a6b08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] md:block md:min-h-0 md:p-5 md:text-base md:leading-normal">
                 {occasion.label}
               </Link>
             ))}
@@ -130,15 +131,16 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-6 px-5 py-14 sm:px-8 lg:grid-cols-[1fr_1fr] lg:px-10">
+      <section className="mx-auto grid max-w-7xl gap-6 px-5 pb-8 pt-8 sm:px-8 md:py-14 lg:grid-cols-[1fr_1fr] lg:px-10">
         <article className="rounded-3xl border border-[#ead8b3] bg-white p-6 shadow-sm sm:p-8">
           <h2 className="text-3xl font-semibold tracking-[-0.04em]">Guías para comprar mejor</h2>
           <p className="mt-4 leading-8 text-[#625746]">
-            Aprende lo esencial sobre materiales, tallas, cuidados y piedras antes de tomar una decisión.
+            <span className="md:hidden">Lo esencial sobre tallas, materiales, cuidados y piedras.</span>
+            <span className="hidden md:inline">Aprende lo esencial sobre materiales, tallas, cuidados y piedras antes de tomar una decisión.</span>
           </p>
-          <div className="mt-6 grid gap-3">
+          <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-1">
             {guideLinks.map((guide) => (
-              <Link key={guide.href} href={guide.href} className="rounded-2xl border border-[#ead8b3] bg-[#fffdf8] p-4 font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
+              <Link key={guide.href} href={guide.href} className="flex min-h-16 items-center rounded-2xl border border-[#ead8b3] bg-[#fffdf8] p-3 text-sm font-semibold leading-5 text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] md:block md:min-h-0 md:p-4 md:text-base md:leading-normal">
                 {guide.label}
               </Link>
             ))}
@@ -188,9 +190,9 @@ function buildHomeStructuredData() {
   };
 }
 
-function HeroJewelry() {
+function HeroJewelry({ className = "" }: { className?: string }) {
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-[#ead8b3] bg-white p-3 shadow-2xl shadow-[#805400]/10 sm:p-4">
+    <div className={`relative overflow-hidden rounded-[2rem] border border-[#ead8b3] bg-white p-3 shadow-2xl shadow-[#805400]/10 sm:p-4 ${className}`}>
       <div className="relative aspect-[4/3] min-h-[300px] overflow-hidden rounded-[1.5rem] bg-[#f8ecd4] sm:aspect-[16/11] lg:min-h-[430px]">
         <Image src="/images/hero-joyas-aniversario.png" alt="Joyeria dorada elegante con collar, anillo, pulsera y pendientes sobre marmol claro" fill priority sizes="(max-width: 1024px) 100vw, 640px" className="object-cover object-center" />
       </div>
@@ -200,14 +202,14 @@ function HeroJewelry() {
 
 function CategoryCard({ href, title, text, image }: { href: string; title: string; text: string; image: string }) {
   return (
-    <Link href={href} className="group overflow-hidden rounded-3xl border border-[#ead8b3] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-[#805400]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
-      <div className="relative h-48 bg-[#f8ecd4]">
+    <Link href={href} className="group flex min-h-[120px] overflow-hidden rounded-3xl border border-[#ead8b3] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-[#805400]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] md:block">
+      <div className="relative w-[35%] shrink-0 self-stretch bg-[#f8ecd4] md:h-48 md:w-auto">
         <Image src={image} alt={`Guía de ${title.toLowerCase()} en Joyas.ai`} fill sizes="(max-width: 1024px) 100vw, 420px" className="object-cover transition duration-300 group-hover:scale-[1.03]" />
       </div>
-      <div className="p-6">
-        <h3 className="text-2xl font-semibold tracking-[-0.03em]">{title}</h3>
-        <p className="mt-2 leading-7 text-[#7c7064]">{text}</p>
-        <span className="mt-5 inline-flex font-semibold text-[#9a6b08]">Ver guía</span>
+      <div className="flex min-w-0 flex-1 flex-col justify-center p-4 md:block md:p-6">
+        <h3 className="text-lg font-semibold leading-tight tracking-[-0.03em] md:text-2xl md:leading-normal">{title}</h3>
+        <p className="mt-1 line-clamp-2 text-sm leading-5 text-[#7c7064] md:mt-2 md:line-clamp-none md:text-base md:leading-7">{text}</p>
+        <span className="mt-2 inline-flex text-sm font-semibold text-[#9a6b08] md:mt-5 md:text-base">Ver guía</span>
       </div>
     </Link>
   );

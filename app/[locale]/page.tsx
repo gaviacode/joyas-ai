@@ -130,7 +130,7 @@ export default async function LocalizedHomePage({ params }: PageProps) {
           <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em]">{copy.categoriesTitle}</h2>
           <p className="mt-4 text-lg leading-8 text-[#63584c]">{copy.categoriesDescription}</p>
         </div>
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {copy.categories.map((category) => (
             <CategoryCard key={category.href} {...category} cta={copy.cardCta} />
           ))}
@@ -149,9 +149,9 @@ export default async function LocalizedHomePage({ params }: PageProps) {
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">{copy.occasionsEyebrow}</p>
             <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em]">{copy.occasionsTitle}</h2>
           </div>
-          <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-7 grid grid-cols-2 gap-3 md:grid-cols-2 lg:grid-cols-4">
             {copy.occasions.map((occasion) => (
-              <Link key={occasion.href} href={occasion.href} className="rounded-2xl border border-[#ead8b3] bg-white p-5 font-semibold text-[#2b241f] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d7a63c] hover:text-[#9a6b08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
+              <Link key={occasion.href} href={occasion.href} className="flex min-h-16 items-center rounded-2xl border border-[#ead8b3] bg-white p-3 text-sm font-semibold leading-5 text-[#2b241f] shadow-sm transition hover:-translate-y-0.5 hover:border-[#d7a63c] hover:text-[#9a6b08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] md:block md:min-h-0 md:p-5 md:text-base md:leading-normal">
                 {occasion.label}
               </Link>
             ))}
@@ -163,9 +163,9 @@ export default async function LocalizedHomePage({ params }: PageProps) {
         <article className="rounded-3xl border border-[#ead8b3] bg-white p-6 shadow-sm sm:p-8">
           <h2 className="text-3xl font-semibold tracking-[-0.04em]">{copy.guidesTitle}</h2>
           <p className="mt-4 leading-8 text-[#625746]">{copy.guidesDescription}</p>
-          <div className="mt-6 grid gap-3">
+          <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-1">
             {copy.guideLinks.map((guide) => (
-              <Link key={guide.href} href={guide.href} className="rounded-2xl border border-[#ead8b3] bg-[#fffdf8] p-4 font-semibold text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
+              <Link key={guide.href} href={guide.href} className="flex min-h-16 items-center rounded-2xl border border-[#ead8b3] bg-[#fffdf8] p-3 text-sm font-semibold leading-5 text-[#7a540f] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] md:block md:min-h-0 md:p-4 md:text-base md:leading-normal">
                 {guide.label}
               </Link>
             ))}
@@ -209,7 +209,7 @@ function getHomeCopy(locale: LocalizedLocale) {
     return {
       eyebrow: "Recomendador de joias com inteligência artificial",
       title: "Encontre a joia perfeita com IA",
-      description: "Fale com um joalheiro especialista com inteligência artificial e descubra anéis, colares, pulseiras ou brincos conforme a ocasião, seu orçamento e o estilo da pessoa.",
+      description: "A IA da joyas.ai ajuda você a escolher anéis, colares, pulseiras ou brincos de acordo com a ocasião, o estilo e o seu orçamento.",
       guidesCta: "Ver guias",
       heroAlt: "Joias douradas elegantes com colar, anel, pulseira e brincos sobre mármore claro",
       giftIdeasTitle: "Procura algo além de uma joia?",
@@ -257,7 +257,7 @@ function getHomeCopy(locale: LocalizedLocale) {
   return {
     eyebrow: "AI jewelry advisor",
     title: "Find the perfect jewelry with AI",
-    description: "Talk to an expert AI jeweler and discover rings, necklaces, bracelets or earrings by occasion, budget and the person's style.",
+    description: "Joyas.ai's AI helps you choose rings, necklaces, bracelets or earrings based on the occasion, style and your budget.",
     guidesCta: "View guides",
     heroAlt: "Elegant gold jewelry with necklace, ring, bracelet and earrings on light marble",
     giftIdeasTitle: "Looking for more than jewelry?",
@@ -314,14 +314,14 @@ function HeroJewelry({ alt }: { alt: string }) {
 
 function CategoryCard({ href, title, text, image, cta }: { href: string; title: string; text: string; image: string; cta: string }) {
   return (
-    <Link href={href} className="group overflow-hidden rounded-3xl border border-[#ead8b3] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-[#805400]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">
-      <div className="relative h-48 bg-[#f8ecd4]">
+    <Link href={href} className="group flex min-h-[120px] overflow-hidden rounded-3xl border border-[#ead8b3] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-[#805400]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] md:block">
+      <div className="relative w-[35%] shrink-0 self-stretch bg-[#f8ecd4] md:h-48 md:w-auto">
         <Image src={image} alt={title} fill sizes="(max-width: 1024px) 100vw, 420px" className="object-cover transition duration-300 group-hover:scale-[1.03]" />
       </div>
-      <div className="p-6">
-        <h3 className="text-2xl font-semibold tracking-[-0.03em]">{title}</h3>
-        <p className="mt-2 leading-7 text-[#7c7064]">{text}</p>
-        <span className="mt-5 inline-flex font-semibold text-[#9a6b08]">{cta}</span>
+      <div className="flex min-w-0 flex-1 flex-col justify-center p-4 md:block md:p-6">
+        <h3 className="text-lg font-semibold leading-tight tracking-[-0.03em] md:text-2xl md:leading-normal">{title}</h3>
+        <p className="mt-1 line-clamp-2 text-sm leading-5 text-[#7c7064] md:mt-2 md:line-clamp-none md:text-base md:leading-7">{text}</p>
+        <span className="mt-2 inline-flex text-sm font-semibold text-[#9a6b08] md:mt-5 md:text-base">{cta}</span>
       </div>
     </Link>
   );
