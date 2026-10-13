@@ -75,7 +75,7 @@ export const config = {
 };
 
 function isCrawler(userAgent: string | null) {
-  return /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|linkedinbot/i.test(
+  return /googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|twitterbot|linkedinbot|oai-searchbot/i.test(
     userAgent ?? "",
   );
 }

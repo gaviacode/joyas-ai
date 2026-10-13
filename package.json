@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seo:keyword-map": "node scripts/seo/generate-keyword-map.mjs"
+    "seo:keyword-map": "node scripts/seo/generate-keyword-map.mjs",
+    "seo:validate-localization": "node scripts/seo/validate-localization.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.17.1",

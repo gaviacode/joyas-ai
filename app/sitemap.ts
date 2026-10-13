@@ -17,7 +17,7 @@ import { absoluteUrl } from "@/lib/site-config";
 
 type SitemapRoute = {
   route: string;
-  languages?: Record<string, string>;
+  languages?: Partial<Record<string, string>>;
   lastModified?: string;
   changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
   priority: number;

@@ -98,8 +98,7 @@ export default function Home() {
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">Categorías</p>
           <h2 className="mt-3 text-4xl font-semibold tracking-[-0.04em]">Explora por tipo de joya</h2>
           <p className="mt-4 text-lg leading-8 text-[#63584c]">
-            <span className="md:hidden">Guías para elegir mejor según estilo, material y ocasión.</span>
-            <span className="hidden md:inline">Cada guía explica estilos, materiales, momentos de uso y errores frecuentes para elegir con más criterio.</span>
+            Guías sobre estilos, materiales y ocasiones para elegir con más criterio.
           </p>
         </div>
         <div className="mt-6 grid gap-3 md:mt-8 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
@@ -135,8 +134,7 @@ export default function Home() {
         <article className="rounded-3xl border border-[#ead8b3] bg-white p-6 shadow-sm sm:p-8">
           <h2 className="text-3xl font-semibold tracking-[-0.04em]">Guías para comprar mejor</h2>
           <p className="mt-4 leading-8 text-[#625746]">
-            <span className="md:hidden">Lo esencial sobre tallas, materiales, cuidados y piedras.</span>
-            <span className="hidden md:inline">Aprende lo esencial sobre materiales, tallas, cuidados y piedras antes de tomar una decisión.</span>
+            Lo esencial sobre tallas, materiales, cuidados y piedras antes de decidir.
           </p>
           <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-1">
             {guideLinks.map((guide) => (

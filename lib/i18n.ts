@@ -558,26 +558,42 @@ const articleContentOverrides: Record<LocalizedLocale, Record<string, { intro?: 
       ],
     },
     "guias:plata-925": {
-      intro: "Sterling silver 925 contains 92.5% silver. The remaining percentage is made up of other metals that help make jewelry more practical.",
+      intro: "Sterling silver is an alloy containing 92.5% silver. The remaining 7.5% is made up of other metals, often copper, which can make many jewelry designs more practical for regular wear.",
       sections: [
         {
-          title: "Why Silver Is Alloyed",
+          title: "What 925 and Sterling Silver Mean",
           paragraphs: [
-            "Pure silver can be too soft for many everyday pieces. An alloy makes it possible to create more practical jewelry.",
-            "The exact composition and surface treatments can vary by maker and piece.",
+            "The number 925 means that 925 parts out of every 1,000 parts of the alloy are silver: 92.5% by fineness. In jewelry, this alloy is commonly called sterling silver.",
+            "Fine silver is relatively soft, so alloying it can make many rings, chains, bracelets, and settings more practical. The exact metals in the remaining 7.5%, as well as any surface treatments, can vary by maker and piece.",
           ],
         },
         {
-          title: "Care",
+          title: "Common Marks — and What They Do Not Prove",
           paragraphs: [
-            "Silver can darken over time through contact with air, moisture, cosmetics or certain substances. This does not necessarily mean it is fake.",
-            "Keeping pieces dry, separate and cleaning them with suitable products helps preserve their appearance.",
+            "Marks such as 925, S925, Sterling, or Sterling Silver are commonly used to indicate sterling-silver fineness. They may appear on a clasp, the inside of a ring, an earring post, or another small component, depending on the design.",
+            "A mark is useful information, not conclusive proof. It can be copied, added to a non-silver item, or describe only one component of a mixed-material piece. Read it together with the product description, the seller's information, and any documentation available.",
           ],
         },
         {
-          title: "Before Buying",
+          title: "Solid 925 Silver vs. Silver-Plated Jewelry",
           paragraphs: [
-            "Check whether the piece is solid silver, silver plated or another finish. Maintenance and durability are not the same.",
+            "A 925-silver piece is made from a sterling-silver alloy through the body of the relevant metal component. Silver-plated jewelry has a thin surface layer of silver over a different base metal. The base metal can become visible as plating wears, especially at edges and high-friction areas.",
+            "Neither category is automatically better for every budget or design, but they are different products. Check whether a listing says sterling silver, silver plated, or uses another finish, and consider how that affects wear, care, repairs, and price.",
+          ],
+        },
+        {
+          title: "Useful Checks and When to Seek Professional Help",
+          paragraphs: [
+            "Start with the hallmark, a clear material description, the seller's details, and any invoice or documentation. Uneven color at worn edges can suggest plating, but appearance alone cannot confirm composition.",
+            "Home checks such as a magnet, color, sound, or ice can offer limited clues, not a verdict. For example, a non-magnetic item is not automatically silver because many other metals are also non-magnetic. Avoid acids, scratching, or abrasive tests that can damage the piece.",
+            "If authenticity matters because of the piece's value, condition, or sentimental importance, take it to a qualified jewelry professional for an appropriate assessment.",
+          ],
+        },
+        {
+          title: "Basic Care for Sterling Silver",
+          paragraphs: [
+            "Sterling silver can tarnish through contact with air, moisture, cosmetics, sulfur-containing substances, and household chemicals. Tarnish alone does not mean that a piece is not silver.",
+            "Store pieces dry and separately, put jewelry on after perfume or cosmetics, and avoid chlorine and salt water. Use a soft cloth or a method suitable for the specific piece; take extra care with stones, pearls, enamel, plating, or other delicate finishes.",
           ],
         },
       ],
@@ -686,6 +702,8 @@ const exactText: Record<LocalizedLocale, Record<string, string>> = {
     "Preguntar al joyero IA": "Ask the AI jeweler",
     "Probar el joyero IA": "Try the AI jeweler",
     "Cómo saber si una joya es de oro": "How to tell if jewelry is gold",
+    "Cómo saber si una joya es de plata": "How to tell if jewelry is silver",
+    "Cómo limpiar joyas de plata": "How to clean silver jewelry",
     "Oro blanco": "White gold",
     "Oro rosa": "Rose gold",
     "Platino en joyería": "Platinum jewelry",
@@ -882,11 +900,9 @@ export function getLocalizedGuideCategorySlug(esSlug: string, locale: Locale) {
 }
 
 export function getArticleAlternates(kind: ContentKind, esSlug: string) {
-  return {
-    es: getLocalizedPath(kind, esSlug, "es"),
-    "pt-BR": getLocalizedPath(kind, esSlug, "pt-BR"),
-    en: getLocalizedPath(kind, esSlug, "en"),
-  };
+  return Object.fromEntries(
+    getAvailableArticleLocales(kind, esSlug).map((locale) => [locale, getLocalizedPath(kind, esSlug, locale)]),
+  ) as Partial<Record<Locale, string>>;
 }
 
 export function getGuideCategoryAlternates(esSlug: string) {
@@ -899,9 +915,9 @@ export function getGuideCategoryAlternates(esSlug: string) {
 
 export function getLanguageLinks(kind: ContentKind, esSlug: string) {
   const alternates = getArticleAlternates(kind, esSlug);
-  return locales.map((locale) => ({
+  return getAvailableArticleLocales(kind, esSlug).map((locale) => ({
     locale,
-    href: alternates[locale],
+    href: alternates[locale] as string,
     label: localeLabels[locale],
   }));
 }
@@ -927,13 +943,8 @@ export function getGuideCategoryLanguageLinks(esSlug: string) {
 export function getMetadataAlternates(kind: ContentKind, esSlug: string, locale: Locale) {
   const languages = getArticleAlternates(kind, esSlug);
   return {
-    canonical: languages[locale],
-    languages: {
-      es: languages.es,
-      "pt-BR": languages["pt-BR"],
-      en: languages.en,
-      "x-default": languages.es,
-    },
+    canonical: languages[locale] ?? getLocalizedPath(kind, esSlug, locale),
+    languages: buildLanguageAlternates(languages),
   };
 }
 
@@ -984,15 +995,10 @@ export function buildArticleMetadata(article: ArticleData, kind: ContentKind, lo
   };
 }
 
-export function buildMetadataAlternates(languages: Record<Locale, string>, locale: Locale) {
+export function buildMetadataAlternates(languages: Partial<Record<Locale, string>>, locale: Locale) {
   return {
-    canonical: languages[locale],
-    languages: {
-      es: languages.es,
-      "pt-BR": languages["pt-BR"],
-      en: languages.en,
-      "x-default": languages.es,
-    },
+    canonical: languages[locale] as string,
+    languages: buildLanguageAlternates(languages),
   };
 }
 
@@ -1016,7 +1022,9 @@ export function localizeArticle(article: ArticleData, kind: ContentKind, locale:
     eyebrow: localizeText(article.eyebrow, locale),
     intro: contentOverride?.intro ?? override?.intro ?? localizeText(article.intro, locale),
     sections: contentOverride?.sections ?? article.sections.map((section) => localizeSection(section, locale)),
-    related: article.related.map((link) => localizeLink(link, locale)),
+    related: article.related
+      .filter((link) => isAvailableInLocale(link.href, locale))
+      .map((link) => localizeLink(link, locale)),
     advisorCta: article.advisorCta
       ? {
           title: localizeText(article.advisorCta.title, locale),
@@ -1104,11 +1112,7 @@ export function getAllLocalizedArticleRoutes() {
 }
 
 function getIndexableArticleAlternates(kind: ContentKind, esSlug: string) {
-  return Object.fromEntries(
-    locales
-      .filter((locale) => locale === "es" || Boolean(articleSlugs[kind][esSlug]?.[locale]))
-      .map((locale) => [locale, getLocalizedPath(kind, esSlug, locale)]),
-  );
+  return getArticleAlternates(kind, esSlug);
 }
 
 export function localizeLink(link: LinkItem, locale: Locale): LinkItem {
@@ -1154,14 +1158,54 @@ export function localizeHref(href: string, locale: Locale) {
   }
 
   if (kind && slug && articleSlugs[kind]?.[slug]) {
-    return `${getLocalizedPath(kind, slug, locale)}${hash ? `#${hash}` : ""}`;
+    if (articleSlugs[kind][slug]?.[locale]) {
+      return `${getLocalizedPath(kind, slug, locale)}${hash ? `#${hash}` : ""}`;
+    }
+
+    return href;
   }
 
   if (kind && !slug && ["joyas", "ocasiones", "guias"].includes(kind)) {
     return `${getLocalizedIndexPath(kind, locale)}${hash ? `#${hash}` : ""}`;
   }
 
-  return getLocaleHomePath(locale);
+  return href;
+}
+
+function getAvailableArticleLocales(kind: ContentKind, esSlug: string): Locale[] {
+  return locales.filter((locale) => locale === "es" || Boolean(articleSlugs[kind][esSlug]?.[locale]));
+}
+
+function buildLanguageAlternates(languages: Partial<Record<Locale, string>>) {
+  const alternates = Object.fromEntries(
+    locales.flatMap((locale) => (languages[locale] ? [[locale, languages[locale]]] : [])),
+  ) as Record<string, string>;
+
+  if (languages.es) {
+    alternates["x-default"] = languages.es;
+  }
+
+  return alternates;
+}
+
+function isAvailableInLocale(href: string, locale: Locale) {
+  if (locale === "es" || href.startsWith("http")) {
+    return true;
+  }
+
+  const path = href.split("#")[0] ?? href;
+  const parts = path.split("/").filter(Boolean);
+  const kind = parts[0] as ContentKind | undefined;
+  const slug = parts[1];
+
+  if (kind && slug) {
+    const sourceArticle = findArticle(getSourceItems(kind), slug);
+    if (sourceArticle) {
+      return Boolean(articleSlugs[kind][slug]?.[locale]);
+    }
+  }
+
+  return true;
 }
 
 export function localizeText(text: string, locale: Locale) {

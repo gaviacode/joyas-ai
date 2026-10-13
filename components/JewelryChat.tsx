@@ -117,7 +117,6 @@ const chatCopy = {
     heroTitle: "Encuentra la joya perfecta con inteligencia artificial",
     heroDescription:
       "Elige cómo quieres empezar y te ayudaremos a encontrar la opción más adecuada.",
-    mobileHeroDescription: "Te ayudamos a elegir según persona, ocasión, estilo y presupuesto.",
     tabsLabel: "Modos del recomendador",
     directTab: "Describe lo que buscas",
     guidedTab: "Déjate guiar por el joyero IA",
@@ -128,7 +127,6 @@ const chatCopy = {
     directModeCta: "Describir lo que busco",
     guidedModeTitle: "Prefiero que me guíes",
     guidedModeDescription: "Responde unas preguntas sencillas sobre persona, ocasión, estilo y presupuesto.",
-    mobileGuidedModeDescription: "Responde unas preguntas rápidas.",
     guidedModeCta: "Empezar paso a paso",
     directTitle: "Describe lo que buscas",
     directHelp:
@@ -195,14 +193,8 @@ const chatCopy = {
     summaryBudget: "con presupuesto",
     listAnd: "y",
     trustTitle: "Recomendación prudente",
-    trustFirst:
-      "El joyero IA propone tipos de joya personalizados. En esta fase no muestra productos concretos, tiendas, marcas, stock ni precios exactos.",
-    trustSecond:
-      "Podemos mostrar enlaces a opciones de compra. La disponibilidad, el precio final y los detalles del producto se verifican siempre en la tienda.",
-    desktopTrustFirst:
-      "La IA recomienda tipos de joya según tu contexto, sin garantizar productos, stock ni precios exactos.",
-    desktopTrustSecond:
-      "Si mostramos enlaces de compra, confirma siempre disponibilidad, precio y detalles en la tienda.",
+    trustFirst: "La IA recomienda tipos de joya; no garantiza productos concretos, stock ni precios exactos.",
+    trustSecond: "Los enlaces de compra pueden ser de afiliación. Confirma precio, detalles y disponibilidad en la tienda.",
     statusLoading: "El joyero IA está analizando tus preferencias...",
     retry: "Reintentar",
     empty:
@@ -242,7 +234,6 @@ const chatCopy = {
     heroTitle: "Encontre a joia perfeita com inteligência artificial",
     heroDescription:
       "Conte o que procura ou deixe-se guiar passo a passo. Nosso joalheiro IA analisará a pessoa, a ocasião, o estilo e seu orçamento para recomendar uma opção adequada.",
-    mobileHeroDescription: "Ajudamos você a escolher por pessoa, ocasião, estilo e orçamento.",
     tabsLabel: "Modos do recomendador",
     directTab: "Descreva o que procura",
     guidedTab: "Deixe o joalheiro IA guiar você",
@@ -253,7 +244,6 @@ const chatCopy = {
     directModeCta: "Descrever o que procuro",
     guidedModeTitle: "Prefiro que você me guie",
     guidedModeDescription: "Responda perguntas simples sobre pessoa, ocasião, estilo e orçamento.",
-    mobileGuidedModeDescription: "Responda algumas perguntas rápidas.",
     guidedModeCta: "Começar passo a passo",
     directTitle: "Descreva o que procura",
     directHelp:
@@ -320,14 +310,8 @@ const chatCopy = {
     summaryBudget: "com orçamento",
     listAnd: "e",
     trustTitle: "Recomendação prudente",
-    trustFirst:
-      "O joalheiro IA propõe tipos de joia personalizados. Nesta fase, não mostra produtos concretos, lojas, marcas, estoque nem preços exatos.",
-    trustSecond:
-      "Podemos mostrar links para opções de compra. A disponibilidade, o preço final e os detalhes do produto devem ser sempre verificados na loja.",
-    desktopTrustFirst:
-      "A IA recomenda tipos de joia conforme seu contexto, sem garantir produtos, estoque ou preços exatos.",
-    desktopTrustSecond:
-      "Se mostrarmos links de compra, confirme sempre disponibilidade, preço e detalhes na loja.",
+    trustFirst: "A IA recomenda tipos de joia; não garante produtos concretos, estoque ou preços exatos.",
+    trustSecond: "Os links de compra podem ser de afiliação. Confirme preço, detalhes e disponibilidade na loja.",
     statusLoading: "O joalheiro IA está analisando suas preferências...",
     retry: "Tentar novamente",
     empty:
@@ -360,7 +344,6 @@ const chatCopy = {
     heroTitle: "Find the perfect jewelry with artificial intelligence",
     heroDescription:
       "Tell us what you need or follow the guided flow. Our AI jeweler will analyze the person, occasion, style and budget to recommend a suitable option.",
-    mobileHeroDescription: "We help you choose based on the person, occasion, style and budget.",
     tabsLabel: "Advisor modes",
     directTab: "Describe what you need",
     guidedTab: "Let the AI jeweler guide you",
@@ -371,7 +354,6 @@ const chatCopy = {
     directModeCta: "Describe what I need",
     guidedModeTitle: "I would like guidance",
     guidedModeDescription: "Answer a few simple questions about the person, occasion, style and budget.",
-    mobileGuidedModeDescription: "Answer a few quick questions.",
     guidedModeCta: "Start step by step",
     directTitle: "Describe what you need",
     directHelp:
@@ -438,14 +420,8 @@ const chatCopy = {
     summaryBudget: "with a budget of",
     listAnd: "and",
     trustTitle: "Careful recommendation",
-    trustFirst:
-      "The AI jeweler suggests personalized jewelry types. At this stage it does not show specific products, stores, brands, stock or exact prices.",
-    trustSecond:
-      "We may show links to purchase options. Availability, final price and product details should always be verified with the store.",
-    desktopTrustFirst:
-      "AI recommends jewelry types based on your context, without guaranteeing products, stock or exact prices.",
-    desktopTrustSecond:
-      "If we show purchase links, always confirm availability, price and details with the store.",
+    trustFirst: "The AI recommends jewelry types; it does not guarantee specific products, stock, or exact prices.",
+    trustSecond: "Purchase links may be affiliate links. Confirm price, details, and availability with the store.",
     statusLoading: "The AI jeweler is analyzing your preferences...",
     retry: "Try again",
     empty:
@@ -1237,7 +1213,6 @@ function AdvisorModeSelector({
     mode: AdvisorMode;
     title: string;
     description: string;
-    mobileDescription?: string;
     cta: string;
     icon: React.ReactNode;
   }> = [
@@ -1252,7 +1227,6 @@ function AdvisorModeSelector({
       mode: "guided",
       title: copy.guidedModeTitle,
       description: copy.guidedModeDescription,
-      mobileDescription: copy.mobileGuidedModeDescription,
       cta: copy.guidedModeCta,
       icon: <ListChecks className="h-5 w-5" strokeWidth={1.8} />,
     },
@@ -1293,12 +1267,7 @@ function AdvisorModeSelector({
               </span>
               <span className="text-lg font-semibold tracking-[-0.02em] text-[#17120b] md:mt-5 md:text-xl">{option.title}</span>
             </div>
-            <span className="mt-2 max-w-md text-sm leading-6 text-[#63584c] md:text-base md:leading-7">
-              {option.mobileDescription ? <>
-                <span className="md:hidden">{option.mobileDescription}</span>
-                <span className="hidden md:inline">{option.description}</span>
-              </> : option.description}
-            </span>
+            <span className="mt-2 max-w-md text-sm leading-6 text-[#63584c] md:text-base md:leading-7">{option.description}</span>
             <span className="mt-5 inline-flex min-h-11 items-center rounded-xl border border-[#c89a43] bg-white px-4 py-2 pt-2 text-sm font-semibold text-[#7a540f] transition group-hover:bg-[#fff5df] group-active:bg-[#fff1d2] md:mt-auto">
               {option.cta} <span aria-hidden="true" className="ml-2">→</span>
             </span>
@@ -2135,8 +2104,8 @@ function TrustPanel({ copy }: { copy: ChatCopy }) {
         {copy.trustTitle}
       </p>
       <div className="mt-4 space-y-4 text-sm leading-6 text-[#625746] lg:mt-3 lg:space-y-3">
-        <p><span className="md:hidden">{copy.trustFirst}</span><span className="hidden md:inline">{copy.desktopTrustFirst}</span></p>
-        <p><span className="md:hidden">{copy.trustSecond}</span><span className="hidden md:inline">{copy.desktopTrustSecond}</span></p>
+        <p>{copy.trustFirst}</p>
+        <p>{copy.trustSecond}</p>
       </div>
     </aside>
   );
