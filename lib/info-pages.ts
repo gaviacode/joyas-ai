@@ -268,7 +268,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
     },
     "sobre-joyas-ai": {
       kind: "sobre-joyas-ai",
-      title: "About joyas.ai",
+      title: "About Joyas.ai",
       description: "Learn about joyas.ai, a project for choosing jewelry with AI support, educational content and clear buying criteria.",
       eyebrow: "Project",
       intro: "joyas.ai was created to make a difficult decision simpler: choosing jewelry for someone else or for yourself.",

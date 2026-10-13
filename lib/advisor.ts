@@ -1,6 +1,6 @@
 export type AdvisorMode = "direct" | "guided";
 export type AdvisorLocale = "es" | "pt-BR" | "en";
-export const ADVISOR_RECOMMENDATION_COUNT = 6;
+export const MAX_ADVISOR_RECOMMENDATION_COUNT = 6;
 
 export const guidedJewelryTypes = [
   "anillo",
@@ -43,12 +43,8 @@ export type GuidedPreferences = {
 };
 
 export type RefinementPreferences = {
-  improvementGoal?: "original" | "discreet" | "elegant" | "special" | "cheaper";
-  prominence?: "discreet" | "balanced" | "statement";
-  usage?: "daily" | "occasions" | "both";
-  meaningful?: "yes" | "no" | "neutral";
-  personalizable?: "yes" | "no" | "neutral";
-  additionalAvoid?: string;
+  quickFilters?: Array<"necklaces_only" | "no_gemstones" | "more_discreet" | "more_affordable">;
+  additionalRequest?: string;
 };
 
 export type AdvisorRequest = {
@@ -64,13 +60,12 @@ export type AdvisorRecommendation = {
   id: string;
   genericName: string;
   reason: string;
+  comparisonNote: string;
+  beforeBuying: string;
   searchQuery: string;
   recommendedMaterials: string[];
   styles: string[];
   suitableOccasions: string[];
-  estimatedPriceRange: string;
-  jewelerTip: string;
-  disclaimer: string;
 };
 
 export type AdvisorResponse = {

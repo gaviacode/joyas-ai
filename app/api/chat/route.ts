@@ -12,7 +12,7 @@ import type {
   GuidedJewelryType,
   RefinementPreferences,
 } from "@/lib/advisor";
-import { ADVISOR_RECOMMENDATION_COUNT, guidedJewelryTypes } from "@/lib/advisor";
+import { MAX_ADVISOR_RECOMMENDATION_COUNT, guidedJewelryTypes } from "@/lib/advisor";
 
 const SYSTEM_PROMPT = `
 Eres el joyero IA experto de joyas.ai.
@@ -22,16 +22,20 @@ Tu tarea es recomendar tipos genéricos de joyas, no productos comerciales concr
 Reglas obligatorias:
 - Responde en el idioma indicado por la petición: español si locale es "es", portugués brasileño natural si locale es "pt-BR" e inglés natural si locale es "en".
 - Devuelve exclusivamente JSON válido con esta forma: {"summary":"...","recommendations":[...],"followUpMessage":"..."}.
-- Incluye exactamente 6 recomendaciones, ordenadas de mejor a peor encaje con las preferencias del usuario. Si faltan datos esenciales, mantén seis alternativas prudentes y explica la incertidumbre en summary.
-- Cada recomendación debe incluir: id, genericName, reason, searchQuery, recommendedMaterials, styles, suitableOccasions, estimatedPriceRange, jewelerTip y disclaimer.
-- Para cada idea, genera una \`searchQuery\` de 3–8 palabras que describa una joya concreta y comprable: tipo de joya + material o acabado + rasgo diferenciador.
+- Incluye entre 1 y 6 recomendaciones, ordenadas de mejor a peor encaje. No fuerces opciones poco pertinentes para llegar a seis.
+- La primera recomendación es la principal. Su reason debe explicar de forma concreta por qué elegirla frente a las alternativas; comparisonNote debe resumir su diferencia práctica. En las demás, comparisonNote debe explicar qué alternativa ofrece.
+- Cada recomendación debe incluir: id, genericName, reason, comparisonNote, beforeBuying, searchQuery, recommendedMaterials, styles y suitableOccasions.
+- beforeBuying debe indicar una única comprobación concreta y relevante para esa pieza (por ejemplo, medida, rango de ajuste, cierre, tipo de piedra o acabado). No repitas avisos genéricos.
+- Para cada idea, genera una \`searchQuery\` de 3–8 palabras que describa una búsqueda coherente: tipo de joya + material o acabado + rasgo diferenciador. Conserva literalmente "plata 925" cuando esa sea la recomendación de material.
 
-Las ideas deben ser claramente distintas entre sí. No uses frases promocionales, precios, URLs, ASIN, tiendas, marketplaces, marcas salvo petición expresa, ni afirmes disponibilidad, stock o reseñas. Si no se conoce la talla, prioriza joyas sin talla o ajustables.
+Las ideas deben ser claramente distintas entre sí. No uses frases promocionales, precios, intervalos de precio, URLs, ASIN, tiendas, marketplaces, marcas salvo petición expresa, ni afirmes disponibilidad, stock o reseñas.
+- Respeta de forma estricta el presupuesto, los materiales, el uso y las exclusiones explícitas. Conserva la moneda e importe que indique el usuario. Si la combinación no es realista, explica el conflicto en summary y ofrece alternativas identificadas como tales, sin cambiar el material solicitado silenciosamente.
+- Si el usuario indica que no tiene las orejas perforadas, no recomiendes pendientes que requieran perforación. Si quiere evitar talla o no conoce la talla de anillo, no recomiendes anillos que requieran talla. No afirmes que una pulsera ajustable sirve para cualquier muñeca ni que un collar, gargantilla o pulsera no requiere comprobar medidas: indica la medida o rango de ajuste relevante en beforeBuying.
+- No deduzcas género, comodidad, resistencia, autenticidad, hipoalergenicidad u otras preferencias no indicadas. Evita garantías absolutas.
 - Si el tipo solicitado es "conjuntos", genera búsquedas concretas de sets coordinados, como "conjunto collar y pendientes", "conjunto collar pulsera pendientes" o "set de joyería elegante", incorporando material, estilo, ocasión o destinatario cuando aporte precisión. Nunca uses consultas genéricas como "conjuntos" o "joyas conjunto".
 - Si el tipo solicitado es "charms / abalorios", genera búsquedas concretas como "charm pulsera plata", "abalorio plata mujer", "charm corazón" o "charm regalo mujer", incorporando material, estilo, ocasión o destinatario cuando aporte precisión.
 - No inventes productos concretos, URLs, ASIN, enlaces de afiliado, stock, descuentos, valoraciones, reseñas, disponibilidad ni precios exactos.
-- Usa rangos de precio orientativos, nunca importes exactos, y deja claro que dependen del material y proveedor.
-- No afirmes que una joya concreta esté disponible.
+- No incluyas precios ni rangos de precio, y no afirmes que una joya concreta esté disponible.
 - Trata el género solo como una preferencia comercial indicada por el usuario; no impongas estereotipos.
 - Si se proporciona una edad aproximada, úsala solo como una pista flexible para adaptar el estilo, tamaño, delicadeza y tipo de joya; evita estereotipos o reglas rígidas basados únicamente en la edad.
 - Permite opciones unisex y alternativas si el usuario no está seguro.
@@ -42,11 +46,7 @@ Las ideas deben ser claramente distintas entre sí. No uses frases promocionales
 
 const ALLOWED_GUIDED_JEWELRY_TYPES = new Set<string>(guidedJewelryTypes);
 const REFINEMENT_VALUES = {
-  improvementGoal: new Set(["original", "discreet", "elegant", "special", "cheaper"]),
-  prominence: new Set(["discreet", "balanced", "statement"]),
-  usage: new Set(["daily", "occasions", "both"]),
-  meaningful: new Set(["yes", "no", "neutral"]),
-  personalizable: new Set(["yes", "no", "neutral"]),
+  quickFilters: new Set(["necklaces_only", "no_gemstones", "more_discreet", "more_affordable"]),
 } as const;
 
 const PIECE_DETAILS_BY_TYPE: Record<string, readonly string[]> = {
@@ -106,22 +106,21 @@ const ADVISOR_RESPONSE_SCHEMA = {
     followUpMessage: { type: Type.STRING },
     recommendations: {
       type: Type.ARRAY,
-      minItems: "6",
+      minItems: "1",
       maxItems: "6",
       items: {
         type: Type.OBJECT,
-        required: ["id", "genericName", "reason", "searchQuery", "recommendedMaterials", "styles", "suitableOccasions", "estimatedPriceRange", "jewelerTip", "disclaimer"],
+        required: ["id", "genericName", "reason", "comparisonNote", "beforeBuying", "searchQuery", "recommendedMaterials", "styles", "suitableOccasions"],
         properties: {
           id: { type: Type.STRING },
           genericName: { type: Type.STRING },
           reason: { type: Type.STRING },
+          comparisonNote: { type: Type.STRING },
+          beforeBuying: { type: Type.STRING },
           searchQuery: { type: Type.STRING },
           recommendedMaterials: { type: Type.ARRAY, items: { type: Type.STRING } },
           styles: { type: Type.ARRAY, items: { type: Type.STRING } },
           suitableOccasions: { type: Type.ARRAY, items: { type: Type.STRING } },
-          estimatedPriceRange: { type: Type.STRING },
-          jewelerTip: { type: Type.STRING },
-          disclaimer: { type: Type.STRING },
         },
       },
     },
@@ -845,30 +844,21 @@ function isValidRefinementPreferences(value: unknown): value is RefinementPrefer
   if (!value || typeof value !== "object") return false;
   const candidate = value as RefinementPreferences;
   return (
-    isOptionalRefinementValue(candidate.improvementGoal, REFINEMENT_VALUES.improvementGoal) &&
-    isOptionalRefinementValue(candidate.prominence, REFINEMENT_VALUES.prominence) &&
-    isOptionalRefinementValue(candidate.usage, REFINEMENT_VALUES.usage) &&
-    isOptionalRefinementValue(candidate.meaningful, REFINEMENT_VALUES.meaningful) &&
-    isOptionalRefinementValue(candidate.personalizable, REFINEMENT_VALUES.personalizable) &&
-    (candidate.additionalAvoid === undefined || (typeof candidate.additionalAvoid === "string" && candidate.additionalAvoid.length <= 280))
+    (candidate.quickFilters === undefined ||
+      (Array.isArray(candidate.quickFilters) &&
+        candidate.quickFilters.length <= 4 &&
+        candidate.quickFilters.every((filter) => typeof filter === "string" && REFINEMENT_VALUES.quickFilters.has(filter)))) &&
+    (candidate.additionalRequest === undefined || (typeof candidate.additionalRequest === "string" && candidate.additionalRequest.length <= 280))
   );
-}
-
-function isOptionalRefinementValue(value: unknown, allowed: ReadonlySet<string>) {
-  return value === undefined || (typeof value === "string" && allowed.has(value));
 }
 
 function cleanRefinementPreferences(preferences?: RefinementPreferences): RefinementPreferences | undefined {
   if (!preferences) return undefined;
   const cleaned: RefinementPreferences = {
-    improvementGoal: preferences.improvementGoal,
-    prominence: preferences.prominence,
-    usage: preferences.usage,
-    meaningful: preferences.meaningful,
-    personalizable: preferences.personalizable,
-    additionalAvoid: cleanOptionalString(preferences.additionalAvoid)?.slice(0, 280),
+    quickFilters: preferences.quickFilters?.filter((filter) => REFINEMENT_VALUES.quickFilters.has(filter)).slice(0, 4),
+    additionalRequest: cleanOptionalString(preferences.additionalRequest)?.slice(0, 280),
   };
-  return Object.values(cleaned).some(Boolean) ? cleaned : undefined;
+  return cleaned.quickFilters?.length || cleaned.additionalRequest ? cleaned : undefined;
 }
 
 function buildUserPrompt(request: AdvisorRequest) {
@@ -888,7 +878,7 @@ function buildUserPrompt(request: AdvisorRequest) {
         .join("\n")
     : "Sin conversación previa.";
   const refinementText = request.refinementPreferences
-    ? `\nPREFERENCIAS ADICIONALES DE AFINADO\nEstas preferencias complementan las preferencias originales y no las sustituyen. Prioridad: 1) respeta todas las restricciones originales; 2) usa el afinado para mejorar la precisión; 3) si hay conflicto, prevalece lo original; 4) mantén variedad real entre las seis ideas.\nRefinement:\n${formatRefinementPreferences(request.refinementPreferences)}\nGenera seis recomendaciones nuevas. No cambies tipo de joya, presupuesto, acabado ni otra restricción original salvo que permita varias opciones. Si improvement=cheaper, prioriza la parte baja del presupuesto original sin cambiarlo. Si meaningful=yes, favorece conceptos con simbolismo, relación, recuerdos, fechas, iniciales o símbolos sin inventar significados. Si personalizable=yes, favorece ideas conceptualmente personalizables sin inventar productos concretos.`
+    ? `\nAJUSTES ADICIONALES\nEstos ajustes complementan las preferencias originales y no las sustituyen. Prioridad: 1) respeta presupuesto, materiales, uso y exclusiones originales; 2) aplica solo los ajustes compatibles; 3) si el texto libre contradice una restricción y no está claro que el usuario quiera cambiarla, pide aclaración en summary y conserva la restricción.\nAjustes:\n${formatRefinementPreferences(request.refinementPreferences)}\nNo cambies silenciosamente el material, presupuesto, tipo o una exclusión original. "necklaces_only" limita las opciones a collares; "no_gemstones" excluye piedras; "more_discreet" reduce el protagonismo; "more_affordable" prioriza compromisos explícitos sin asegurar precios ni disponibilidad.`
     : "";
 
   return `
@@ -939,7 +929,7 @@ function parseAdvisorResponse(text: string): AdvisorResponse {
 
   return {
     summary: parsed.summary,
-    recommendations: parsed.recommendations.slice(0, ADVISOR_RECOMMENDATION_COUNT).map(normalizeRecommendation),
+    recommendations: parsed.recommendations.slice(0, MAX_ADVISOR_RECOMMENDATION_COUNT).map(normalizeRecommendation),
     followUpMessage: parsed.followUpMessage,
   };
 }
@@ -969,8 +959,8 @@ function getAdvisorResponseValidationIssues(value: unknown) {
     return issues;
   }
 
-  if (candidate.recommendations.length !== ADVISOR_RECOMMENDATION_COUNT) {
-    issues.push(`recommendations debe tener exactamente ${ADVISOR_RECOMMENDATION_COUNT} elementos`);
+  if (candidate.recommendations.length < 1 || candidate.recommendations.length > MAX_ADVISOR_RECOMMENDATION_COUNT) {
+    issues.push(`recommendations debe tener entre 1 y ${MAX_ADVISOR_RECOMMENDATION_COUNT} elementos`);
   }
 
   const normalizedNames = new Set<string>();
@@ -1041,16 +1031,12 @@ function getRecommendationValidationIssues(value: unknown) {
     issues.push("suitableOccasions no es array de strings");
   }
 
-  if (typeof candidate.estimatedPriceRange !== "string") {
-    issues.push("estimatedPriceRange no es string");
+  if (typeof candidate.comparisonNote !== "string") {
+    issues.push("comparisonNote no es string");
   }
 
-  if (typeof candidate.jewelerTip !== "string") {
-    issues.push("jewelerTip no es string");
-  }
-
-  if (typeof candidate.disclaimer !== "string") {
-    issues.push("disclaimer no es string");
+  if (typeof candidate.beforeBuying !== "string") {
+    issues.push("beforeBuying no es string");
   }
 
   return issues;
@@ -1062,12 +1048,8 @@ function isStringArray(value: unknown): value is string[] {
 
 function formatRefinementPreferences(preferences: RefinementPreferences) {
   const entries = [
-    ["improvement", preferences.improvementGoal],
-    ["prominence", preferences.prominence],
-    ["usage", preferences.usage],
-    ["meaning", preferences.meaningful],
-    ["personalizable", preferences.personalizable],
-    ["avoid", preferences.additionalAvoid],
+    ["quick_filters", preferences.quickFilters?.join(", ")],
+    ["free_text", preferences.additionalRequest],
   ].filter((entry): entry is [string, string] => Boolean(entry[1]));
 
   return entries.map(([key, value]) => `${key}=${value}`).join("\n");
@@ -1129,8 +1111,5 @@ function normalizeRecommendation(
     recommendedMaterials: recommendation.recommendedMaterials.slice(0, 4),
     styles: recommendation.styles.slice(0, 4),
     suitableOccasions: recommendation.suitableOccasions.slice(0, 4),
-    disclaimer:
-      recommendation.disclaimer ||
-      "Recomendación orientativa: representa un tipo de joya, no un producto concreto disponible en una tienda.",
   };
 }

@@ -19,7 +19,7 @@ import type {
   GuidedJewelryType,
   RefinementPreferences,
 } from "@/lib/advisor";
-import { ADVISOR_RECOMMENDATION_COUNT, guidedJewelryTypes } from "@/lib/advisor";
+import { MAX_ADVISOR_RECOMMENDATION_COUNT, guidedJewelryTypes } from "@/lib/advisor";
 import { amazonProvider } from "@/lib/affiliate";
 import { resetAdvisorEvent } from "@/components/AdvisorResetLink";
 import { trackGAEvent } from "@/lib/google-analytics-events";
@@ -54,7 +54,7 @@ type AdvisorErrorResponse = {
 };
 
 const maxDescriptionLength = 650;
-const maxRefinementAvoidLength = 280;
+const maxRefinementRequestLength = 280;
 const emptyRefinementPreferences: RefinementPreferences = {};
 
 const recipients: Option[] = [
@@ -196,38 +196,34 @@ const chatCopy = {
     trustFirst: "La IA recomienda tipos de joya; no garantiza productos concretos, stock ni precios exactos.",
     trustSecond: "Los enlaces de compra pueden ser de afiliación. Confirma precio, detalles y disponibilidad en la tienda.",
     statusLoading: "El joyero IA está analizando tus preferencias...",
+    statusRefining: "El joyero IA está ajustando las recomendaciones...",
+    orLabel: "o",
     retry: "Reintentar",
     empty:
       "No se han encontrado recomendaciones claras. Añade algún detalle más sobre estilo, ocasión o presupuesto y vuelve a intentarlo.",
     resultsEyebrow: "Recomendaciones del joyero IA",
-    resultsTitle: "Seis ideas personalizadas",
+    resultsTitle: "Ideas personalizadas",
     resultsDisclaimer:
       "Recomendación orientativa: representa un tipo de joya, no un producto concreto disponible en una tienda.",
-    recommendation: "Recomendación",
+    primaryRecommendation: "La que mejor encaja contigo",
+    alternativeRecommendation: "Alternativa",
     whyFits: "Por qué encaja",
-    recommendedMaterial: "Material recomendado",
-    indicativePrice: "Precio orientativo",
-    jewelerTip: "Consejo del joyero",
-    viewOnAmazon: "Ver opciones en Amazon →",
+    whyChoose: "Por qué la elegiría",
+    beforeBuying: "Antes de comprar",
+    viewOnAmazon: "Buscar este tipo de joya en Amazon",
     refineButton: "✨ Afinar recomendaciones",
     refinementTitle: "Afina tus recomendaciones",
-    refinementHelp: "Estas preferencias son opcionales y no sustituyen tus criterios originales.",
-    improvementGoal: "¿Qué quieres mejorar de estas recomendaciones?",
-    prominence: "¿Qué nivel de protagonismo prefieres?",
-    usage: "¿La quieres para uso diario o para ocasiones especiales?",
-    meaningful: "¿Quieres que tenga un significado especial?",
-    personalizable: "¿Quieres que pueda personalizarse?",
-    additionalAvoid: "¿Quieres evitar algo más?",
-    additionalAvoidPlaceholder: "Por ejemplo: nada demasiado grande, sin corazones, no quiero algo muy clásico...",
+    refinementHelp: "Los ajustes se suman a tus criterios originales y conservan sus restricciones.",
+    quickAdjustments: "Ajustes rápidos",
+    necklacesOnly: "Solo collares",
+    noGemstones: "Sin piedras",
+    moreDiscreet: "Más discreto",
+    moreAffordable: "Más económico",
+    additionalRequest: "Otro cambio",
+    additionalRequestPlaceholder: "Por ejemplo: una cadena corta, sin corazones o con cierre fácil de comprobar...",
+    applyRefinement: "Aplicar ajustes",
     optionalRefinement: "Opcional",
-    skip: "Saltar",
-    noRefinementSelected: "Selecciona alguna opción para afinar tus recomendaciones.",
-    moreOriginal: "Más original", moreDiscreet: "Más discreto", moreElegant: "Más elegante", moreSpecial: "Más especial", moreAffordable: "Más económico",
-    discreet: "Discreto", balanced: "Equilibrado", statement: "Llamativo",
-    daily: "Diario", occasionsUse: "Ocasiones especiales", both: "Ambos",
-    yes: "Sí", no: "No", neutral: "Me da igual",
     refining: "Refinando...",
-    sendRefinement: "✨ Afinar mis recomendaciones",
   },
   "pt-BR": {
     heroEyebrow: "Joalheiro pessoal com IA",
@@ -313,31 +309,28 @@ const chatCopy = {
     trustFirst: "A IA recomenda tipos de joia; não garante produtos concretos, estoque ou preços exatos.",
     trustSecond: "Os links de compra podem ser de afiliação. Confirme preço, detalhes e disponibilidade na loja.",
     statusLoading: "O joalheiro IA está analisando suas preferências...",
+    statusRefining: "O joalheiro IA está ajustando as recomendações...",
+    orLabel: "ou",
     retry: "Tentar novamente",
     empty:
       "Não foram encontradas recomendações claras. Adicione mais algum detalhe sobre estilo, ocasião ou orçamento e tente novamente.",
     resultsEyebrow: "Recomendações do joalheiro IA",
-    resultsTitle: "Seis ideias personalizadas",
+    resultsTitle: "Ideias personalizadas",
     resultsDisclaimer:
       "Recomendação orientativa: representa um tipo de joia, não um produto concreto disponível em uma loja.",
-    recommendation: "Recomendação",
+    primaryRecommendation: "A que mais combina com você",
+    alternativeRecommendation: "Alternativa",
     whyFits: "Por que combina",
-    recommendedMaterial: "Material recomendado",
-    indicativePrice: "Preço orientativo",
-    jewelerTip: "Dica do joalheiro",
-    viewOnAmazon: "Ver opções na Amazon →",
+    whyChoose: "Por que eu escolheria esta",
+    beforeBuying: "Antes de comprar",
+    viewOnAmazon: "Buscar este tipo de joia na Amazon",
     refineButton: "✨ Refinar recomendações",
     refinementTitle: "Refine suas recomendações",
-    refinementHelp: "Estas preferências são opcionais e não substituem seus critérios originais.",
-    improvementGoal: "O que você gostaria de melhorar?", prominence: "Nível de destaque", usage: "Uso principal",
-    meaningful: "Você busca algo com significado?", personalizable: "Deve poder ser personalizada?",
-    additionalAvoid: "Algo que você prefere evitar", additionalAvoidPlaceholder: "Ex.: designs muito chamativos ou pedras grandes", optionalRefinement: "Opcional",
-    skip: "Pular",
-    noRefinementSelected: "Selecione ao menos uma opção para refinar as recomendações.",
-    moreOriginal: "Mais original", moreDiscreet: "Mais discreto", moreElegant: "Mais elegante", moreSpecial: "Mais especial", moreAffordable: "Mais econômico",
-    discreet: "Discreto", balanced: "Equilibrado", statement: "Marcante", daily: "Diário", occasionsUse: "Ocasiões especiais", both: "Ambos", yes: "Sim", no: "Não", neutral: "Tanto faz",
+    refinementHelp: "Os ajustes são somados aos seus critérios originais e preservam as restrições.",
+    quickAdjustments: "Ajustes rápidos", necklacesOnly: "Somente colares", noGemstones: "Sem pedras", moreDiscreet: "Mais discreto", moreAffordable: "Mais econômico",
+    additionalRequest: "Outro ajuste", additionalRequestPlaceholder: "Ex.: corrente curta, sem corações ou fecho fácil de conferir...",
+    applyRefinement: "Aplicar ajustes", optionalRefinement: "Opcional",
     refining: "Refinando...",
-    sendRefinement: "✨ Refinar minhas recomendações",
   },
   en: {
     heroEyebrow: "Personal AI jeweler",
@@ -423,31 +416,28 @@ const chatCopy = {
     trustFirst: "The AI recommends jewelry types; it does not guarantee specific products, stock, or exact prices.",
     trustSecond: "Purchase links may be affiliate links. Confirm price, details, and availability with the store.",
     statusLoading: "The AI jeweler is analyzing your preferences...",
+    statusRefining: "The AI jeweler is adjusting your recommendations...",
+    orLabel: "or",
     retry: "Try again",
     empty:
       "No clear recommendations were found. Add another detail about style, occasion or budget and try again.",
     resultsEyebrow: "AI jeweler recommendations",
-    resultsTitle: "Six personalized ideas",
+    resultsTitle: "Personalized ideas",
     resultsDisclaimer:
       "Indicative recommendation: this represents a jewelry type, not a specific product available in a store.",
-    recommendation: "Recommendation",
+    primaryRecommendation: "The best fit for you",
+    alternativeRecommendation: "Alternative",
     whyFits: "Why it fits",
-    recommendedMaterial: "Recommended material",
-    indicativePrice: "Indicative price",
-    jewelerTip: "Jeweler tip",
-    viewOnAmazon: "View options on Amazon →",
+    whyChoose: "Why I would choose it",
+    beforeBuying: "Before buying",
+    viewOnAmazon: "Search for this type of jewelry on Amazon",
     refineButton: "✨ Refine recommendations",
     refinementTitle: "Refine your recommendations",
-    refinementHelp: "These preferences are optional and do not replace your original criteria.",
-    improvementGoal: "What would you like to improve?", prominence: "Level of presence", usage: "Primary use",
-    meaningful: "Would you like it to be meaningful?", personalizable: "Should it be personalizable?",
-    additionalAvoid: "Anything you would rather avoid", additionalAvoidPlaceholder: "E.g. very ornate designs or large stones", optionalRefinement: "Optional",
-    skip: "Skip",
-    noRefinementSelected: "Select at least one option to refine the recommendations.",
-    moreOriginal: "More original", moreDiscreet: "More understated", moreElegant: "More elegant", moreSpecial: "More special", moreAffordable: "More affordable",
-    discreet: "Understated", balanced: "Balanced", statement: "Statement", daily: "Everyday", occasionsUse: "Special occasions", both: "Both", yes: "Yes", no: "No", neutral: "No preference",
+    refinementHelp: "These adjustments add to your original criteria and preserve their restrictions.",
+    quickAdjustments: "Quick adjustments", necklacesOnly: "Necklaces only", noGemstones: "No gemstones", moreDiscreet: "More understated", moreAffordable: "More affordable",
+    additionalRequest: "Another change", additionalRequestPlaceholder: "E.g. a short chain, no hearts, or an easy-to-check clasp...",
+    applyRefinement: "Apply adjustments", optionalRefinement: "Optional",
     refining: "Refining...",
-    sendRefinement: "✨ Refine my recommendations",
   },
 } satisfies Record<Locale, Record<string, string>>;
 
@@ -584,7 +574,6 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   const [conversation, setConversation] = useState<ConversationMessage[]>([]);
   const [refinementPreferences, setRefinementPreferences] = useState<RefinementPreferences>(emptyRefinementPreferences);
   const [isRefinementOpen, setIsRefinementOpen] = useState(false);
-  const [refinementStep, setRefinementStep] = useState(0);
   const [refinementError, setRefinementError] = useState("");
   const [error, setError] = useState("");
   const [status, setStatus] = useState<RequestState>("idle");
@@ -645,7 +634,6 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
     setConversation([]);
     setRefinementPreferences(emptyRefinementPreferences);
     setIsRefinementOpen(false);
-    setRefinementStep(0);
     setRefinementError("");
     setError("");
     setStatus("idle");
@@ -770,7 +758,6 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       setConversation([]);
       setRefinementPreferences(emptyRefinementPreferences);
       setIsRefinementOpen(false);
-      setRefinementStep(0);
       setRefinementError("");
       setError("");
       setStatus("idle");
@@ -894,7 +881,6 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
       setStatus(data.recommendations.length ? "results" : "empty");
       if (refinement) {
         setIsRefinementOpen(false);
-        setRefinementStep(0);
       }
       if (data.recommendations.length) {
         setResultsGeneration((generation) => generation + 1);
@@ -955,7 +941,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
 
   function openRefinement() {
     setIsRefinementOpen(true);
-    setRefinementStep(0);
+    setRefinementPreferences(emptyRefinementPreferences);
     setRefinementError("");
     trackGAEvent("refinement_open", { locale });
     requestAnimationFrame(() => scrollToSectionBelowHeader(refinementRef.current));
@@ -964,11 +950,7 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
   function submitRefinement() {
     trackGAEvent("refinement_submit", {
       locale,
-      improvementGoal: refinementPreferences.improvementGoal,
-      prominence: refinementPreferences.prominence,
-      usage: refinementPreferences.usage,
-      meaningful: refinementPreferences.meaningful,
-      personalizable: refinementPreferences.personalizable,
+      quickFilters: refinementPreferences.quickFilters?.join(",") ?? "",
     });
     void submitAdvisor(refinementPreferences);
   }
@@ -1170,14 +1152,12 @@ export default function JewelryChat({ locale = "es" }: { locale?: Locale }) {
         <RefinementPanel
           panelRef={refinementRef}
           isOpen={isRefinementOpen}
-          currentStep={refinementStep}
           preferences={refinementPreferences}
           isLoading={isLoading}
           isRequestBlocked={isCooldownActive}
           copy={copy}
           error={refinementError}
           onChange={setRefinementPreferences}
-          onStepChange={setRefinementStep}
           onSubmit={submitRefinement}
         />
       ) : null}
@@ -1276,7 +1256,7 @@ function AdvisorModeSelector({
       })}
       <div className="order-2 flex items-center gap-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[#8f806e] sm:hidden" aria-hidden="true">
         <span className="h-px flex-1 bg-[#ead8b3]" />
-        <span>o</span>
+        <span>{copy.orLabel}</span>
         <span className="h-px flex-1 bg-[#ead8b3]" />
       </div>
       </div>
@@ -2134,7 +2114,7 @@ function StatusPanel({
   if (status === "loading" || status === "refining") {
     return (
       <div className="mt-6 rounded-2xl border border-[#ead8b3] bg-[#fff9ed] px-4 py-3 text-sm font-semibold text-[#6b4b13]" role="status">
-        {copy.statusLoading}
+        {status === "refining" ? copy.statusRefining : copy.statusLoading}
       </div>
     );
   }
@@ -2299,7 +2279,7 @@ function RecommendationResults({
             {copy.resultsEyebrow}
           </p>
           <h3 className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-[#17120b]">
-            {copy.resultsTitle}
+            {getResultsTitle(response.recommendations.length, copy, locale)}
           </h3>
           {preferenceChips.length ? <div className="mt-3 flex max-w-3xl flex-wrap gap-2">
             {preferenceChips.map((chip) => <span key={chip} className="rounded-full border border-[#ead8b3] bg-[#fff9ed] px-3 py-1.5 text-xs font-semibold leading-4 text-[#68420c]">
@@ -2320,7 +2300,7 @@ function RecommendationResults({
       <p className="mt-4 max-w-3xl text-sm leading-6 text-[#75695d]">{response.summary}</p>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {response.recommendations.slice(0, ADVISOR_RECOMMENDATION_COUNT).map((recommendation, index) => (
+        {response.recommendations.slice(0, MAX_ADVISOR_RECOMMENDATION_COUNT).map((recommendation, index) => (
           <RecommendationCard
             key={recommendation.id}
             recommendation={recommendation}
@@ -2357,9 +2337,9 @@ function RecommendationCard({
   const amazonUrl = amazonProvider.buildSearchUrl?.(searchQuery, locale);
 
   return (
-    <article className="flex h-full flex-col rounded-3xl border border-[#ead8b3] bg-white p-5 shadow-sm sm:p-6">
+    <article className={`flex h-full flex-col rounded-3xl border p-5 shadow-sm sm:p-6 ${index === 0 ? "border-[#c89a43] bg-[#fffdf8] shadow-[#805400]/10" : "border-[#ead8b3] bg-white"}`}>
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9b722b]">
-        {copy.recommendation} {index + 1}
+        {index === 0 ? copy.primaryRecommendation : `${copy.alternativeRecommendation} ${index}`}
       </p>
       <h4 className="mt-3 line-clamp-3 text-xl font-semibold leading-snug tracking-[-0.03em] text-[#17120b]">
         {recommendation.genericName}
@@ -2371,13 +2351,14 @@ function RecommendationCard({
           </span>
         ))}
       </div>
-      <InfoBlock title={copy.whyFits} text={recommendation.reason} />
+      <InfoBlock title={index === 0 ? copy.whyChoose : copy.whyFits} text={recommendation.reason} />
+      <p className="mt-3 text-sm leading-6 text-[#75695d]">{recommendation.comparisonNote}</p>
       <div className="mt-5 rounded-2xl border border-[#eadfca] bg-[#fff9ed] p-4">
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#806632]">
           <span aria-hidden="true" className="flex h-6 w-6 items-center justify-center rounded-full border border-[#e8cc91] bg-white text-[#8f610d]"><JewelerTipIcon /></span>
-          {copy.jewelerTip}
+          {copy.beforeBuying}
         </div>
-        <p className="mt-2 text-sm leading-6 text-[#5d5148]">{recommendation.jewelerTip}</p>
+        <p className="mt-2 text-sm leading-6 text-[#5d5148]">{recommendation.beforeBuying}</p>
       </div>
       {amazonUrl ? <div className="mt-auto pt-5">
         <a
@@ -2393,7 +2374,7 @@ function RecommendationCard({
           }}
           className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-[#e68a00] bg-[#FF9900] px-4 py-3 text-sm font-semibold text-[#17120b] transition-colors duration-200 hover:bg-[#e68a00] active:bg-[#cc7a00] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 sm:w-auto"
         >
-          {copy.viewOnAmazon}
+          {copy.viewOnAmazon} <span aria-hidden="true" className="ml-2">→</span>
         </a>
       </div> : null}
     </article>
@@ -2421,6 +2402,20 @@ function buildPreferenceChips(
   ].filter((value): value is string => Boolean(value));
 }
 
+function getResultsTitle(count: number, copy: ChatCopy, locale: Locale) {
+  if (!count) return copy.resultsTitle;
+
+  if (count === 1) {
+    return locale === "pt-BR" ? "1 ideia personalizada" : locale === "en" ? "1 personalized idea" : "1 idea personalizada";
+  }
+
+  return locale === "pt-BR"
+    ? `${count} ideias personalizadas`
+    : locale === "en"
+      ? `${count} personalized ideas`
+      : `${count} ideas personalizadas`;
+}
+
 function JewelerTipIcon() {
   return <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18h6M10 21h4M8.3 14.5A6.5 6.5 0 1 1 15.7 14.5c-1 .8-1.7 1.7-1.7 2.5h-4c0-.8-.7-1.7-1.7-2.5z" /></svg>;
 }
@@ -2439,42 +2434,44 @@ function InfoBlock({ title, text }: { title: string; text: string }) {
 function RefinementPanel({
   panelRef,
   isOpen,
-  currentStep,
   preferences,
   isLoading,
   isRequestBlocked,
   copy,
   error,
   onChange,
-  onStepChange,
   onSubmit,
 }: {
   panelRef: React.RefObject<HTMLElement | null>;
   isOpen: boolean;
-  currentStep: number;
   preferences: RefinementPreferences;
   isLoading: boolean;
   isRequestBlocked: boolean;
   copy: ChatCopy;
   error: string;
   onChange: (value: RefinementPreferences) => void;
-  onStepChange: (step: number) => void;
   onSubmit: () => void;
 }) {
   if (!isOpen) {
     return null;
   }
 
-  const choices = [
-    { key: "improvementGoal" as const, label: copy.improvementGoal, options: [["original", copy.moreOriginal], ["discreet", copy.moreDiscreet], ["elegant", copy.moreElegant], ["special", copy.moreSpecial], ["cheaper", copy.moreAffordable]] },
-    { key: "prominence" as const, label: copy.prominence, options: [["discreet", copy.discreet], ["balanced", copy.balanced], ["statement", copy.statement]] },
-    { key: "usage" as const, label: copy.usage, options: [["daily", copy.daily], ["occasions", copy.occasionsUse], ["both", copy.both]] },
-    { key: "meaningful" as const, label: copy.meaningful, options: [["yes", copy.yes], ["no", copy.no], ["neutral", copy.neutral]] },
-    { key: "personalizable" as const, label: copy.personalizable, options: [["yes", copy.yes], ["no", copy.no], ["neutral", copy.neutral]] },
-  ];
-  const lastStep = choices.length;
-  const safeStep = Math.min(Math.max(currentStep, 0), lastStep);
-  const currentChoice = choices[safeStep];
+  const quickFilters = [
+    ["necklaces_only", copy.necklacesOnly],
+    ["no_gemstones", copy.noGemstones],
+    ["more_discreet", copy.moreDiscreet],
+    ["more_affordable", copy.moreAffordable],
+  ] as const;
+
+  function toggleQuickFilter(filter: NonNullable<RefinementPreferences["quickFilters"]>[number]) {
+    const selected = preferences.quickFilters ?? [];
+    onChange({
+      ...preferences,
+      quickFilters: selected.includes(filter)
+        ? selected.filter((item) => item !== filter)
+        : [...selected, filter],
+    });
+  }
 
   return (
     <section ref={panelRef} className="mt-8 scroll-mt-24 rounded-3xl border border-[#ead8b3] bg-[#fffdf8] p-4 sm:p-5">
@@ -2484,43 +2481,36 @@ function RefinementPanel({
       <p className="mt-2 max-w-3xl text-sm leading-6 text-[#625746]">
         {copy.refinementHelp}
       </p>
-      <p className="mt-5 text-sm font-semibold text-[#806632]" aria-live="polite">{copy.step} {safeStep + 1} {copy.of} {lastStep + 1}</p>
-      <div className="mt-3">
-        {currentChoice ? <fieldset>
-          <legend className="text-base font-semibold text-[#2b241f]">{currentChoice.label} <span className="font-normal text-[#75695d]">{copy.optionalRefinement}</span></legend>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {currentChoice.options.map(([value, optionLabel]) => {
-              const selected = preferences[currentChoice.key] === value;
-              return <button key={value} type="button" aria-pressed={selected} onClick={() => { onChange({ ...preferences, [currentChoice.key]: value }); onStepChange(safeStep + 1); }} className={`min-h-11 rounded-full border px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] ${selected ? "border-[#b97a05] bg-[#fff1d2] text-[#68420c]" : "border-[#ead8b3] bg-white text-[#5f4a24] hover:bg-[#fff9ed]"}`}>{optionLabel}</button>;
-            })}
-          </div>
-        </fieldset> : <label htmlFor="refinement-avoid" className="block text-base font-semibold text-[#2b241f]">
-          {copy.additionalAvoid} <span className="font-normal text-[#75695d]">{copy.optionalRefinement}</span>
-          <textarea
-            id="refinement-avoid"
-            value={preferences.additionalAvoid ?? ""}
-            maxLength={maxRefinementAvoidLength}
-            onChange={(event) => onChange({ ...preferences, additionalAvoid: event.target.value })}
-            placeholder={copy.additionalAvoidPlaceholder}
-            className="mt-2 min-h-[4.75rem] w-full resize-y rounded-2xl border border-[#ead8b3] bg-white px-4 py-3 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25"
-          />
-        </label>}
-      </div>
-      {error ? <p className="mt-4 text-sm text-[#9a3f2a]" role="alert">{error}</p> : null}
-      <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex gap-2">
-          {safeStep > 0 ? <button type="button" onClick={() => onStepChange(safeStep - 1)} className="min-h-11 rounded-xl px-4 py-2 text-sm font-semibold text-[#5f4a24] transition hover:bg-[#fff4dd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">← {copy.back}</button> : null}
-          {currentChoice ? <button type="button" onClick={() => onStepChange(safeStep + 1)} className="min-h-11 rounded-xl px-4 py-2 text-sm font-semibold text-[#7a540f] transition hover:bg-[#fff4dd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]">{copy.skip}</button> : null}
+      <fieldset className="mt-5">
+        <legend className="text-base font-semibold text-[#2b241f]">{copy.quickAdjustments}</legend>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {quickFilters.map(([filter, label]) => {
+            const selected = preferences.quickFilters?.includes(filter) ?? false;
+            return <button key={filter} type="button" aria-pressed={selected} onClick={() => toggleQuickFilter(filter)} className={`min-h-11 rounded-full border px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] ${selected ? "border-[#b97a05] bg-[#fff1d2] text-[#68420c]" : "border-[#ead8b3] bg-white text-[#5f4a24] hover:bg-[#fff9ed]"}`}>{label}</button>;
+          })}
         </div>
-        {safeStep === lastStep ? <button
+      </fieldset>
+      <label htmlFor="refinement-request" className="mt-5 block text-base font-semibold text-[#2b241f]">
+        {copy.additionalRequest} <span className="font-normal text-[#75695d]">{copy.optionalRefinement}</span>
+        <textarea
+          id="refinement-request"
+          value={preferences.additionalRequest ?? ""}
+          maxLength={maxRefinementRequestLength}
+          onChange={(event) => onChange({ ...preferences, additionalRequest: event.target.value })}
+          placeholder={copy.additionalRequestPlaceholder}
+          className="mt-2 min-h-[4.75rem] w-full resize-y rounded-2xl border border-[#ead8b3] bg-white px-4 py-3 text-sm leading-6 text-[#17120b] outline-none transition placeholder:text-[#9a8d7b] focus:border-[#b97a05] focus:ring-2 focus:ring-[#d7a63c]/25"
+        />
+      </label>
+      {error ? <p className="mt-4 text-sm text-[#9a3f2a]" role="alert">{error}</p> : null}
+      <div className="mt-5 flex justify-end">
+        <button
           type="button"
           onClick={onSubmit}
           disabled={isLoading || isRequestBlocked}
           className="min-h-12 w-full rounded-2xl bg-[#17120b] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
         >
-          {isLoading ? copy.refining : copy.updateRecommendations}
+          {isLoading ? copy.refining : copy.applyRefinement}
         </button>
-        : null}
       </div>
     </section>
   );

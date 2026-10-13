@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test:advisor-contract": "node scripts/validate-advisor-contract.mjs",
     "seo:keyword-map": "node scripts/seo/generate-keyword-map.mjs",
     "seo:validate-localization": "node scripts/seo/validate-localization.mjs"
   },
