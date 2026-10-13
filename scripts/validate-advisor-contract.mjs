@@ -16,6 +16,7 @@ const assertions = [
   ["offers only direct quick refinements", /necklaces_only.*no_gemstones.*more_discreet.*more_affordable/s.test(files.types) && /quickFilters/.test(files.ui) && /additionalRequest/.test(files.ui)],
   ["keeps prior results after a failed refinement", /if \(refinement\) \{\s*setRefinementError\(message\);\s*setStatus\("results"\);/s.test(files.ui)],
   ["protects the material wording in Amazon searches", /Conserva literalmente "plata 925"/.test(files.route)],
+  ["uses prudent budget wording in generated summaries", /taking the stated budget into account/.test(files.route) && /considerando o orçamento informado/.test(files.route) && /teniendo en cuenta el presupuesto indicado/.test(files.route)],
   ["uses the localized Amazon search calls to action", /Buscar este tipo de joya en Amazon/.test(files.ui) && /Buscar este tipo de joia na Amazon/.test(files.ui) && /Search for this type of jewelry on Amazon/.test(files.ui)],
   ["localizes the compact mode separator", /orLabel: "o"/.test(files.ui) && /orLabel: "ou"/.test(files.ui) && /orLabel: "or"/.test(files.ui)],
   ["capitalizes the English footer brand", /"Sobre Joyas\.ai": "About Joyas\.ai"/.test(files.i18n)],
