@@ -1,5 +1,6 @@
 import AiAdvisorCta from "@/components/AiAdvisorCta";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import JewelryRecommenderLanding from "@/components/JewelryRecommenderLanding";
 import type { LanguageLink } from "@/components/LanguageSwitcher";
 import SiteHeader from "@/components/SiteHeader";
 import type { Locale } from "@/lib/i18n";
@@ -20,6 +21,10 @@ export default function LocalizedInfoPage({
   languageLinks,
   compact = false,
 }: LocalizedInfoPageProps) {
+  if (page.kind === "joyero-ia") {
+    return <JewelryRecommenderLanding locale={locale} href={href} languageLinks={languageLinks} />;
+  }
+
   const homeHref = locale === "es" ? "/es" : locale === "pt-BR" ? "/pt-br" : "/en";
   const homeLabel = locale === "pt-BR" ? "Início" : locale === "en" ? "Home" : "Inicio";
   const isCompactLegalNotice = compact && page.kind === "aviso-legal";

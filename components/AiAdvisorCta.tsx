@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { AdvisorContext } from "@/lib/advisor";
-import { localizeText, type Locale } from "@/lib/i18n";
+import { getLocalizedInfoPath, localizeText, type Locale } from "@/lib/i18n";
 
 type AiAdvisorCtaProps = {
   title?: string;
@@ -17,12 +17,12 @@ export default function AiAdvisorCta({
   context,
   variant = "default",
 }: AiAdvisorCtaProps) {
-  const homeHref = locale === "es" ? "/es" : locale === "pt-BR" ? "/pt-br" : "/en";
+  const advisorPageHref = getLocalizedInfoPath("joyero-ia", locale);
   const query = new URLSearchParams();
   if (context?.jewelryType) query.set("advisorType", context.jewelryType);
   if (context?.occasion) query.set("advisorOccasion", context.occasion);
   if (context?.topic) query.set("advisorTopic", context.topic);
-  const advisorHref = `${homeHref}${query.size ? `?${query.toString()}` : ""}#joyero-ia`;
+  const advisorHref = `${advisorPageHref}${query.size ? `?${query.toString()}` : ""}#joyero-ia`;
 
   if (variant === "compact") {
     return (
@@ -39,7 +39,7 @@ export default function AiAdvisorCta({
           </p>
         </div>
         <div className="mt-5 flex flex-col gap-3 sm:mt-0 sm:min-w-[13rem]">
-          <Link href={`${homeHref}#joyero-ia`} className="inline-flex justify-center rounded-xl bg-[#17120b] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2">
+          <Link href={advisorHref} className="inline-flex justify-center rounded-xl bg-[#17120b] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2b241f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2">
             {localizeText("Describir lo que busco", locale)}
           </Link>
           <Link href={advisorHref} className="inline-flex justify-center rounded-xl border border-[#d7a63c] bg-white px-5 py-3 text-sm font-semibold text-[#8a5d07] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] focus-visible:ring-offset-2">

@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   async redirects() {
     return [
+      { source: "/pt-br/joalheiro-ia", destination: "/pt-br/recomendador-de-joias", permanent: true },
+      { source: "/en/ai-jewelry-advisor", destination: "/en/ai-jewelry-recommender", permanent: true },
       { source: "/joyas/regalos", destination: "/guias", permanent: true },
       { source: "/pt-br/joias/presentes", destination: "/pt-br/guias", permanent: true },
       { source: "/en/jewelry/jewelry-gifts", destination: "/en/guides", permanent: true },

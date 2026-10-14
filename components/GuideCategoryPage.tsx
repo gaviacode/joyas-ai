@@ -2,7 +2,7 @@ import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import type { LanguageLink } from "@/components/LanguageSwitcher";
 import SiteHeader from "@/components/SiteHeader";
-import { getLocalizedIndexPath, localizeText, type Locale } from "@/lib/i18n";
+import { getLocalizedIndexPath, getLocalizedInfoPath, localizeText, type Locale } from "@/lib/i18n";
 import type { ArticleData, GuideCategory } from "@/lib/site-content";
 
 type GuideCategoryPageProps = {
@@ -14,6 +14,7 @@ type GuideCategoryPageProps = {
 
 export default function GuideCategoryPage({ category, guides, locale = "es", languageLinks }: GuideCategoryPageProps) {
   const guidesHref = getLocalizedIndexPath("guias", locale);
+  const advisorHref = getLocalizedInfoPath("joyero-ia", locale) + "#joyero-ia";
 
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
@@ -46,7 +47,7 @@ export default function GuideCategoryPage({ category, guides, locale = "es", lan
             {localizeText("Todas las categorías", locale)}
           </Link>
           <Link
-            href={locale === "es" ? "/es#joyero-ia" : `/${locale === "pt-BR" ? "pt-br" : locale}#joyero-ia`}
+            href={advisorHref}
             className="rounded-full border border-[#17120b] bg-[#17120b] px-4 py-2 text-white transition hover:bg-[#3a2b16] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05]"
           >
             {localizeText("Preguntar al joyero IA", locale)}

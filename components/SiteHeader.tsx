@@ -6,10 +6,10 @@ import { useState } from "react";
 import LanguageSwitcher, { type LanguageLink } from "@/components/LanguageSwitcher";
 import AdvisorResetLink from "@/components/AdvisorResetLink";
 import Logo from "@/components/Logo";
-import { localizeHref, localizeText, type Locale } from "@/lib/i18n";
+import { getLocalizedInfoPath, localizeHref, localizeText, type Locale } from "@/lib/i18n";
 
 const navLinks = [
-  { href: "/#joyero-ia", label: "Recomendador" },
+  { href: "/recomendador-de-joyas", label: "Recomendador" },
   { href: "/joyas", label: "Joyas" },
   { href: "/ocasiones", label: "Ocasiones" },
   { href: "/guias", label: "Guías" },
@@ -28,7 +28,7 @@ export default function SiteHeader({
     href: localizeHref(link.href, locale),
     label: localizeText(link.label, locale),
   }));
-  const advisorHref = localizeHref("/#joyero-ia", locale);
+  const advisorHref = `${getLocalizedInfoPath("joyero-ia", locale)}#joyero-ia`;
   const homeHref = localizeHref("/", locale);
   const labels = {
     mainNav: locale === "pt-BR" ? "Navegação principal" : locale === "en" ? "Main navigation" : "Navegación principal",

@@ -50,7 +50,7 @@ export type InfoPageKind =
 
 const infoPageSlugs: Record<InfoPageKind, Record<Locale, string>> = {
   "como-funciona": { es: "como-funciona", "pt-BR": "como-funciona", en: "how-it-works" },
-  "joyero-ia": { es: "joyero-ia", "pt-BR": "joalheiro-ia", en: "ai-jewelry-advisor" },
+  "joyero-ia": { es: "recomendador-de-joyas", "pt-BR": "recomendador-de-joias", en: "ai-jewelry-recommender" },
   "preguntas-frecuentes": { es: "preguntas-frecuentes", "pt-BR": "perguntas-frequentes", en: "faq" },
   "sobre-joyas-ai": { es: "sobre-joyas-ai", "pt-BR": "sobre-joyas-ai", en: "about-joyas-ai" },
   transparencia: { es: "transparencia", "pt-BR": "transparencia", en: "transparency" },
@@ -1137,7 +1137,7 @@ export function localizeHref(href: string, locale: Locale) {
   }
 
   if (href === "/#joyero-ia") {
-    return `${getLocaleHomePath(locale)}#joyero-ia`;
+    return getLocalizedInfoPath("joyero-ia", locale) + "#joyero-ia";
   }
 
   if (locale === "es") {

@@ -78,8 +78,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .map((item) => ({
       route: item.path,
       languages: item.languages,
-      changeFrequency: "monthly" as const,
-      priority: 0.5,
+      changeFrequency: item.kind === "joyero-ia" ? "weekly" as const : "monthly" as const,
+      priority: item.kind === "joyero-ia" ? 0.9 : 0.5,
     }));
 
   return uniqueByRoute([

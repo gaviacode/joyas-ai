@@ -5,7 +5,7 @@ import SiteHeader from "@/components/SiteHeader";
 import AdvisorResetLink from "@/components/AdvisorResetLink";
 import JewelryChat from "@/components/JewelryChat";
 import ExternalGiftIdeasCta from "@/components/ExternalGiftIdeasCta";
-import { getHomeMetadataAlternates, openGraphLocales } from "@/lib/i18n";
+import { getHomeMetadataAlternates, getLocalizedInfoPath, openGraphLocales } from "@/lib/i18n";
 import { absoluteUrl, PUBLIC_CONTACT_EMAIL, SITE_NAME } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -78,9 +78,9 @@ export default function Home() {
             Encuentra la joya perfecta con IA
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-[#63584c] md:mt-6 md:text-lg md:leading-8">
-            La IA de joyas.ai te ayuda a elegir anillos, collares, pulseras o pendientes según la ocasión, el estilo y tu presupuesto.
+            Joyas.ai es un recomendador de joyas con IA que te ayuda a elegir anillos, collares, pulseras o pendientes según la persona, la ocasión, el estilo y el presupuesto.
           </p>
-          <AdvisorResetLink href="/es#joyero-ia" className="mt-9 hidden w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#b97a05] to-[#d7a63c] px-7 py-4 font-semibold text-white shadow-lg shadow-[#b97a05]/20 transition hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-[220px] md:inline-flex">
+          <AdvisorResetLink href={`${getLocalizedInfoPath("joyero-ia", "es")}#joyero-ia`} className="mt-9 hidden w-full items-center justify-center rounded-xl bg-gradient-to-r from-[#b97a05] to-[#d7a63c] px-7 py-4 font-semibold text-white shadow-lg shadow-[#b97a05]/20 transition hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b97a05] sm:w-[220px] md:inline-flex">
             Probar el joyero IA
           </AdvisorResetLink>
         </div>

@@ -31,7 +31,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
     },
     "joyero-ia": {
       kind: "joyero-ia",
-      title: "Joyero IA: recomendador de joyas",
+      title: "Recomendador de joyas con IA",
       description: "Qué puede hacer el joyero IA de joyas.ai y ejemplos de consultas para recibir recomendaciones orientativas.",
       eyebrow: "Recomendador",
       intro: "El joyero IA ayuda a ordenar preferencias y convertirlas en ideas de joyas genéricas, prudentes y fáciles de comparar.",
@@ -141,7 +141,7 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
     },
     "joyero-ia": {
       kind: "joyero-ia",
-      title: "Joalheiro IA: recomendador de joias",
+      title: "Recomendador de joias com IA",
       description: "O que o joalheiro IA da joyas.ai pode fazer e exemplos de consultas para receber recomendações orientativas.",
       eyebrow: "Recomendador",
       intro: "O joalheiro IA ajuda a organizar preferências e transformá-las em ideias de joias genéricas, prudentes e fáceis de comparar.",
@@ -247,8 +247,8 @@ const infoPages: Record<Locale, Record<InfoPageKind, LocalizedInfoPage>> = {
     },
     "joyero-ia": {
       kind: "joyero-ia",
-      title: "AI Jewelry Advisor",
-      description: "What the joyas.ai advisor can do and examples of prompts for indicative jewelry recommendations.",
+      title: "AI Jewelry Recommender",
+      description: "Use Joyas.ai's AI jewelry recommender to choose a jewelry gift by recipient, occasion, style, and budget.",
       eyebrow: "Advisor",
       intro: "The AI jewelry advisor helps organize preferences and turn them into generic, careful and easy-to-compare jewelry ideas.",
       sections: [{ title: "What you can ask", paragraphs: ["You can ask for ideas by occasion, recipient, budget, style, materials or concrete doubts about a purchase.", "At this stage the advisor does not show specific products; its goal is to help you decide what type of jewelry to look for."] }],

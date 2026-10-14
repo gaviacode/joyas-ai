@@ -310,7 +310,7 @@ export default function Silver925Guide({ languageLinks }: { languageLinks?: Lang
             Cuéntale al joyero IA qué tipo de joya buscas, para quién es, la ocasión y tu presupuesto.
           </p>
           <Link
-            href="/es?advisorTopic=Joyas%20de%20plata#joyero-ia"
+            href="/recomendador-de-joyas?advisorTopic=Joyas%20de%20plata#joyero-ia"
             className="mt-6 inline-flex rounded-xl bg-white px-6 py-3 font-semibold text-[#17120b] transition hover:bg-[#fff5df] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f0c971]"
           >
             Preguntar al joyero IA

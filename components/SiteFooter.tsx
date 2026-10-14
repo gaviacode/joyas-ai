@@ -23,7 +23,7 @@ const footerGroups: FooterGroup[] = [
   {
     title: "JOYAS.AI",
     links: [
-      { href: "/#joyero-ia", label: "Recomendador" },
+      { href: "/recomendador-de-joyas", label: "Recomendador" },
       { href: "/como-funciona", label: "Cómo funciona" },
       { href: "/sobre-joyas-ai", label: "Sobre Joyas.ai" },
     ],

@@ -11,6 +11,7 @@ import {
   getHomeMetadataAlternates,
   getLocaleHomePath,
   getLocalizedIndexPath,
+  getLocalizedInfoPath,
   localizeText,
   openGraphLocales,
   locales,
@@ -90,7 +91,6 @@ export default async function LocalizedHomePage({ params }: PageProps) {
     return <SpanishHome />;
   }
   const copy = getHomeCopy(locale);
-  const localizedPrefix = locale === "pt-BR" ? "/pt-br" : "/en";
 
   return (
     <main className="min-h-screen bg-[#fffaf1] text-[#1f1a17]">
@@ -107,7 +107,7 @@ export default async function LocalizedHomePage({ params }: PageProps) {
             {copy.description}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <AdvisorResetLink href={`${localizedPrefix}#joyero-ia`} className="inline-flex justify-center rounded-xl bg-[#17120b] px-6 py-3 font-semibold text-white transition hover:bg-[#2b241f]">
+          <AdvisorResetLink href={`${getLocalizedInfoPath("joyero-ia", locale)}#joyero-ia`} className="inline-flex justify-center rounded-xl bg-[#17120b] px-6 py-3 font-semibold text-white transition hover:bg-[#2b241f]">
             {localizeText("Probar el joyero IA", locale)}
           </AdvisorResetLink>
           <Link href={getLocalizedIndexPath("guias", locale)} className="inline-flex justify-center rounded-xl border border-[#d7a63c] bg-white px-6 py-3 font-semibold text-[#9a6b08] transition hover:bg-[#fff5df]">
