@@ -1,5 +1,6 @@
 import { ApiError, GoogleGenAI, Type } from "@google/genai";
 import { createHash, randomUUID } from "node:crypto";
+import { isIP } from "node:net";
 import { NextResponse } from "next/server";
 import { createClient } from "redis";
 import type {
@@ -435,9 +436,15 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object";
 }
 
-function getClientIp(request: Request) {
+function getClientIp(request: Request): string | null {
   // Railway's edge proxy supplies this header with the original client IP.
-  return request.headers.get("x-real-ip")?.trim() || "unknown";
+  const value = request.headers.get("x-real-ip")?.trim();
+
+  if (!value || isIP(value) === 0) {
+    return null;
+  }
+
+  return value;
 }
 
 function getAnonymousVisitor(request: Request) {
@@ -486,34 +493,49 @@ function withAnonymousVisitorCookie(
   return response;
 }
 
-async function checkRateLimit({ ip, visitorId }: { ip: string; visitorId: string }) {
-  const ipHash = hashRateLimitIdentifier(ip);
+async function checkRateLimit({ ip, visitorId }: { ip: string | null; visitorId: string }) {
   const visitorHash = hashRateLimitIdentifier(visitorId);
   const globalDailyLimit = getGlobalDailyLimit();
-  const keys = [
-    `joyas-ai:rate-limit:ip:${ipHash}:10m`,
-    `joyas-ai:rate-limit:ip:${ipHash}:24h`,
+  const keys: string[] = [];
+  const arguments_: string[] = [];
+
+  if (ip) {
+    const ipHash = hashRateLimitIdentifier(ip);
+    keys.push(
+      `joyas-ai:rate-limit:ip:${ipHash}:10m`,
+      `joyas-ai:rate-limit:ip:${ipHash}:24h`,
+    );
+    arguments_.push(
+      String(RATE_LIMIT_SHORT_MAX_REQUESTS),
+      String(RATE_LIMIT_SHORT_WINDOW_SECONDS),
+      String(RATE_LIMIT_DAILY_MAX_REQUESTS),
+      String(RATE_LIMIT_DAILY_WINDOW_SECONDS),
+    );
+  }
+
+  keys.push(
     `joyas-ai:rate-limit:visitor:${visitorHash}:10m`,
     `joyas-ai:rate-limit:visitor:${visitorHash}:24h`,
-    "joyas-ai:rate-limit:global:24h",
-  ];
+  );
+  arguments_.push(
+    String(RATE_LIMIT_SHORT_MAX_REQUESTS),
+    String(RATE_LIMIT_SHORT_WINDOW_SECONDS),
+    String(RATE_LIMIT_DAILY_MAX_REQUESTS),
+    String(RATE_LIMIT_DAILY_WINDOW_SECONDS),
+  );
+
+  const globalKeyIndex = keys.length + 1;
+  keys.push("joyas-ai:rate-limit:global:24h");
+  arguments_.push(
+    String(globalDailyLimit),
+    String(RATE_LIMIT_DAILY_WINDOW_SECONDS),
+  );
 
   try {
     const redis = await getRedisClient();
     const result = await redis.eval(RATE_LIMIT_SCRIPT, {
       keys,
-      arguments: [
-        String(RATE_LIMIT_SHORT_MAX_REQUESTS),
-        String(RATE_LIMIT_SHORT_WINDOW_SECONDS),
-        String(RATE_LIMIT_DAILY_MAX_REQUESTS),
-        String(RATE_LIMIT_DAILY_WINDOW_SECONDS),
-        String(RATE_LIMIT_SHORT_MAX_REQUESTS),
-        String(RATE_LIMIT_SHORT_WINDOW_SECONDS),
-        String(RATE_LIMIT_DAILY_MAX_REQUESTS),
-        String(RATE_LIMIT_DAILY_WINDOW_SECONDS),
-        String(globalDailyLimit),
-        String(RATE_LIMIT_DAILY_WINDOW_SECONDS),
-      ],
+      arguments: arguments_,
     });
 
     if (!Array.isArray(result) || result[0] !== 0) {
@@ -523,7 +545,7 @@ async function checkRateLimit({ ip, visitorId }: { ip: string; visitorId: string
     const failedKeyIndex = Number(result[1]);
     return {
       allowed: false as const,
-      reason: failedKeyIndex === 5 ? "global" : "individual",
+      reason: failedKeyIndex === globalKeyIndex ? "global" : "individual",
       retryAfterSeconds: Math.max(1, Number(result[2]) || RATE_LIMIT_SHORT_WINDOW_SECONDS),
     };
   } catch (error) {
