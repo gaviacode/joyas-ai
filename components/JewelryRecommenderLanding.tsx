@@ -39,11 +39,11 @@ export default function JewelryRecommenderLanding({ locale, href, languageLinks 
       />
       <SiteHeader locale={locale} languageLinks={languageLinks} />
 
-      <section className="mx-auto max-w-7xl px-5 pb-8 pt-10 sm:px-8 sm:pb-12 sm:pt-14 lg:px-10">
+      <section className="mx-auto max-w-7xl px-5 pb-5 pt-7 sm:px-8 sm:pb-12 sm:pt-14 lg:px-10">
         <div className="max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9b7b3a]">{copy.eyebrow}</p>
-          <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-[-0.04em] text-[#17120b] sm:text-5xl lg:text-6xl">{copy.title}</h1>
-          <p className="mt-5 text-lg leading-8 text-[#63584c]">{copy.intro}</p>
+          <h1 className="mt-3 text-[2rem] font-semibold leading-[1.15] tracking-[-0.04em] text-[#17120b] sm:mt-4 sm:text-5xl sm:leading-tight lg:text-6xl">{copy.title}</h1>
+          <p className="mt-4 text-[17px] leading-[1.6] text-[#63584c] sm:mt-5 sm:text-lg sm:leading-8">{copy.intro}</p>
         </div>
       </section>
 
