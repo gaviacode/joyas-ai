@@ -21,6 +21,7 @@ import {
   getGuidesForCategory,
   guideCategories,
   guides,
+  type ArticleData,
 } from "@/lib/site-content";
 
 const guidesWithEarlyAdvisorCta = new Set([
@@ -199,7 +200,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         : slug === "moissanita-vs-diamante"
           ? "Moissanita vs diamante: diferencias, precio y cuál elegir | Joyas.ai"
         : slug === "tipos-de-anillos"
-          ? "Tipos de anillos: nombres, estilos y significado | Joyas.ai"
+          ? "Tipos de anillos: nombres, estilos y qué significa cada uno | Joyas.ai"
         : slug === "oro-rosa"
           ? "Oro rosa: qué es, composición, quilates y diferencias | Joyas.ai"
         : slug === "diamantes-rosados"
@@ -207,7 +208,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         : slug === "oro-laminado-chapado-bano"
           ? "Oro laminado, chapado y baño de oro: diferencias | Joyas.ai"
         : slug === "tipos-de-cadenas"
-          ? "Tipos de cadenas: nombres, estilos y cómo elegir | Joyas.ai"
+          ? "Tipos de cadenas para collar: nombres, eslabones y estilos | Joyas.ai"
         : slug === "tipos-de-pendientes"
           ? "Tipos de pendientes: nombres, estilos y guía para elegir | Joyas.ai"
         : slug === "oro-blanco"
@@ -240,7 +241,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             ? "Cómo saber si una joya es de oro: pruebas y marcas | Joyas.ai"
         : `${article.title} | Joyas.ai`;
   const seoDescription =
-      slug === "plata-925"
+      slug === "tipos-de-cadenas"
+        ? "Descubre los principales tipos de cadenas para collar, sus nombres, eslabones, estilos y cuáles funcionan mejor con colgantes."
+        : slug === "tipos-de-anillos"
+        ? "Descubre los principales tipos de anillos, sus nombres, estilos y significados: solitario, halo, trilogy, eternity, sello, cóctel y más."
+        : slug === "plata-925"
         ? "Descubre qué significa plata de ley 925, su composición con 92,5 % de plata, cómo identificarla y cómo comprobar si una joya es auténtica."
         : slug === "oro-14k-18k-24k"
         ? "Descubre qué significan 14k, 18k y 24k, cuánta proporción de oro contiene cada aleación y qué diferencias tienen en joyería."
@@ -278,10 +283,11 @@ export default async function GuidePage({ params }: PageProps) {
   }
 
   const articleCategory = findGuideCategoryForArticle(article);
+  const localizedArticle = optimizeSpanishGuideForSearchConsole(localizeArticle(article, "guias", "es"));
 
   return (
     <ArticlePage
-      article={localizeArticle(article, "guias", "es")}
+      article={localizedArticle}
       parent={getArticleParent("guias", "es")}
       breadcrumbItems={[
         { href: "/guias", label: "Guías" },
@@ -292,4 +298,40 @@ export default async function GuidePage({ params }: PageProps) {
       showGuideAdvisorCta={guidesWithEarlyAdvisorCta.has(article.slug)}
     />
   );
+}
+
+function optimizeSpanishGuideForSearchConsole(article: ArticleData): ArticleData {
+  if (article.slug !== "tipos-de-anillos") {
+    return article;
+  }
+
+  return {
+    ...article,
+    sections: [
+      {
+        title: "Tabla rápida de tipos de anillos",
+        paragraphs: [
+          "Esta tabla resume algunos de los diseños y usos más habituales para que puedas comparar de un vistazo antes de entrar en cada tipo con más detalle.",
+        ],
+        table: {
+          columns: ["Tipo de anillo", "Cómo es", "Uso o significado habitual", "Cuándo puede encajar"],
+          rows: [
+            ["Solitario", "Una piedra principal", "Compromiso o pieza protagonista", "Cuando quieres destacar una gema central"],
+            ["Halo", "Piedra central rodeada de piedras pequeñas", "Brillo y presencia visual", "Si buscas un efecto más luminoso"],
+            ["Trilogy", "Tres piedras principales", "Pasado, presente y futuro como simbolismo frecuente", "Aniversarios o regalos con significado"],
+            ["Eternity", "Fila de piedras alrededor de todo o parte del aro", "Continuidad o vínculo duradero", "Aniversarios, alianzas o combinación con otros anillos"],
+            ["Toi et moi", "Dos piedras protagonistas", "Unión de dos elementos", "Regalos románticos o diseños con contraste"],
+            ["Sello", "Parte superior más ancha, lisa o grabada", "Identidad, iniciales o estilo", "Si buscas una pieza con presencia o personalización"],
+            ["Cóctel", "Diseño grande y llamativo", "Pieza protagonista", "Eventos o looks donde el anillo destaque"],
+            ["Alianza", "Aro continuo, liso o decorado", "Matrimonio", "Uso diario y combinación con otros anillos"],
+          ],
+        },
+      },
+      ...article.sections,
+    ],
+    related: [
+      ...article.related,
+      { href: "/guias/anillo-de-promesa", label: "Anillo de promesa" },
+    ],
+  };
 }
