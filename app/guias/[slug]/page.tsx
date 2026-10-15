@@ -23,6 +23,67 @@ import {
   guides,
 } from "@/lib/site-content";
 
+const guidesWithEarlyAdvisorCta = new Set([
+  "como-elegir-collar",
+  "collares-segun-escote",
+  "tipos-de-cadenas",
+  "como-elegir-pendientes",
+  "tipos-cierre-pendientes",
+  "tipos-de-pendientes",
+  "como-elegir-una-joya-para-regalar",
+  "tipos-de-anillos",
+  "moissanita-vs-diamante",
+  "tipos-de-collares",
+  "pulsera-tennis",
+  "pendientes-boda-invitada",
+  "joyas-para-regalar-mujer",
+  "joyas-para-regalar-novia",
+  "pulseras-de-la-amistad",
+  "pulseras-para-mama",
+  "joya-regalo-madre-primeriza",
+  "joyas-para-parejas",
+  "pulseras-para-regalar",
+  "pendientes-madrina-mantilla",
+  "pendientes-madrina-boda",
+  "pendientes-vestido-azul-marino",
+  "pendientes-vestido-rojo-boda",
+  "collares-invitada-boda",
+  "como-elegir-pendientes-novia",
+  "anillo-de-promesa",
+  "pulseras-con-coordenadas",
+  "pulseras-nombres-hijos",
+  "pulseras-de-novia",
+  "pendientes-hipoalergenicos",
+  "pendientes-graduacion",
+  "esclavas-bebes-oro",
+  "cadenas-oro-mujer",
+  "collar-con-inicial",
+  "pulsera-con-nombre",
+  "pulseras-plata-mujer",
+  "pulseras-oro-mujer",
+  "cadenas-plata-mujer",
+  "anillos-plata-mujer",
+  "pendientes-oro-18k",
+  "gargantillas-oro",
+  "cruz-oro",
+  "anillos-oro-mujer",
+  "aros-plata-mujer",
+  "aros-oro-mujer",
+  "collar-estrella",
+  "pulsera-infinito",
+  "collar-sol",
+  "collar-luna",
+  "anillo-sello-mujer",
+  "pendientes-estrella-plata",
+  "pendientes-pequenos-plata",
+  "anillos-tungsteno",
+  "collares-conchas",
+  "pulsera-grabada-mujer",
+  "collares-finos-mujer",
+  "cadena-fina-oro",
+  "brazalete-oro-mujer",
+]);
+
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
@@ -228,7 +289,7 @@ export default async function GuidePage({ params }: PageProps) {
         { href: `/guias/${article.slug}`, label: article.title },
       ]}
       languageLinks={getLanguageLinks("guias", article.slug)}
-      showGuideAdvisorCta
+      showGuideAdvisorCta={guidesWithEarlyAdvisorCta.has(article.slug)}
     />
   );
 }
